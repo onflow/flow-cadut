@@ -1,2 +1,3 @@
-# flow-template-generator
-Node based template generator to simplify interaction with Cadence files.
+# Flow Template Generator.
+Working with Cadence template files can be a bit frustrating.
+We aim to simplify this process by providing you an easy way to generate supporting files, which are easy to use. 
