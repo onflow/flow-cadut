@@ -2,44 +2,86 @@
   "name": "flow-template-generator",
   "version": "0.0.1",
   "description": "Flow Template Generator",
-  "scripts": {
-    "build": "microbundle",
-    "lint": "eslint -c .eslintrc.js src",
-    "prettify": "prettier --config ./.prettierrc.json --write ./src",
-    "test": "jest",
-    "check-headers": "sh ./check-headers.sh",
-    "prepublishOnly": "npm test && npm run build",
-    "publish": "npm publish"
-  },
-  "source": "src/index.js",
-  "main": "dist/index.js",
+  "author": "Maksim Daunarovich",
+  "license": "Apache-2.0",
   "sideEffects": false,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/onflow/flow-template-generator.git"
-  },
   "keywords": [
     "flow",
     "cadence",
     "template",
     "generator"
   ],
-  "author": "Maksim Daunarovich",
-  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onflow/flow-template-generator.git"
+  },
   "bugs": {
     "url": "https://github.com/onflow/flow-template-generator/issues"
   },
   "homepage": "https://github.com/onflow/flow-template-generator#readme",
-  "jest": {
-    "transform": {
-      ".js": "jest-esm-transformer"
-    }
+  "source": "src/index.js",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "microbundle",
+    "lint": "eslint src",
+    "prettify": "prettier --config ./.prettierrc.json --write ./src",
+    "test": "jest",
+    "check-headers": "sh ./check-headers.sh",
+    "prepublishOnly": "npm test && npm run build",
+    "publish": "npm publish",
+    "precompile-handlebars": "node_modules/.bin/handlebars src/templates -f ./src/templates/index.js -e hbs -c handlebars"
+  },
+  "bin": {
+    "gen": "src/generator/index.js"
+  },
+  "dependencies": {
+    "esm": "^3.2.25",
+    "handlebars": "^4.7.7",
+    "handlebars-loader": "^1.7.1"
   },
   "devDependencies": {
     "eslint": "^7.24.0",
     "eslint-plugin-jest": "^24.3.6",
     "jest": "^26.6.3",
     "jest-esm-transformer": "^1.0.0",
-    "prettier": "^2.3.0"
+    "prettier": "^2.3.0",
+    "microbundle": "^0.13.0",
+    "yargs": "^15.4.1"
+  },
+  "eslintConfig": {
+    "extends": [
+      "eslint:recommended",
+      "plugin:jest/recommended"
+    ],
+    "env": {
+      "node": true,
+      "es6": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 12,
+      "sourceType": "module"
+    },
+    "plugins": [
+      "jest"
+    ]
+  },
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "transform": {
+      ".js": "jest-esm-transformer"
+    },
+    "testEnvironment": "node",
+    "verbose": true
+  },
+  "prettier": {
+    "printWidth": 100,
+    "endOfLine": "lf",
+    "semi": true,
+    "useTabs": false,
+    "singleQuote": false,
+    "trailingComma": "es5",
+    "tabWidth": 2
   }
 }
