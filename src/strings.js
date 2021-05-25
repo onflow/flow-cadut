@@ -23,6 +23,7 @@ export const capitalizeFirstLetter = (input) => {
 
 export const underscoreToCamelCase = (text) => {
 	return text
+		.replace("-","_")
 		.split("_")
 		.map((word, i) => (i > 0 ? capitalizeFirstLetter(word) : word))
 		.join("");
