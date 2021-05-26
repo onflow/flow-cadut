@@ -27,27 +27,6 @@ export const extractTransactionArguments = (code) => {
   return extract(code, "transaction");
 };
 
-/*export const isContract = (code) => {
-  const lines = code.split(/\r\n|\n|\r/);
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    if (line.match(/\w+\s+contract\s+(\w*\s*)\w*!/g)) {
-      if (line.includes("{")) {
-        return true;
-      }
-
-      if (i + 1 >= lines.length) {
-        return false;
-      }
-      const nextLine = line[i + 1];
-      return nextLine.includes("{");
-    }
-  }
-
-  return false;
-};*/
-
 const contractMatcher = /\w+\s+contract\s+(\w*\s*)\w*/g;
 const transactionMatcher = /transaction(\(\s*\))*\s*/g;
 const scriptMatcher = /pub\s*fun\s*main\s*/g;
