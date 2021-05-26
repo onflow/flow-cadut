@@ -1,6 +1,5 @@
 import { replaceImportAddresses } from "flow-js-testing";
-import { getEnvironment } from "utils/env";
-import { reportMissingImports } from 'utils'
+import { getEnvironment, reportMissingImports } from 'utils'
 
 export const CODE = `
 {{ code }}
@@ -24,6 +23,12 @@ export const {{ assetName }}Template = (addressMap = {}, env = "testnet") => {
     return replaceImportAddresses(CODE, fullMap);
 };
 
+// TODO: compare number of arguments
+// TODO: pass signers
+// TOOD: compare number of signers
+// TODO: create specific method to scripts, transactions and contracts
+
 export const  {{ assetName }} = (addressMap = {}, env = "testnet", args = []) => {
   // TODO: implement sendTransaction or executeScript, based on context
+  const code = {{ assetName}}Template(addressMap, env, args)
 }
