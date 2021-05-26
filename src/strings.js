@@ -17,34 +17,37 @@
  */
 
 export const capitalizeFirstLetter = (input) => {
-	const [first] = input.split("");
-	return first.toUpperCase() + input.slice(1);
+  const [first] = input.split("");
+  return first.toUpperCase() + input.slice(1);
 };
 
 export const underscoreToCamelCase = (text) => {
-	return text
-		.replace("-","_")
-		.split("_")
-		.map((word, i) => (i > 0 ? capitalizeFirstLetter(word) : word))
-		.join("");
+  return text
+    .replace("-", "_")
+    .split("_")
+    .map((word, i) => (i > 0 ? capitalizeFirstLetter(word) : word))
+    .join("");
 };
 
 export const trimAndSplit = (input, trimWith, splitBy) => {
-	if (splitBy){
-		return input.replace(trimWith, "").split(splitBy);
-	}
-	return input.replace(trimWith, "").split(getSplitCharacter(input));
+  if (splitBy) {
+    return input.replace(trimWith, "").split(splitBy);
+  }
+  return input.replace(trimWith, "").split(getSplitCharacter(input));
 };
 
 export const getSplitCharacter = (input) => {
-	switch (true){
-		case input.indexOf("//") >= 0:
-			return "//"
-		case input.indexOf("/") >= 0:
-			return "/"
-		case input.indexOf("\\") >= 0:
-			return "\\"
-		default:
-			return ""
-	}
-}
+  switch (true) {
+    case input.indexOf("//") >= 0:
+      return "//";
+    case input.indexOf("/") >= 0:
+      return "/";
+    case input.indexOf("\\") >= 0:
+      return "\\";
+    default:
+      return "";
+  }
+};
+
+export const collapseSpaces = (input) => input.replace(/\s+/g, " ");
+export const stripNewLines = input => input.replace(/\r\n|\n|\r/g, " ");

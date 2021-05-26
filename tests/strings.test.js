@@ -1,4 +1,4 @@
-import { trimAndSplit, underscoreToCamelCase } from "../src/strings";
+import { collapseSpaces, trimAndSplit, underscoreToCamelCase } from "../src/strings";
 
 describe("string unit tests - convert to camelCase", () => {
   test("convert single word", () => {
@@ -40,3 +40,28 @@ describe("string unit tests - split", () => {
     expect(third).toBe("file.cdc");
   });
 });
+
+describe("collapse spaces", ()=>{
+  test("no extra spaces",()=>{
+    const input = "pub fun main()"
+    const output = collapseSpaces(input);
+
+    expect(output).toEqual(input);
+  })
+
+  test("simple line",()=>{
+    const input = "pub       fun      main()"
+    const output = collapseSpaces(input);
+    const correct = "pub fun main()"
+
+    expect(output).toEqual(correct);
+  })
+
+  test("collapse tabs and spaces",()=>{
+    const input = "pub\t\tfun\t\t\t\t\t\t\tmain()"
+    const output = collapseSpaces(input);
+    const correct = "pub fun main()"
+
+    expect(output).toEqual(correct);
+  })
+})
