@@ -1,0 +1,38 @@
+import { executeScript } from '{{ ixDependency }}'
+
+import {
+  getEnvironment,
+  replaceImportAddresses,
+  reportMissingImports,
+  reportMissing
+} from 'flow-template-generator'
+
+export const CODE = `
+{{ code }}
+`;
+
+/**
+* Method to generate cadence code for TestAsset
+* @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
+* @param {( "emulator" | "testnet" | "mainnet" )} [env] - current working environment, defines default deployed contracts
+*/
+export const {{ assetName }}Template = async (addressMap = {}) => {
+  const envMap = await getEnvironment(env);
+  const fullMap = {
+  ...envMap,
+  ...addressMap,
+  };
+
+  // If there are any missing imports in fullMap it will be reported via console
+  reportMissingImports(CODE, fullMap, `{{ name }} =>`)
+
+  return replaceImportAddresses(CODE, fullMap);
+};
+
+export const  {{ assetName }} = async ({ addressMap = {}, args = [] }) => {
+  const code = await {{ assetName}}Template(addressMap, args);
+
+  reportMissing("arguments", args.length, {{ argsAmount }}, {{assetName}});
+
+  return executeScript({ code, args})
+}
