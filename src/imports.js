@@ -86,3 +86,23 @@ export const reportMissingImports = (code, addressMap, prefix = "") => {
     report(list, prefix);
   }
 };
+
+
+const REGEXP_IMPORT = /(\s*import\s*)([\w\d]+)(\s+from\s*)([\w\d".\\/]+)/g;
+
+/**
+ * Returns Cadence template code with replaced import addresses
+ * @param {string} code - Cadence template code.
+ * @param {{string:string}} [addressMap={}] - name/address map or function to use as lookup table
+ * for addresses in import statements.
+ * @param byName - lag to indicate whether we shall use names of the contracts.
+ * @returns {*}
+ */
+export const replaceImportAddresses = (code, addressMap, byName = true) => {
+  return code.replace(REGEXP_IMPORT, (match, imp, contract, _, address) => {
+    const key = byName ? contract : address;
+    const newAddress =
+      addressMap instanceof Function ? addressMap(key) : addressMap[key];
+    return `${imp}${contract} from ${newAddress}`;
+  });
+};
