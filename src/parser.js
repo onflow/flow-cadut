@@ -1,5 +1,5 @@
 /*
- * Flow JS Testing
+ * Flow Template Utilities
  *
  * Copyright 2021 Dapper Labs, Inc.
  *
@@ -24,6 +24,7 @@ export const SCRIPT = "script";
 export const UNKNOWN = "unknown";
 
 const contractMatcher = /\w+\s+contract\s+(\w*\s*)\w*/g;
+const contractNameMatcher = /\w+\s+contract\s+(?:interface)*\s*(\w*)/g;
 const transactionMatcher = /transaction(\(\s*\))*\s*/g;
 const scriptMatcher = /pub\s*fun\s*main\s*/g;
 
@@ -54,20 +55,21 @@ export const extractTransactionArguments = (code) => {
   return extract(code, "transaction");
 };
 
-export const getTemplateInfo = (code) => {
-  if (code.match(contractMatcher)) {
-    return {
-      type: CONTRACT,
-      signers: 1,
-      // TODO: implement extraction from `init` method
-      args: []
-    };
+export const extractContractName = (code) => {
+  const singleLine = code.replace(/\r\n|\n|\r/g, " ");
+  const matches = contractNameMatcher.exec(singleLine);
+
+  if (matches.length < 2) {
+    throw new Error("Contract Error: can't find name of the contract");
   }
 
-  if (code.match(transactionMatcher)) {
+  return matches[1];
+};
+
+export const getTemplateInfo = (code) => {
+  if (transactionMatcher.test(code)) {
     const signers = extractSigners(code);
     const args = extractTransactionArguments(code);
-    console.log({ args, signers });
     return {
       type: TRANSACTION,
       signers: signers.length,
@@ -75,11 +77,22 @@ export const getTemplateInfo = (code) => {
     };
   }
 
-  if (code.match(scriptMatcher)) {
+  if (scriptMatcher.test(code)) {
     const args = extractScriptArguments(code);
     return {
       type: SCRIPT,
       args: args,
+    };
+  }
+
+  if (contractMatcher.test(code)) {
+    // TODO: implement extraction from `init` method
+    const contractName = extractContractName(code);
+    return {
+      type: CONTRACT,
+      signers: 1,
+      args: [],
+      contractName,
     };
   }
 

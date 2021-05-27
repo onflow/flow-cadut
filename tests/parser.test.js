@@ -4,6 +4,7 @@ import {
   CONTRACT,
   SCRIPT,
   TRANSACTION,
+  extractContractName,
 } from "../src/parser";
 
 describe("parser", () => {
@@ -16,7 +17,6 @@ describe("parser", () => {
     const output = extract(input, "fun main");
     expect(output.length).toBe(1);
   });
-
   test("extract transaction arguments - no arguments", () => {
     const input = `
       transaction {
@@ -27,6 +27,26 @@ describe("parser", () => {
     `;
     const output = extract(input, "transaction");
     expect(output.length).toBe(0);
+  });
+});
+
+describe("extract contract name", () => {
+  test("extract contract name - contract interface", () => {
+    const contractName = "KittyItems";
+    const input = `
+      pub contract interface ${contractName} {
+    `;
+    const output = extractContractName(input);
+    expect(output).toEqual(contractName);
+  });
+
+  test("extract contract name - contract", () => {
+    const contractName = "KittyItems";
+    const input = `
+      pub contract ${contractName} {
+    `;
+    const output = extractContractName(input);
+    expect(output).toEqual(contractName);
   });
 });
 
@@ -51,6 +71,7 @@ describe("template type checker", () => {
     `;
     expect(getTemplateInfo(input).type).toBe(CONTRACT);
   });
+
   test("is contract - contract interface", () => {
     const input = `
       pub contract interface      Basic {      }
