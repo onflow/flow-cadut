@@ -27,7 +27,15 @@ export {
   sansExtension,
 } from "./file";
 
-export { extractImports, missingImports, reportMissingImports, report } from "./imports";
+export {
+  extractImports,
+  missingImports,
+  reportMissingImports,
+  report,
+  replaceImportAddresses,
+} from "./imports";
+
+export { reportArguments } from "./args";
 
 export {
   trimAndSplit,
