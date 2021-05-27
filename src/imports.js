@@ -1,5 +1,5 @@
 /*
- * Flow JS Testing
+ * Flow Template Utilities
  *
  * Copyright 2021 Dapper Labs, Inc.
  *
