@@ -1,5 +1,5 @@
 /*
- * Flow JS Testing
+ * Flow Template Utilities
  *
  * Copyright 2021 Dapper Labs, Inc.
  *
@@ -20,7 +20,7 @@ import { resolve } from "path";
 import Handlebars from "handlebars";
 import { getSplitCharacter, trimAndSplit, underscoreToCamelCase } from "./strings";
 import { generateExports, getFilesList, readFile, writeFile } from "./file";
-import { CONTRACT, getTemplateInfo, SCRIPT, TRANSACTION } from "./parser";
+import { CONTRACT, extractSigners, getTemplateInfo, SCRIPT, TRANSACTION } from "./parser";
 
 export const processFolder = async (input, output, options = {}) => {
   const splitCharacter = getSplitCharacter(input);
@@ -66,7 +66,14 @@ export const processFolder = async (input, output, options = {}) => {
         });
         break;
       case CONTRACT:
-        data = Handlebars.templates.contract({ code, name, ixDependency, assetName: name });
+        const contractName = templateInfo.contractName;
+        data = Handlebars.templates.contract({
+          code,
+          name,
+          ixDependency,
+          contractName,
+          assetName: name,
+        });
         break;
       default:
         // TODO: implement empty plug
