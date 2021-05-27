@@ -36,11 +36,12 @@ export const {{ assetName }}Template = async (addressMap = {}) => {
 * @param Array<*> args - list of arguments
 * param Array<string> - list of signers
 */
-export const  {{ assetName }} = async ({ addressMap = {}, args = [], signers = [] }) => {
-  const code = await {{ assetName}}Template(addressMap, env, args);
+export const  deploy{{ assetName }} = async ({ addressMap = {}, args = [], to, update = false }) => {
+  const code = await {{ assetName }}Template(addressMap, env, args);
+  const name = {{ contractName }}
 
   reportMissing("arguments", args.length, {{ argsAmount }}, {{assetName}});
-  reportMissing("signers", signers.length, {{ signersAmount }}, {{assetName}});
+  reportMissing("signers", signers.length, 1, {{assetName}});
 
-  return deployContract({ code, args, signers })
+  return deployContract({ code, args, to, update, name })
 }
