@@ -17,7 +17,7 @@ export const CODE = `
 * @param {( "emulator" | "testnet" | "mainnet" )} [env] - current working environment, defines default deployed contracts
 */
 export const {{ assetName }}Template = async (addressMap = {}) => {
-  const envMap = await getEnvironment(env);
+  const envMap = await getEnvironment();
   const fullMap = {
   ...envMap,
   ...addressMap,
