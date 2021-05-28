@@ -20,7 +20,7 @@ import { resolve } from "path";
 import Handlebars from "handlebars";
 import { getSplitCharacter, trimAndSplit, underscoreToCamelCase } from "./strings";
 import { generateExports, getFilesList, readFile, writeFile } from "./file";
-import { CONTRACT, extractSigners, getTemplateInfo, SCRIPT, TRANSACTION } from "./parser";
+import { getTemplateInfo, CONTRACT, SCRIPT, TRANSACTION } from "./parser";
 
 export const processFolder = async (input, output, options = {}) => {
   const splitCharacter = getSplitCharacter(input);
@@ -65,7 +65,7 @@ export const processFolder = async (input, output, options = {}) => {
           assetName: name,
         });
         break;
-      case CONTRACT:
+      case CONTRACT: {
         const contractName = templateInfo.contractName;
         data = Handlebars.templates.contract({
           code,
@@ -75,6 +75,7 @@ export const processFolder = async (input, output, options = {}) => {
           assetName: name,
         });
         break;
+      }
       default:
         // TODO: implement empty plug
         data = "// Unsupported file";
