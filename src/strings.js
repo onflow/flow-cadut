@@ -50,4 +50,4 @@ export const getSplitCharacter = (input) => {
 };
 
 export const collapseSpaces = (input) => input.replace(/\s+/g, " ");
-export const stripNewLines = input => input.replace(/\r\n|\n|\r/g, " ");
+export const stripNewLines = (input) => input.replace(/\r\n|\n|\r/g, " ");

@@ -41,27 +41,27 @@ describe("string unit tests - split", () => {
   });
 });
 
-describe("collapse spaces", ()=>{
-  test("no extra spaces",()=>{
-    const input = "pub fun main()"
+describe("collapse spaces", () => {
+  test("no extra spaces", () => {
+    const input = "pub fun main()";
     const output = collapseSpaces(input);
 
     expect(output).toEqual(input);
-  })
+  });
 
-  test("simple line",()=>{
-    const input = "pub       fun      main()"
+  test("simple line", () => {
+    const input = "pub       fun      main()";
     const output = collapseSpaces(input);
-    const correct = "pub fun main()"
+    const correct = "pub fun main()";
 
     expect(output).toEqual(correct);
-  })
+  });
 
-  test("collapse tabs and spaces",()=>{
-    const input = "pub\t\tfun\t\t\t\t\t\t\tmain()"
+  test("collapse tabs and spaces", () => {
+    const input = "pub\t\tfun\t\t\t\t\t\t\tmain()";
     const output = collapseSpaces(input);
-    const correct = "pub fun main()"
+    const correct = "pub fun main()";
 
     expect(output).toEqual(correct);
-  })
-})
+  });
+});
