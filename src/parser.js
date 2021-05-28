@@ -24,7 +24,6 @@ export const SCRIPT = "script";
 export const UNKNOWN = "unknown";
 
 const contractMatcher = /\w+\s+contract\s+(\w*\s*)\w*/g;
-const contractNameMatcher = /\w+\s+contract\s+(?:interface)*\s*(\w*)/g;
 const transactionMatcher = /transaction(\(\s*\))*\s*/g;
 const scriptMatcher = /pub\s*fun\s*main\s*/g;
 
@@ -56,6 +55,7 @@ export const extractTransactionArguments = (code) => {
 };
 
 export const extractContractName = (code) => {
+  const contractNameMatcher = /\w+\s+contract\s+(?:interface)*\s*(\w*)/g;
   const singleLine = code.replace(/\r\n|\n|\r/g, " ");
   const matches = contractNameMatcher.exec(singleLine);
 
