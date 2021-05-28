@@ -34,7 +34,7 @@ export const {{ assetName }}Template = async (addressMap = {}) => {
 * Sends {{ assetName }} transaction to the network
 * @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
 * @param Array<*> args - list of arguments
-* param Array<string> - list of signers
+* @param Array<string> - list of signers
 */
 export const  {{ assetName }} = async ({ addressMap = {}, args = [], signers = [] }) => {
   const code = await {{ assetName}}Template(addressMap, env, args);
