@@ -1,10 +1,10 @@
 import {
   extract,
+  extractContractName,
   getTemplateInfo,
   CONTRACT,
   SCRIPT,
   TRANSACTION,
-  extractContractName,
 } from "../src/parser";
 
 describe("parser", () => {
