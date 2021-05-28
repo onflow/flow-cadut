@@ -1,7 +1,7 @@
 {
-  "name": "flow-template-generator",
+  "name": "flow-template-utilities",
   "version": "0.0.1-alpha.0",
-  "description": "Flow Template Generator",
+  "description": "Flow Template Utilities",
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
   "sideEffects": false,
@@ -53,6 +53,7 @@
     "yargs": "^15.4.1"
   },
   "eslintConfig": {
+    "ignorePatterns": ["**/templates/*.js"],
     "extends": [
       "eslint:recommended",
       "plugin:jest/recommended"
