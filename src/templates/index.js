@@ -740,7 +740,7 @@ templates["transaction"] = template({
             })
           : helper)
       ) +
-      " transaction to the network\n* @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value\n* @param Array<*> args - list of arguments\n* param Array<string> - list of signers\n*/\nexport const  " +
+      " transaction to the network\n* @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value\n* @param Array<*> args - list of arguments\n* @param Array<string> - list of signers\n*/\nexport const  " +
       alias4(
         ((helper =
           (helper =
