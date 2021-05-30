@@ -35,7 +35,7 @@ export {
   replaceImportAddresses,
 } from "./imports";
 
-export { reportArguments } from "./args";
+export { reportArguments, reportMissing } from "./args";
 
 export {
   trimAndSplit,

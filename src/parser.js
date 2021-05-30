@@ -23,10 +23,6 @@ export const TRANSACTION = "transaction";
 export const SCRIPT = "script";
 export const UNKNOWN = "unknown";
 
-const contractMatcher = /\w+\s+contract\s+(\w*\s*)\w*/g;
-const transactionMatcher = /transaction(\(\s*\))*\s*/g;
-const scriptMatcher = /pub\s*fun\s*main\s*/g;
-
 export const extract = (code, keyWord) => {
   const target = code
     .split(/\r\n|\n|\r/)
@@ -67,6 +63,10 @@ export const extractContractName = (code) => {
 };
 
 export const getTemplateInfo = (code) => {
+  const contractMatcher = /\w+\s+contract\s+(\w*\s*)\w*/g;
+  const transactionMatcher = /transaction(\(\s*\))*\s*/g;
+  const scriptMatcher = /pub\s*fun\s*main\s*/g;
+
   if (transactionMatcher.test(code)) {
     const signers = extractSigners(code);
     const args = extractTransactionArguments(code);

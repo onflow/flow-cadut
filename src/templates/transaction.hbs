@@ -5,16 +5,15 @@ import {
   replaceImportAddresses,
   reportMissingImports,
   reportMissing
-} from 'flow-template-generator'
+} from 'flow-template-utilities'
 
 export const CODE = `
-  {{ code }}
+  {{{ code }}}
 `;
 
 /**
 * Method to generate cadence code for {{ assetName }} transaction
 * @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
-* @param {( "emulator" | "testnet" | "mainnet" )} [env] - current working environment, defines default deployed contracts
 */
 export const {{ assetName }}Template = async (addressMap = {}) => {
   const envMap = await getEnvironment();
@@ -37,7 +36,7 @@ export const {{ assetName }}Template = async (addressMap = {}) => {
 * @param Array<string> - list of signers
 */
 export const  {{ assetName }} = async ({ addressMap = {}, args = [], signers = [] }) => {
-  const code = await {{ assetName}}Template(addressMap, env, args);
+  const code = await {{ assetName}}Template(addressMap);
 
   reportMissing("arguments", args.length, {{ argsAmount }}, {{assetName}});
   reportMissing("signers", signers.length, {{ signersAmount }}, {{assetName}});

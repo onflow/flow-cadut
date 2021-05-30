@@ -76,7 +76,6 @@ describe("template type checker", () => {
     const input = `
       pub contract interface      Basic {      }
     `;
-    const { type } = getTemplateInfo(input);
     expect(getTemplateInfo(input).type).toBe(CONTRACT);
   });
 
@@ -100,4 +99,18 @@ describe("template type checker", () => {
     expect(signers).toBe(1);
     expect(args.length).toBe(1);
   });
+
+  test("is transaction - real example", () => {
+    const input = `
+      import FlowManager from 0x01
+
+      transaction(name:String, code: String, manager: Address ##ARGS-WITH-TYPES##) {
+        prepare(acct: AuthAccount){
+          let decoded = code.decodeHex()
+        }
+      }
+    `
+    const { type } = getTemplateInfo(input)
+    expect(type).toBe(TRANSACTION);
+  })
 });

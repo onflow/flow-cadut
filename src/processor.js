@@ -20,7 +20,7 @@ import { resolve } from "path";
 import Handlebars from "handlebars";
 import { getSplitCharacter, trimAndSplit, underscoreToCamelCase } from "./strings";
 import { generateExports, getFilesList, readFile, writeFile } from "./file";
-import { getTemplateInfo, CONTRACT, SCRIPT, TRANSACTION } from "./parser";
+import { getTemplateInfo, CONTRACT, SCRIPT, TRANSACTION, extractSigners } from "./parser";
 
 export const processFolder = async (input, output, options = {}) => {
   const splitCharacter = getSplitCharacter(input);
@@ -56,15 +56,18 @@ export const processFolder = async (input, output, options = {}) => {
           assetName: name,
         });
         break;
-      case TRANSACTION:
+      case TRANSACTION: {
+        const signers = extractSigners(code);
         data = Handlebars.templates.transaction({
           code,
           name,
           ixDependency,
           argsAmount,
+          signersAmount: signers.length,
           assetName: name,
         });
         break;
+      }
       case CONTRACT: {
         const contractName = templateInfo.contractName;
         data = Handlebars.templates.contract({

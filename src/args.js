@@ -31,7 +31,8 @@ export const reportArguments = (found, required, prefix = "") => {
 };
 
 /**
- * Reports missing arguments.
+ * Reports missing items.
+ * @param {string} itemType - name of the missing item
  * @param {number} found - number of arguments passed into method
  * @param {number} required - number of arguments required to execute the code
  * @param {string} prefix - error message prefix

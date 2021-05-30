@@ -24,6 +24,14 @@ describe("string unit tests - convert to camelCase", () => {
 
     expect(result).toBe(expected);
   });
+
+  test("convert multiple words split with dashes", () => {
+    const input = "multiple-words-combined";
+    const result = underscoreToCamelCase(input);
+    const expected = "multipleWordsCombined";
+
+    expect(result).toBe(expected);
+  });
 });
 
 describe("string unit tests - split", () => {
