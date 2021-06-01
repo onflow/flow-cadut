@@ -35,7 +35,7 @@ export const {{ assetName }}Template = async (addressMap = {}) => {
 * @param Array<*> args - list of arguments
 * param Array<string> - list of signers
 */
-export const  deploy{{ assetName }} = async ({ addressMap = {}, args = [], to, update = false }) => {
+export const  {{ assetName }} = async ({ addressMap = {}, args = [], to, update = false }) => {
   const code = await {{ assetName }}Template(addressMap);
   const name = "{{ contractName }}"
 
