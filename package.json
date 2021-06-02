@@ -1,7 +1,7 @@
 {
-  "name": "flow-template-utilities",
-  "version": "0.0.1-alpha.0",
-  "description": "Flow Template Utilities",
+  "name": "flow-cadut",
+  "version": "0.1.0",
+  "description": "Flow Cadence Template Utilities",
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
   "sideEffects": false,
@@ -13,12 +13,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/onflow/flow-template-generator.git"
+    "url": "git+https://github.com/onflow/flow-cadut.git"
   },
   "bugs": {
-    "url": "https://github.com/onflow/flow-template-generator/issues"
+    "url": "https://github.com/onflow/flow-cadut/issues"
   },
-  "homepage": "https://github.com/onflow/flow-template-generator#readme",
+  "homepage": "https://github.com/onflow/flow-cadut#readme",
   "source": "src/index.js",
   "main": "dist/index.js",
   "scripts": {
