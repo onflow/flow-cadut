@@ -28,7 +28,6 @@
     "test": "jest",
     "check-headers": "sh ./check-headers.sh",
     "prepublishOnly": "npm test && npm run build",
-    "publish": "npm publish",
     "precompile-handlebars": "node_modules/.bin/handlebars src/templates -f ./src/templates/index.js -e hbs -c handlebars"
   },
   "bin": {
