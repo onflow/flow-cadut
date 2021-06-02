@@ -109,8 +109,8 @@ describe("template type checker", () => {
           let decoded = code.decodeHex()
         }
       }
-    `
-    const { type } = getTemplateInfo(input)
+    `;
+    const { type } = getTemplateInfo(input);
     expect(type).toBe(TRANSACTION);
-  })
+  });
 });
