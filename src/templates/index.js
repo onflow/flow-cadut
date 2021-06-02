@@ -163,7 +163,7 @@ templates["contract"] = template({
             })
           : helper)
       ) +
-      "'\n\nimport {\n  getEnvironment,\n  replaceImportAddresses,\n  reportMissingImports,\n  reportMissing\n} from 'flow-template-utilities'\n\nexport const CODE = `\n  " +
+      "'\n\nimport {\n  getEnvironment,\n  replaceImportAddresses,\n  reportMissingImports,\n  reportMissing\n} from 'flow-cadut'\n\nexport const CODE = `\n  " +
       ((stack1 =
         ((helper =
           (helper =
@@ -460,7 +460,7 @@ templates["script"] = template({
             })
           : helper)
       ) +
-      "'\n\nimport {\n  getEnvironment,\n  replaceImportAddresses,\n  reportMissingImports,\n  reportMissing\n} from 'flow-template-utilities'\n\nexport const CODE = `\n  " +
+      "'\n\nimport {\n  getEnvironment,\n  replaceImportAddresses,\n  reportMissingImports,\n  reportMissing\n} from 'flow-cadut'\n\nexport const CODE = `\n  " +
       ((stack1 =
         ((helper =
           (helper =
@@ -621,7 +621,7 @@ templates["transaction"] = template({
             })
           : helper)
       ) +
-      "'\n\nimport {\n  getEnvironment,\n  replaceImportAddresses,\n  reportMissingImports,\n  reportMissing\n} from 'flow-template-utilities'\n\nexport const CODE = `\n  " +
+      "'\n\nimport {\n  getEnvironment,\n  replaceImportAddresses,\n  reportMissingImports,\n  reportMissing\n} from 'flow-cadut'\n\nexport const CODE = `\n  " +
       ((stack1 =
         ((helper =
           (helper =
