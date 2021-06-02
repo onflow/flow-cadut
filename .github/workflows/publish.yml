@@ -3,10 +3,6 @@ name: Publish
 on:
   # allow to manually run this workflow
   workflow_dispatch:
-  # run when new version tag is pushed
-  push:
-    tags:
-      - 'v*'
   # run on published release. this will not trigger, when release draft is created
   release:
     types: 
@@ -32,6 +28,10 @@ jobs:
         # use fresh install
       - name: Install dependencies
         run: npm ci
+
+      # Set NPM auth token from GitHub Secrets
+      - env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
         # build modules with microbundle
       - name: Build
