@@ -163,7 +163,7 @@ templates["contract"] = template({
             })
           : helper)
       ) +
-      "'\n\nimport {\n  getEnvironment,\n  replaceImportAddresses,\n  reportMissingImports,\n  reportMissing\n} from 'flow-cadut'\n\nexport const CODE = `\n  " +
+      "'\n\nimport {\n  getEnvironment,\n  replaceImportAddresses,\n  reportMissingImports\n} from 'flow-cadut'\n\nexport const CODE = `\n  " +
       ((stack1 =
         ((helper =
           (helper =
@@ -176,7 +176,7 @@ templates["contract"] = template({
               name: "code",
               hash: {},
               data: data,
-              loc: { start: { line: 11, column: 2 }, end: { line: 11, column: 14 } },
+              loc: { start: { line: 10, column: 2 }, end: { line: 10, column: 14 } },
             })
           : helper)) != null
         ? stack1
@@ -194,7 +194,7 @@ templates["contract"] = template({
               name: "assetName",
               hash: {},
               data: data,
-              loc: { start: { line: 15, column: 38 }, end: { line: 15, column: 53 } },
+              loc: { start: { line: 14, column: 38 }, end: { line: 14, column: 53 } },
             })
           : helper)
       ) +
@@ -211,7 +211,7 @@ templates["contract"] = template({
               name: "assetName",
               hash: {},
               data: data,
-              loc: { start: { line: 18, column: 13 }, end: { line: 18, column: 28 } },
+              loc: { start: { line: 17, column: 13 }, end: { line: 17, column: 28 } },
             })
           : helper)
       ) +
@@ -228,7 +228,7 @@ templates["contract"] = template({
               name: "name",
               hash: {},
               data: data,
-              loc: { start: { line: 26, column: 39 }, end: { line: 26, column: 49 } },
+              loc: { start: { line: 25, column: 39 }, end: { line: 25, column: 49 } },
             })
           : helper)
       ) +
@@ -245,7 +245,7 @@ templates["contract"] = template({
               name: "assetName",
               hash: {},
               data: data,
-              loc: { start: { line: 33, column: 10 }, end: { line: 33, column: 25 } },
+              loc: { start: { line: 32, column: 10 }, end: { line: 32, column: 25 } },
             })
           : helper)
       ) +
@@ -262,7 +262,7 @@ templates["contract"] = template({
               name: "assetName",
               hash: {},
               data: data,
-              loc: { start: { line: 38, column: 14 }, end: { line: 38, column: 29 } },
+              loc: { start: { line: 37, column: 14 }, end: { line: 37, column: 29 } },
             })
           : helper)
       ) +
@@ -279,7 +279,7 @@ templates["contract"] = template({
               name: "assetName",
               hash: {},
               data: data,
-              loc: { start: { line: 39, column: 21 }, end: { line: 39, column: 36 } },
+              loc: { start: { line: 38, column: 21 }, end: { line: 38, column: 36 } },
             })
           : helper)
       ) +
@@ -296,7 +296,7 @@ templates["contract"] = template({
               name: "contractName",
               hash: {},
               data: data,
-              loc: { start: { line: 40, column: 16 }, end: { line: 40, column: 34 } },
+              loc: { start: { line: 39, column: 16 }, end: { line: 39, column: 34 } },
             })
           : helper)
       ) +
