@@ -65,7 +65,18 @@ export const sansExtension = (fileName) => {
 };
 
 export const prettify = (code) => {
-  return prettier.format(code, { parser: "babel", plugins: [parserBabel] });
+  // Use the same formatting options as in this repository
+  // TODO: read prettier config from local folder
+  const options = {
+    "printWidth": 100,
+    "endOfLine": "lf",
+    "semi": true,
+    "useTabs": false,
+    "singleQuote": false,
+    "trailingComma": "es5",
+    "tabWidth": 2
+  }
+  return prettier.format(code, { parser: "babel", plugins: [parserBabel], ...options });
 };
 
 export const generateExports = async (dir, template) => {
