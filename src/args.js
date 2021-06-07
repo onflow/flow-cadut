@@ -16,6 +16,9 @@
  * limitations under the License.
  */
 
+import * as types from "@onflow/types";
+import { toFixedValue, withPrefix } from "./fixer";
+
 /**
  * Reports missing arguments.
  * @param {number} found - number of arguments passed into method
@@ -43,4 +46,92 @@ export const reportMissing = (itemType = "items", found, required, prefix = "") 
     const message = prefix ? `${prefix} ${errorMessage}` : errorMessage;
     console.error(message);
   }
+};
+
+export const argType = (pair) => {
+  const [_, type] = pair.split(":");
+  return type;
+};
+
+// Type Checker
+const isBasicNumType = (type) => {
+  return type.includes("Int") || type.includes("Word");
+};
+
+const isFixedNumType = (type) => {
+  return type.includes("Fix64");
+};
+
+const isBoolean = (type) => type;
+
+const isArray = (type) => {
+  const clearType = type.replace(/\s/g, "");
+  return clearType.startsWith("[") && clearType.endsWith("]");
+};
+
+const isDictionary = (type) => {
+  const clearType = type.replace(/\s/g, "");
+  return clearType.startsWith("{") && clearType.endsWith("}");
+};
+
+const getDictionaryTypes = (type) => type.replace(/[\s{}]/g, "").split(":");
+
+export const mapArgument = (type, value) => {
+  // TODO: add some validation, when wrong type is presented
+  switch (true) {
+    case isBasicNumType(type): {
+      return {
+        type: types[type],
+        value,
+      };
+    }
+
+    case isFixedNumType(type): {
+      return {
+        type: types[type],
+        value: toFixedValue(value),
+      };
+    }
+
+    case type === "String" || type === "Character": {
+      return { type: types[type], value };
+    }
+
+    case type === "Address": {
+      return {
+        type: types.Address,
+        value: withPrefix(value),
+      };
+    }
+
+    case type === "Bool": {
+      return {
+        type: types.Bool,
+        value,
+      };
+    }
+
+    // TODO: Fix this case
+    case isArray(type): {
+      const arrayType = types.Array(types[type]);
+      return {
+        type: arrayType,
+        value,
+      };
+    }
+
+    case isDictionary(type): {
+      const [keyType, valueType] = getDictionaryTypes(type);
+      return {
+        type: types.Dictionary({ key: keyType, value: valueType }),
+        value,
+      };
+    }
+  }
+};
+
+export const mapArguments = (schema = [], values) => {
+  return schema.map((type, i) => {
+    return mapArgument(type, values[i]);
+  });
 };
