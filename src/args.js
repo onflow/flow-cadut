@@ -122,9 +122,19 @@ export const mapArgument = (type, value) => {
 
     case isDictionary(type): {
       const [keyType, valueType] = getDictionaryTypes(type);
+      const finalValue = [];
+      for (let key in value) {
+        console.log(key, value[key])
+        if (value.hasOwnProperty(key)) {
+          finalValue.push({
+            key,
+            value: mapArgument(valueType, value[key]),
+          });
+        }
+      }
       return {
         type: types.Dictionary({ key: keyType, value: valueType }),
-        value,
+        value: finalValue,
       };
     }
   }

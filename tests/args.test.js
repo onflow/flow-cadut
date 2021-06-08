@@ -55,4 +55,24 @@ describe("map arguments", () => {
     expect(output.value).toBe(value);
     expect(output.type.label).toBe(type);
   });
+
+  test("Array - Simple", async () => {
+    throw "Not Implemented"
+  })
+
+  test("Dictionary - Simple", async () => {
+    const type = "{String: String}";
+    const value = {
+      name: "Power",
+      surname: "Rangers",
+      country: "Japan",
+    };
+    const output = mapArgument(type, value);
+
+    expect(output.type.label).toBe("Dictionary");
+    expect(output.value.length).toBe(3);
+    expect(output.value[0].key).toBe("name");
+    expect(output.value[0].value.value).toBe("Power");
+    expect(output.value[0].value.type.label).toBe("String");
+  });
 });
