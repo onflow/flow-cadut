@@ -17,7 +17,7 @@ describe("map arguments", () => {
     const output = mapArgument(type, value);
 
     expect(output.value).toBe(toFixedValue(value));
-    expect(output.type).toBe(type);
+    expect(output.type.label).toBe(type);
   });
 
   test("String", async () => {
@@ -26,7 +26,7 @@ describe("map arguments", () => {
     const output = mapArgument(type, value);
 
     expect(output.value).toBe(toFixedValue(value));
-    expect(output.type).toBe(type);
+    expect(output.type.label).toBe(type);
   });
 
   test("Address - with prefix", async () => {
@@ -35,7 +35,7 @@ describe("map arguments", () => {
     const output = mapArgument(type, value);
 
     expect(output.value).toBe(value);
-    expect(output.type).toBe(type);
+    expect(output.type.label).toBe(type);
   });
 
   test("Address - with prefix", async () => {
@@ -44,7 +44,7 @@ describe("map arguments", () => {
     const output = mapArgument(type, value);
 
     expect(output.value).toBe(withPrefix(value));
-    expect(output.type).toBe(type);
+    expect(output.type.label).toBe(type);
   });
 
   test("Bool", async () => {
@@ -53,6 +53,6 @@ describe("map arguments", () => {
     const output = mapArgument(type, value);
 
     expect(output.value).toBe(value);
-    expect(output.type).toBe(type);
+    expect(output.type.label).toBe(type);
   });
 });
