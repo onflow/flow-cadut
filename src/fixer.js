@@ -16,32 +16,14 @@
  * limitations under the License.
  */
 
-export { getEnvironment } from "./env";
+export const sansPrefix = (address) => {
+  if (address == null) return null;
+  return address.replace(/^0x/, "");
+};
 
-export {
-  clearPath,
-  generateExports,
-  getFilesList,
-  readFile,
-  writeFile,
-  sansExtension,
-} from "./file";
+export const withPrefix = (address) => {
+  if (address == null) return null;
+  return "0x" + sansPrefix(address);
+};
 
-export {
-  extractImports,
-  missingImports,
-  reportMissingImports,
-  report,
-  replaceImportAddresses,
-} from "./imports";
-
-export { reportArguments, reportMissing, mapArguments, mapArgument, mapValuesToCode } from "./args";
-
-export {
-  trimAndSplit,
-  underscoreToCamelCase,
-  getSplitCharacter,
-  capitalizeFirstLetter,
-} from "./strings";
-
-export { processFolder } from "./processor";
+export const toFixedValue = (val) => val.toString();
