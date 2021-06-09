@@ -16,7 +16,9 @@
  * limitations under the License.
  */
 
-import * as types from "@onflow/types";
+import * as t from "@onflow/types";
+import * as fcl from "@onflow/fcl";
+
 import { toFixedValue, withPrefix } from "./fixer";
 
 /**
@@ -48,6 +50,10 @@ export const reportMissing = (itemType = "items", found, required, prefix = "") 
   }
 };
 
+const throwTypeError = (msg) => {
+  throw new Error("Type Error: " + msg)
+}
+
 export const argType = (pair) => {
   const [_, type] = pair.split(":");
   return type;
@@ -55,18 +61,25 @@ export const argType = (pair) => {
 
 // Type Checker
 const isBasicNumType = (type) => {
-  return type.includes("Int") || type.includes("Word");
+  return type.startsWith("Int") || type.startsWith("UInt") || type.startsWith("Word");
 };
 
 const isFixedNumType = (type) => {
-  return type.includes("Fix64");
+  return type.startsWith("Fix64") || type.startsWith("UFix64");
 };
 
-const isBoolean = (type) => type;
+const isString = (type) => type === "String";
+const isCharacter = (type) => type === "Character";
+const isBoolean = (type) => type === "Bool";
+const isAddress = (type) => type === "Address";
+
+const isBasicType = (type) =>
+  isBasicNumType(type) || isString(type) || isCharacter(type) || isBoolean(type);
 
 const isArray = (type) => {
   const clearType = type.replace(/\s/g, "");
-  return clearType.startsWith("[") && clearType.endsWith("]");
+  const result = clearType.startsWith("[") && clearType.endsWith("]");
+  return result;
 };
 
 const isDictionary = (type) => {
@@ -74,74 +87,79 @@ const isDictionary = (type) => {
   return clearType.startsWith("{") && clearType.endsWith("}");
 };
 
+const isComplexType = (type) => isArray(type) || isDictionary(type);
+
 const getDictionaryTypes = (type) => type.replace(/[\s{}]/g, "").split(":");
+const getArrayType = (type) => type.replace(/[\s\[\]]/g, "");
 
 export const mapArgument = (type, value) => {
-  // TODO: add some validation, when wrong type is presented
   switch (true) {
-    case isBasicNumType(type): {
-      return {
-        type: types[type],
-        value,
-      };
+    case isBasicType(type): {
+      const result = fcl.arg(value, t[type]);
+      return result;
     }
 
     case isFixedNumType(type): {
-      return {
-        type: types[type],
-        value: toFixedValue(value),
-      };
+      // Try to parse value and throw if it fails
+      if (isNaN(parseFloat(value))) {
+        throwTypeError("Expected proper value for fixed type");
+      }
+      return fcl.arg(toFixedValue(value), t[type]);
     }
 
-    case type === "String" || type === "Character": {
-      return { type: types[type], value };
+    case isAddress(type): {
+      return fcl.arg(withPrefix(value), t[type]);
     }
 
-    case type === "Address": {
-      return {
-        type: types.Address,
-        value: withPrefix(value),
-      };
-    }
-
-    case type === "Bool": {
-      return {
-        type: types.Bool,
-        value,
-      };
-    }
-
-    // TODO: Fix this case
     case isArray(type): {
-      const arrayType = types.Array(types[type]);
-      return {
-        type: arrayType,
-        value,
-      };
+      const arrayType = getArrayType(type);
+
+      if (isComplexType(arrayType)) {
+        return fcl.arg(
+          value.map((v) => mapArgument(arrayType, v)),
+          t.Array(t[arrayType])
+        );
+      }
+
+      return fcl.arg(value, t.Array(t[arrayType]));
     }
 
     case isDictionary(type): {
       const [keyType, valueType] = getDictionaryTypes(type);
       const finalValue = [];
       for (let key in value) {
-        console.log(key, value[key])
         if (value.hasOwnProperty(key)) {
+          let resolvedValue;
+          if (isComplexType(valueType)) {
+            resolvedValue = mapArgument(valueType, value[key]);
+          } else {
+            resolvedValue = value[key];
+          }
+
           finalValue.push({
             key,
-            value: mapArgument(valueType, value[key]),
+            value: resolvedValue,
           });
         }
       }
-      return {
-        type: types.Dictionary({ key: keyType, value: valueType }),
-        value: finalValue,
-      };
+      return fcl.arg(finalValue, t.Dictionary({ key: t[keyType], value: t[valueType] }));
+    }
+
+    default: {
+      throw `${type} is not supported`;
     }
   }
 };
 
+export const assertType = (arg) => arg.xform.asArgument(arg.value);
+
 export const mapArguments = (schema = [], values) => {
-  return schema.map((type, i) => {
-    return mapArgument(type, values[i]);
+  if (values.length < schema.length) {
+    throw new Error("Not enough arguments");
+  }
+  return values.map((value, i) => {
+    const mapped = mapArgument(schema[i], value);
+    assertType(mapped);
+    return mapped;
   });
 };
