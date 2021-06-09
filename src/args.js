@@ -20,6 +20,25 @@ import * as t from "@onflow/types";
 import * as fcl from "@onflow/fcl";
 
 import { toFixedValue, withPrefix } from "./fixer";
+import { getTemplateInfo } from "./parser";
+import {
+  isBasicType,
+  isFixedNumType,
+  isAddress,
+  isArray,
+  isDictionary,
+  isComplexType,
+} from "./type-checker";
+
+
+const throwTypeError = (msg) => {
+  throw new Error("Type Error: " + msg);
+};
+
+export const argType = (pair) => pair.split(":")[1];
+
+export const getDictionaryTypes = (type) => type.replace(/[\s{}]/g, "").split(":");
+export const getArrayType = (type) => type.replace(/[\s[\]]/g, "");
 
 /**
  * Reports missing arguments.
@@ -50,53 +69,16 @@ export const reportMissing = (itemType = "items", found, required, prefix = "") 
   }
 };
 
-const throwTypeError = (msg) => {
-  throw new Error("Type Error: " + msg)
-}
-
-export const argType = (pair) => {
-  const [_, type] = pair.split(":");
-  return type;
-};
-
-// Type Checker
-const isBasicNumType = (type) => {
-  return type.startsWith("Int") || type.startsWith("UInt") || type.startsWith("Word");
-};
-
-const isFixedNumType = (type) => {
-  return type.startsWith("Fix64") || type.startsWith("UFix64");
-};
-
-const isString = (type) => type === "String";
-const isCharacter = (type) => type === "Character";
-const isBoolean = (type) => type === "Bool";
-const isAddress = (type) => type === "Address";
-
-const isBasicType = (type) =>
-  isBasicNumType(type) || isString(type) || isCharacter(type) || isBoolean(type);
-
-const isArray = (type) => {
-  const clearType = type.replace(/\s/g, "");
-  const result = clearType.startsWith("[") && clearType.endsWith("]");
-  return result;
-};
-
-const isDictionary = (type) => {
-  const clearType = type.replace(/\s/g, "");
-  return clearType.startsWith("{") && clearType.endsWith("}");
-};
-
-const isComplexType = (type) => isArray(type) || isDictionary(type);
-
-const getDictionaryTypes = (type) => type.replace(/[\s{}]/g, "").split(":");
-const getArrayType = (type) => type.replace(/[\s\[\]]/g, "");
-
+/**
+ * Map single argument to fcl.arg representation.
+ * @param {string} type - Cadence value type
+ * @param {any} value - actual value
+ * @returns any - mapped fcl.arg value
+ */
 export const mapArgument = (type, value) => {
   switch (true) {
     case isBasicType(type): {
-      const result = fcl.arg(value, t[type]);
-      return result;
+      return fcl.arg(value, t[type]);
     }
 
     case isFixedNumType(type): {
@@ -127,20 +109,20 @@ export const mapArgument = (type, value) => {
     case isDictionary(type): {
       const [keyType, valueType] = getDictionaryTypes(type);
       const finalValue = [];
-      for (let key in value) {
-        if (value.hasOwnProperty(key)) {
-          let resolvedValue;
-          if (isComplexType(valueType)) {
-            resolvedValue = mapArgument(valueType, value[key]);
-          } else {
-            resolvedValue = value[key];
-          }
-
-          finalValue.push({
-            key,
-            value: resolvedValue,
-          });
+      const keys = Object.keys(value);
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        let resolvedValue;
+        if (isComplexType(valueType)) {
+          resolvedValue = mapArgument(valueType, value[key]);
+        } else {
+          resolvedValue = value[key];
         }
+
+        finalValue.push({
+          key,
+          value: resolvedValue,
+        });
       }
       return fcl.arg(finalValue, t.Dictionary({ key: t[keyType], value: t[valueType] }));
     }
@@ -153,6 +135,12 @@ export const mapArgument = (type, value) => {
 
 export const assertType = (arg) => arg.xform.asArgument(arg.value);
 
+/**
+ * Map arguments with provided schema.
+ * @param {[string]} schema - array of Cadence value types
+ * @param {[any]} values - array of passed values
+ * @returns [any] - array of mapped fcl.arg values
+ */
 export const mapArguments = (schema = [], values) => {
   if (values.length < schema.length) {
     throw new Error("Not enough arguments");
@@ -162,4 +150,15 @@ export const mapArguments = (schema = [], values) => {
     assertType(mapped);
     return mapped;
   });
+};
+
+/**
+ * Map arguments via Cadence template.
+ * @param {[string]} code - Cadence template
+ * @param {[any]} values - array of values
+ * @returns [any] - array of mapped fcl.arg
+ */
+export const mapValuesToCode = (code, values = []) => {
+  const schema = getTemplateInfo(code).args.map(argType);
+  return mapArguments(schema, values);
 };
