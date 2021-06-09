@@ -1,3 +1,6 @@
+### 0.1.3 - 2021-06-10
+- Export mapArgument, mapArguments and mapValuesToCode methods.
+
 ### 0.1.2 -- 2021-06-02
 - Regenerated templates to remove unused import, which would trigger linter.
 
