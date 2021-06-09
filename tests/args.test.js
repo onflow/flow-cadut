@@ -182,7 +182,7 @@ describe("complex example", () => {
     const code = `pub fun main(a: Int, b: Address, c: [String], d: UFix64) { }`;
 
     const invoke = (args) => () => {
-      mapValuesToCode(code, args)
+      mapValuesToCode(code, args);
     };
 
     // Schema expects more parameters to be provided

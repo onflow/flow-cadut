@@ -30,7 +30,6 @@ import {
   isComplexType,
 } from "./type-checker";
 
-
 const throwTypeError = (msg) => {
   throw new Error("Type Error: " + msg);
 };
