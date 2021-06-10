@@ -1,3 +1,6 @@
+### 0.1.4 - 2021-06-11
+- Update regexp matchers to properly catch script and transaction arguments
+
 ### 0.1.3 - 2021-06-10
 - Export mapArgument, mapArguments and mapValuesToCode methods.
 
