@@ -23,6 +23,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "microbundle",
+    "watch": "microbundle watch",
     "lint": "eslint src",
     "prettify": "prettier --write {src,tests}/**/*.js {src,tests}/*.js",
     "test": "jest",
