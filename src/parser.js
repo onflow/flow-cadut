@@ -27,7 +27,9 @@ export const extract = (code, keyWord) => {
   const target = code
     .split(/\r\n|\n|\r/)
     .map(collapseSpaces)
-    .find((line) => line.includes(keyWord));
+    .find((line) => {
+      return new RegExp(keyWord, "g").test(line);
+    });
 
   if (target) {
     const match = target.match(/(?:\()(.*)(?:\))/);
@@ -43,11 +45,11 @@ export const extractSigners = (code) => {
 };
 
 export const extractScriptArguments = (code) => {
-  return extract(code, "fun main");
+  return extract(code, "fun\\s+main");
 };
 
 export const extractTransactionArguments = (code) => {
-  return extract(code, "transaction");
+  return extract(code, `transaction\\s*(?:\\()(.*)(?:\\))`);
 };
 
 export const extractContractName = (code) => {
@@ -64,8 +66,8 @@ export const extractContractName = (code) => {
 
 export const getTemplateInfo = (code) => {
   const contractMatcher = /\w+\s+contract\s+(\w*\s*)\w*/g;
-  const transactionMatcher = /transaction(\(\s*\))*\s*/g;
-  const scriptMatcher = /pub\s*fun\s*main\s*/g;
+  const transactionMatcher = /transaction\s*(\(\s*\))*\s*/g;
+  const scriptMatcher = /pub\s+fun\s+main\s*/g;
 
   if (transactionMatcher.test(code)) {
     const signers = extractSigners(code);

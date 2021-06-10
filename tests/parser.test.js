@@ -1,10 +1,11 @@
 import {
-  extract,
   extractContractName,
   getTemplateInfo,
   CONTRACT,
   SCRIPT,
   TRANSACTION,
+  extractTransactionArguments,
+  extractScriptArguments,
 } from "../src/parser";
 
 describe("parser", () => {
@@ -14,7 +15,7 @@ describe("parser", () => {
         log(a)
       }
     `;
-    const output = extract(input, "fun main");
+    const output = extractScriptArguments(input);
     expect(output.length).toBe(1);
   });
   test("extract transaction arguments - no arguments", () => {
@@ -25,8 +26,21 @@ describe("parser", () => {
         }
       }
     `;
-    const output = extract(input, "transaction");
+    const output = extractTransactionArguments(input);
     expect(output.length).toBe(0);
+  });
+
+  test("extract transaction arguments - keyword in comments", () => {
+    const input = ` // nothing here
+      // this is some basic transaction we want to send
+      transaction(a: Int) {
+        prepare(){
+          log("hello")
+        }
+      }
+    `;
+    const output = extractTransactionArguments(input);
+    expect(output.length).toBe(1);
   });
 });
 
