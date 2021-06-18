@@ -33,6 +33,14 @@ export const parseArgs = (argv) => {
   let branch = argv.branch;
 
   switch (argv._.length) {
+    // Case to pull from GitHub in "no flags" form
+    case 3: {
+      input = argv._[0];
+      branch = argv._[1];
+      output = argv._[2];
+      break;
+    }
+
     case 2: {
       input = argv._[0];
       output = argv._[1];
