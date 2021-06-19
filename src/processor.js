@@ -17,6 +17,7 @@
  */
 
 import fs from "fs";
+import path from "path";
 import { resolve } from "path";
 import Handlebars from "handlebars";
 import simpleGit from "simple-git";
@@ -42,10 +43,21 @@ const extractParams = (input, branch) => {
   return { folderPath, fetchUrl, branchValue };
 };
 
-const TEMP_REPO_FOLDER = "./temp-generator-repo";
+const TEMP_REPO_FOLDER = path.resolve(process.cwd(), "./temp-generator-repo");
 const clean = () => {
   fs.rmdirSync(TEMP_REPO_FOLDER, { recursive: true });
 };
+
+export const getBranchesList = (branches, remotes) => {
+  const mappedRemotes = remotes.map(item => item.name)
+  return branches.map((branch)=>{
+    if (branch.startsWith("remote")){
+      const sliceLength = `remotes/${remote}/`.length;
+      return branch.slice(sliceLength);
+    }
+    return branch
+  })
+}
 
 export const processGitRepo = async (input, output, branch, cliOptions = {}) => {
   const git = simpleGit({
@@ -57,16 +69,27 @@ export const processGitRepo = async (input, output, branch, cliOptions = {}) => 
 
   clean();
 
-  const options = ["--single-branch", "--depth", "1"];
+  const options = [];
   if (branch) {
     options.concat(["--branch", branch]);
   }
 
   await git.clone(fetchUrl, TEMP_REPO_FOLDER, options);
-  await processFolder(`${TEMP_REPO_FOLDER}/${folderPath}`, output, cliOptions );
+
+  const tempGit = simpleGit({
+    baseDir: TEMP_REPO_FOLDER,
+    binary: "git",
+  });
+
+  const list = await tempGit.branch(["--list", "--all"]);
+  const remotes = await tempGit.getRemotes();
+  console.log( list.all );
+  console.log(remotes)
+
+  // await processFolder(`${TEMP_REPO_FOLDER}/${folderPath}`, output, cliOptions );
 
   // Teardown
-  clean();
+  // clean();
 };
 
 export const processFolder = async (input, output, options = {}) => {

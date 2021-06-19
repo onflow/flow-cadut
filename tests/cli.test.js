@@ -1,4 +1,5 @@
 import { parseArgs } from "../src/cli";
+import {getBranchesList} from "../src/processor";
 
 const input = "./cadence";
 const output = "./generated";
@@ -56,3 +57,34 @@ describe("CLI parser", () => {
     expect(parsed.branch).toEqual(branch);
   });
 });
+
+describe("branch extractor", ()=>{
+  it("shall return empty list",()=>{
+    const branches = []
+    const remotes = []
+    const list = getBranchesList(branches, remotes);
+
+    expect(list.length).toBe(0)
+  })
+
+  it("shall return empty list",()=>{
+    const branches = [
+      'master',
+      'remotes/origin/feature/epochs',
+      'remotes/origin/feature/js-templates',
+      'remotes/origin/josh/freeze',
+      'remotes/origin/josh/test-on-testnet',
+      'remotes/origin/kan/staking-id-bench',
+      'remotes/origin/kan/test-on-testnet',
+      'remotes/origin/master',
+      'remotes/origin/max/js-test-tools',
+      'remotes/origin/max/storage-testing',
+      'remotes/origin/template-manifest-sample-values'
+    ]
+
+    const remotes = [ { name: 'origin' } ]
+    const list = getBranchesList(branches, remotes);
+
+    expect(list.length).toBe(branches.length)
+  })
+})
