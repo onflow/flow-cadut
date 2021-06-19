@@ -30,7 +30,8 @@ const isGitUrl = (input) => /https:\/\/github.com/.test(input);
 
 export const parseArgs = (argv) => {
   let input, output;
-  let branch = argv.branch;
+  const branch = argv.branch;
+  const dependency = argv.dependency;
 
   switch (argv._.length) {
     // Case to pull from GitHub in "no flags" form
@@ -62,7 +63,7 @@ export const parseArgs = (argv) => {
     output = argv._[1];
   }
 
-  return { input, output, branch };
+  return { input, output, branch, dependency };
 };
 
 export async function run(args) {
@@ -72,9 +73,10 @@ export async function run(args) {
     .alias("i", "input")
     .alias("o", "output")
     .alias("b", "branch")
+    .alias("d", "dependency")
     .default({ i: "./cadence", o: "./src/generated", dependency: "flow-js-testing" }).argv;
   // console.log(argv)
-  const { input, output, branch } = parseArgs(argv);
+  const { input, output, branch, dependency } = parseArgs(argv);
   console.log({ input, output, branch });
 
   if (isGitUrl(input)) {
