@@ -1,5 +1,5 @@
 import { parseArgs } from "../src/cli";
-import {getBranchesList} from "../src/processor";
+import {getBranchesList, getParamsFromUrl} from "../src/processor";
 
 const input = "./cadence";
 const output = "./generated";
@@ -58,33 +58,68 @@ describe("CLI parser", () => {
   });
 });
 
-describe("branch extractor", ()=>{
-  it("shall return empty list",()=>{
-    const branches = []
-    const remotes = []
+describe("branch extractor", () => {
+  it("shall return empty list", () => {
+    const branches = [];
+    const remotes = [];
     const list = getBranchesList(branches, remotes);
 
-    expect(list.length).toBe(0)
-  })
+    expect(list.length).toBe(0);
+  });
 
-  it("shall return empty list",()=>{
+  it("shall return empty list", () => {
     const branches = [
-      'master',
-      'remotes/origin/feature/epochs',
-      'remotes/origin/feature/js-templates',
-      'remotes/origin/josh/freeze',
-      'remotes/origin/josh/test-on-testnet',
-      'remotes/origin/kan/staking-id-bench',
-      'remotes/origin/kan/test-on-testnet',
-      'remotes/origin/master',
-      'remotes/origin/max/js-test-tools',
-      'remotes/origin/max/storage-testing',
-      'remotes/origin/template-manifest-sample-values'
-    ]
+      "master",
+      "remotes/origin/feature/epochs",
+      "remotes/origin/feature/js-templates",
+      "remotes/origin/josh/freeze",
+      "remotes/origin/josh/test-on-testnet",
+      "remotes/origin/kan/staking-id-bench",
+      "remotes/origin/kan/test-on-testnet",
+      "remotes/origin/master",
+      "remotes/origin/max/js-test-tools",
+      "remotes/origin/max/storage-testing",
+      "remotes/origin/template-manifest-sample-values",
+    ];
 
-    const remotes = [ { name: 'origin' } ]
+    const remotes = [{ name: "origin" }];
+    const list = getBranchesList(branches, remotes);
+    console.log({ list });
+    expect(list.length).toBe(branches.length);
+  });
+
+  it("shall return empty list", () => {
+    const branches = [
+      "master",
+      "remotes/origin/feature/epochs",
+      "remotes/origin/feature/js-templates",
+      "remotes/origin/josh/freeze",
+      "remotes/origin/josh/test-on-testnet",
+      "remotes/origin/kan/staking-id-bench",
+      "remotes/origin/kan/test-on-testnet",
+      "remotes/origin/master",
+      "remotes/origin/max/js-test-tools",
+      "remotes/origin/max/storage-testing",
+      "remotes/origin/template-manifest-sample-values",
+    ];
+
+    const remotes = [{ name: "origin" }];
     const list = getBranchesList(branches, remotes);
 
-    expect(list.length).toBe(branches.length)
-  })
-})
+    expect(list.length).toBe(branches.length);
+  });
+});
+
+describe("folder path extractor", () => {
+  test("simple test", () => {
+    const url = "https://github.com/onflow/flow-core-contracts/tree/feature/js-templates/contracts";
+    const expectedPath = "./contracts";
+    const expectedBranch = "feature/js-templates";
+
+    const branches = ["feature/js-templates"];
+    const result = getParamsFromUrl(url, branches);
+
+    expect(result.folderPath).toBe(expectedPath);
+    expect(result.branch).toBe(expectedBranch);
+  });
+});

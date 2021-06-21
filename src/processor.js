@@ -26,21 +26,16 @@ import { getSplitCharacter, trimAndSplit, underscoreToCamelCase } from "./string
 import { generateExports, getFilesList, readFile, writeFile } from "./file";
 import { getTemplateInfo, CONTRACT, SCRIPT, TRANSACTION, extractSigners } from "./parser";
 
-const extractParams = (input, branch) => {
+const getFetchUrl = (input) => {
   // eslint-disable-next-line no-useless-escape
   const groups = /(\w+:\/\/)(.+@)*([\w\d\.]+)(:[\d]+)?\/*(.*)/g.exec(input);
 
-  // TODO: use branch argument to get actual folder value
-
   const inputPath = groups[5];
   const inputBits = inputPath.split("/");
-  const pathBits = inputBits.slice(4);
-  const folderPath = pathBits.join("/");
 
   const [owner, repo] = inputBits;
-  const branchValue = inputBits[3];
-  const fetchUrl = `https://github.com/${owner}/${repo}`;
-  return { folderPath, fetchUrl, branchValue };
+  // TODO: use actual path with password and user
+  return `https://github.com/${owner}/${repo}`;
 };
 
 const TEMP_REPO_FOLDER = path.resolve(process.cwd(), "./temp-generator-repo");
@@ -49,15 +44,39 @@ const clean = () => {
 };
 
 export const getBranchesList = (branches, remotes) => {
-  const mappedRemotes = remotes.map(item => item.name)
-  return branches.map((branch)=>{
-    if (branch.startsWith("remote")){
-      const sliceLength = `remotes/${remote}/`.length;
-      return branch.slice(sliceLength);
+  const mappedRemotes = remotes.map((item) => item.name);
+
+  return branches.map((branch) => {
+    for (let i = 0; i < mappedRemotes.length; i++) {
+      const remote = mappedRemotes[i];
+      const suffix = `remotes/${remote}/`;
+      if (branch.startsWith(suffix)) {
+        const sliceLength = suffix.length;
+        return branch.slice(sliceLength);
+      }
     }
-    return branch
-  })
-}
+    return branch;
+  });
+};
+
+export const getParamsFromUrl = (url, branches) => {
+  for (let i = 0; i < branches.length; i++) {
+    const branch = branches[i];
+    const part = `tree/${branch}/`;
+    const index = url.indexOf(part);
+    if (index >= 0) {
+      return {
+        branch,
+        fetchUrl: url.slice(0, index - 1),
+        folderPath: `./${url.slice(index + part.length)}`,
+      };
+    }
+  }
+  return {
+    fetchUrl: url,
+    folderPath: "./",
+  };
+};
 
 export const processGitRepo = async (input, output, branch, cliOptions = {}) => {
   const git = simpleGit({
@@ -65,15 +84,14 @@ export const processGitRepo = async (input, output, branch, cliOptions = {}) => 
     binary: "git",
   });
 
-  const { fetchUrl, folderPath } = extractParams(input, branch);
+  const fetchUrl = getFetchUrl(input);
 
+  console.log("Preparing space");
   clean();
 
   const options = [];
-  if (branch) {
-    options.concat(["--branch", branch]);
-  }
 
+  console.log(`Cloning ${fetchUrl} repository to local machine`);
   await git.clone(fetchUrl, TEMP_REPO_FOLDER, options);
 
   const tempGit = simpleGit({
@@ -81,15 +99,26 @@ export const processGitRepo = async (input, output, branch, cliOptions = {}) => 
     binary: "git",
   });
 
-  const list = await tempGit.branch(["--list", "--all"]);
+  console.log("Extracting branch name and folder path from url");
+  const branchList = await tempGit.branch(["--list", "--all"]);
   const remotes = await tempGit.getRemotes();
-  console.log( list.all );
-  console.log(remotes)
+  const branches = getBranchesList(branchList.all, remotes);
+  const params = getParamsFromUrl(input, branches);
 
-  // await processFolder(`${TEMP_REPO_FOLDER}/${folderPath}`, output, cliOptions );
+  if (params.branch) {
+    console.log(`Branch name: ${params.branch}`);
+    console.log(`Check out ${params.branch} branch`);
+    tempGit.checkout(params.branch);
+  }
+
+  console.log("Processing Cadence template files");
+  await processFolder(`${TEMP_REPO_FOLDER}/${params.folderPath}`, output, cliOptions);
 
   // Teardown
-  // clean();
+  console.log("Cleaning up");
+  clean();
+
+  console.log("Done!");
 };
 
 export const processFolder = async (input, output, options = {}) => {
