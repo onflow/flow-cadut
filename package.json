@@ -35,7 +35,7 @@
     "flow-generate": "./bin/generate.js"
   },
   "dependencies": {
-    "@babel/preset-env": "^7.14.2",
+    "@babel/preset-env": "^7.14.5",
     "@onflow/config": "0.0.2",
     "@onflow/fcl": "^0.0.71",
     "@onflow/types": "^0.0.4",
@@ -49,6 +49,7 @@
   "devDependencies": {
     "@babel/cli": "^7.14.3",
     "@babel/core": "^7.14.3",
+    "babel-jest": "^26.6.3",
     "eslint": "^7.24.0",
     "eslint-plugin-jest": "^24.3.6",
     "jest": "^26.6.3",
@@ -80,9 +81,6 @@
     "coveragePathIgnorePatterns": [
       "/node_modules/"
     ],
-    "transform": {
-      ".js": "jest-esm-transformer"
-    },
     "testEnvironment": "node",
     "verbose": true
   },
@@ -94,10 +92,5 @@
     "singleQuote": false,
     "trailingComma": "es5",
     "tabWidth": 2
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ]
   }
 }
