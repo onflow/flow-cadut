@@ -77,7 +77,6 @@ export async function run(args) {
     .default({ i: "./cadence", o: "./src/generated", dependency: "flow-js-testing" }).argv;
   // console.log(argv)
   const { input, output, branch, dependency } = parseArgs(argv);
-  console.log({ input, output, branch });
 
   if (isGitUrl(input)) {
     await processGitRepo(input, output, branch, { dependency });
