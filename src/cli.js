@@ -17,8 +17,6 @@
  */
 
 import fs from "fs";
-import simpleGit from "simple-git";
-import yargs from "yargs";
 
 import { processFolder, processGitRepo } from "./processor";
 import "./templates";
@@ -30,7 +28,7 @@ const isGitUrl = (input) => /https:\/\/github.com/.test(input);
 
 export const parseArgs = (argv) => {
   let input, output;
-  const branch = argv.branch;
+  let branch = argv.branch;
   const dependency = argv.dependency;
 
   switch (argv._.length) {
