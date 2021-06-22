@@ -52,9 +52,13 @@ export const prepareInteraction = async (props, type) => {
  */
 
 export const executeScript = async (props) => {
-  const response = await prepareInteraction(props, "script");
-  console.log({ response });
-  return fcl.decode(response);
+  try {
+    const response = await prepareInteraction(props, "script");
+    //const result = await fcl.decode(response);
+    return [response, null];
+  } catch (e) {
+    return [null, e];
+  }
 };
 
 /**
