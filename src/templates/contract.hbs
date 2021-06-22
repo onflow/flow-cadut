@@ -1,10 +1,10 @@
-import { deployContract } from '{{ ixDependency }}'
-
 import {
   getEnvironment,
   replaceImportAddresses,
-  reportMissingImports
-} from 'flow-cadut'
+  reportMissingImports,
+  deployContract,
+  updateContract
+} from '{{ ixDependency }}'
 
 export const CODE = `
   {{{ code }}}

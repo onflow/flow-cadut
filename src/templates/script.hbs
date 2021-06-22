@@ -1,11 +1,10 @@
-import { executeScript } from '{{ ixDependency }}'
-
 import {
   getEnvironment,
   replaceImportAddresses,
   reportMissingImports,
-  reportMissing
-} from 'flow-cadut'
+  reportMissing,
+  executeScript
+} from '{{ ixDependency }}'
 
 export const CODE = `
   {{{ code }}}
@@ -28,10 +27,10 @@ export const {{ assetName }}Template = async (addressMap = {}) => {
   return replaceImportAddresses(CODE, fullMap);
 };
 
-export const  {{ assetName }} = async ({ addressMap = {}, args = [] }) => {
+export const {{ assetName }} = async ({ addressMap = {}, args = [] }) => {
   const code = await {{ assetName}}Template(addressMap);
 
-  reportMissing("arguments", args.length, {{ argsAmount }}, {{assetName}});
+  reportMissing("arguments", args.length, {{ argsAmount }}, "{{assetName}}");
 
   return executeScript({ code, args})
 }
