@@ -162,6 +162,11 @@ export const mapValuesToCode = (code, values = []) => {
   return mapArguments(schema, values);
 };
 
+export const unwrap = (arr, convert) => {
+  const type = arr[arr.length - 1];
+  return arr.slice(0, -1).map((value) => convert(value, type));
+};
+
 const rawArgs = (args) => {
   return args.reduce((acc, arg) => {
     const unwrapped = unwrap(arg, (value, type) => {
