@@ -72,7 +72,7 @@ export async function run(args) {
     .alias("o", "output")
     .alias("b", "branch")
     .alias("d", "dependency")
-    .default({ i: "./cadence", o: "./src/generated", dependency: "flow-js-testing" }).argv;
+    .default({ i: "./cadence", o: "./src/generated", dependency: "flow-cadut" }).argv;
   // console.log(argv)
   const { input, output, branch, dependency } = parseArgs(argv);
 
