@@ -6,10 +6,8 @@ import {
   executeScript
 } from '../../../../src'
 
-export const CODE = `
-  pub fun main(){
-    panic("Nope!")
-}
+export const CODE = ` 
+  pub fun main(): String { panic("Uh oh!") }
 `;
 
 /**
@@ -32,7 +30,7 @@ export const panicTemplate = async (addressMap = {}) => {
 export const panic = async ({ addressMap = {}, args = [] }) => {
   const code = await panicTemplate(addressMap);
 
-  reportMissing("arguments", args.length, 0, panic);
+  reportMissing("arguments", args.length, 0, `panic =>`);
 
   return executeScript({ code, args})
 }

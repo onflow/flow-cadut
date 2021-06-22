@@ -30,10 +30,10 @@ export const basicTemplate = async (addressMap = {}) => {
   return replaceImportAddresses(CODE, fullMap);
 };
 
-export const  basic = async ({ addressMap = {}, args = [] }) => {
+export const basic = async ({ addressMap = {}, args = [] }) => {
   const code = await basicTemplate(addressMap);
 
-  reportMissing("arguments", args.length, 1, basic);
+  reportMissing("arguments", args.length, 1, `basic =>`);
 
   return executeScript({ code, args})
 }
