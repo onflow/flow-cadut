@@ -30,7 +30,7 @@ export const {{ assetName }}Template = async (addressMap = {}) => {
 export const {{ assetName }} = async ({ addressMap = {}, args = [] }) => {
   const code = await {{ assetName}}Template(addressMap);
 
-  reportMissing("arguments", args.length, {{ argsAmount }}, "{{assetName}}");
+  reportMissing("arguments", args.length, {{ argsAmount }}, `{{ name }} =>`);
 
   return executeScript({ code, args})
 }

@@ -109,15 +109,15 @@ templates['script'] = template({"compiler":[8,">= 4.3.0"],"main":function(contai
     + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":17,"column":13},"end":{"line":17,"column":28}}}) : helper)))
     + "Template = async (addressMap = {}) => {\n  const envMap = await getEnvironment();\n  const fullMap = {\n  ...envMap,\n  ...addressMap,\n  };\n\n  // If there are any missing imports in fullMap it will be reported via console\n  reportMissingImports(CODE, fullMap, `"
     + alias4(((helper = (helper = lookupProperty(helpers,"name") || (depth0 != null ? lookupProperty(depth0,"name") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data,"loc":{"start":{"line":25,"column":39},"end":{"line":25,"column":49}}}) : helper)))
-    + " =>`)\n\n  return replaceImportAddresses(CODE, fullMap);\n};\n\nexport const  "
-    + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":30,"column":14},"end":{"line":30,"column":29}}}) : helper)))
+    + " =>`)\n\n  return replaceImportAddresses(CODE, fullMap);\n};\n\nexport const "
+    + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":30,"column":13},"end":{"line":30,"column":28}}}) : helper)))
     + " = async ({ addressMap = {}, args = [] }) => {\n  const code = await "
     + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":31,"column":21},"end":{"line":31,"column":35}}}) : helper)))
     + "Template(addressMap);\n\n  reportMissing(\"arguments\", args.length, "
     + alias4(((helper = (helper = lookupProperty(helpers,"argsAmount") || (depth0 != null ? lookupProperty(depth0,"argsAmount") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"argsAmount","hash":{},"data":data,"loc":{"start":{"line":33,"column":42},"end":{"line":33,"column":58}}}) : helper)))
-    + ", "
-    + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":33,"column":60},"end":{"line":33,"column":73}}}) : helper)))
-    + ");\n\n  return executeScript({ code, args})\n}";
+    + ", `"
+    + alias4(((helper = (helper = lookupProperty(helpers,"name") || (depth0 != null ? lookupProperty(depth0,"name") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data,"loc":{"start":{"line":33,"column":61},"end":{"line":33,"column":71}}}) : helper)))
+    + " =>`);\n\n  return executeScript({ code, args})\n}";
 },"useData":true});
 templates['transaction'] = template({"compiler":[8,">= 4.3.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.hooks.helperMissing, alias3="function", alias4=container.escapeExpression, lookupProperty = container.lookupProperty || function(parent, propertyName) {
@@ -139,19 +139,19 @@ templates['transaction'] = template({"compiler":[8,">= 4.3.0"],"main":function(c
     + alias4(((helper = (helper = lookupProperty(helpers,"name") || (depth0 != null ? lookupProperty(depth0,"name") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data,"loc":{"start":{"line":25,"column":39},"end":{"line":25,"column":49}}}) : helper)))
     + " =>`)\n\n  return replaceImportAddresses(CODE, fullMap);\n};\n\n\n/**\n* Sends "
     + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":32,"column":8},"end":{"line":32,"column":23}}}) : helper)))
-    + " transaction to the network\n* @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value\n* @param Array<*> args - list of arguments\n* @param Array<string> - list of signers\n*/\nexport const  "
-    + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":37,"column":14},"end":{"line":37,"column":29}}}) : helper)))
+    + " transaction to the network\n* @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value\n* @param Array<*> args - list of arguments\n* @param Array<string> - list of signers\n*/\nexport const "
+    + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":37,"column":13},"end":{"line":37,"column":28}}}) : helper)))
     + " = async ({ addressMap = {}, args = [], signers = [] }) => {\n  const code = await "
     + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":38,"column":21},"end":{"line":38,"column":35}}}) : helper)))
     + "Template(addressMap);\n\n  reportMissing(\"arguments\", args.length, "
     + alias4(((helper = (helper = lookupProperty(helpers,"argsAmount") || (depth0 != null ? lookupProperty(depth0,"argsAmount") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"argsAmount","hash":{},"data":data,"loc":{"start":{"line":40,"column":42},"end":{"line":40,"column":58}}}) : helper)))
-    + ", "
-    + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":40,"column":60},"end":{"line":40,"column":73}}}) : helper)))
-    + ");\n  reportMissing(\"signers\", signers.length, "
+    + ", `"
+    + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":40,"column":61},"end":{"line":40,"column":76}}}) : helper)))
+    + " =>`);\n  reportMissing(\"signers\", signers.length, "
     + alias4(((helper = (helper = lookupProperty(helpers,"signersAmount") || (depth0 != null ? lookupProperty(depth0,"signersAmount") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"signersAmount","hash":{},"data":data,"loc":{"start":{"line":41,"column":43},"end":{"line":41,"column":62}}}) : helper)))
-    + ", "
-    + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":41,"column":64},"end":{"line":41,"column":77}}}) : helper)))
-    + ");\n\n  return sendTransaction({ code, args, signers })\n}";
+    + ", `"
+    + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":41,"column":65},"end":{"line":41,"column":80}}}) : helper)))
+    + " =>`);\n\n  return sendTransaction({ code, args, signers })\n}";
 },"useData":true});
 templates['version'] = template({"compiler":[8,">= 4.3.0"],"main":function(container,depth0,helpers,partials,data) {
     var helper, lookupProperty = container.lookupProperty || function(parent, propertyName) {
