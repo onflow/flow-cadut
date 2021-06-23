@@ -3,17 +3,19 @@ import {
   replaceImportAddresses,
   reportMissingImports,
   reportMissing,
-  executeScript
+  sendTransaction
 } from '../../../../src'
 
 export const CODE = `
-  pub fun main(){
-    panic("Nope!")
+  transaction{
+    prepare(signer: AuthAccount){
+        panic("Uh-oh!")
+    }
 }
 `;
 
 /**
-* Method to generate cadence code for TestAsset
+* Method to generate cadence code for panic transaction
 * @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
 */
 export const panicTemplate = async (addressMap = {}) => {
@@ -29,10 +31,18 @@ export const panicTemplate = async (addressMap = {}) => {
   return replaceImportAddresses(CODE, fullMap);
 };
 
-export const panic = async ({ addressMap = {}, args = [] }) => {
+
+/**
+* Sends panic transaction to the network
+* @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
+* @param Array<*> args - list of arguments
+* @param Array<string> - list of signers
+*/
+export const panic = async ({ addressMap = {}, args = [], signers = [] }) => {
   const code = await panicTemplate(addressMap);
 
-  reportMissing("arguments", args.length, 1, `panic =>`);
+  reportMissing("arguments", args.length, 0, `panic =>`);
+  reportMissing("signers", signers.length, 1, `panic =>`);
 
-  return executeScript({ code, args})
+  return sendTransaction({ code, args, signers })
 }
