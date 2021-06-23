@@ -54,10 +54,10 @@ export const prepareInteraction = async (props, type) => {
 export const executeScript = async (props) => {
   try {
     const response = await prepareInteraction(props, "script");
-    //const result = await fcl.decode(response);
-    return [response, null];
+    const result = await fcl.decode(response);
+    return [result, null];
   } catch (e) {
-    return [null, e];
+    return [null, e.message];
   }
 };
 
@@ -65,8 +65,17 @@ export const executeScript = async (props) => {
  * Submits transaction to emulator network and waits before it will be sealed.
  * Returns transaction result.
  */
-export const sendTransaction = async (props) => {
-  return prepareInteraction(props, "transaction");
+export const sendTransaction = async (props, waitForExecution = true) => {
+  try {
+    const response = await prepareInteraction(props, "transaction");
+    if (waitForExecution) {
+      const txResult = fcl.tx(response).onceExecuted();
+      return [txResult, null];
+    }
+    return [response, null];
+  } catch (e) {
+    return [null, e.message];
+  }
 };
 
 // TODO: Implement contract interactions
