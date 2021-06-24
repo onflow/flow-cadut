@@ -34,7 +34,14 @@ const throwTypeError = (msg) => {
   throw new Error("Type Error: " + msg);
 };
 
-export const argType = (pair) => pair.split(":")[1];
+export const splitArgs = (pair) => {
+  return pair
+    .split(/(\w+)\s*:\s*([\w\{\}\[\]:\s]*)/)
+    .filter((item) => item !== "")
+    .map((item) => item.replace(/\s*/g, ""));
+};
+
+export const argType = (pair) => splitArgs(pair)[1];
 
 export const getDictionaryTypes = (type) => type.replace(/[\s{}]/g, "").split(":");
 export const getArrayType = (type) => type.replace(/[\s[\]]/g, "");
@@ -153,7 +160,7 @@ export const mapArguments = (schema = [], values) => {
 
 /**
  * Map arguments via Cadence template.
- * @param {[string]} code - Cadence template
+ * @param {string} code - Cadence template
  * @param {[any]} values - array of values
  * @returns [any] - array of mapped fcl.arg
  */
