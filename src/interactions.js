@@ -37,9 +37,10 @@ export const prepareInteraction = async (props, type) => {
   if (type === "transaction") {
     const { proposer, payer, signers = [] } = props;
     const ixSigners = signers.length === 0 ? [payer] : signers;
+    const ixProposer = proposer || payer;
 
     ix.push(fcl.payer(payer));
-    ix.push(fcl.proposer(proposer));
+    ix.push(fcl.proposer(ixProposer));
     ix.push(fcl.authorizations(ixSigners));
   }
 
@@ -69,7 +70,7 @@ export const sendTransaction = async (props, waitForExecution = true) => {
   try {
     const response = await prepareInteraction(props, "transaction");
     if (waitForExecution) {
-      const txResult = fcl.tx(response).onceExecuted();
+      const txResult = await fcl.tx(response).onceExecuted();
       return [txResult, null];
     }
     return [response, null];
@@ -116,15 +117,14 @@ export const deployContract = async (props) => {
 
   const hexedCode = hexContract(contractCode);
   const args = mapValuesToCode(template, [name, hexedCode]);
-
   // Set roles
-  let ixProposer = to
-  let ixPayer = to
-  let ixSigners = [to]
+  let ixProposer = to;
+  let ixPayer = to;
+  let ixSigners = [to];
 
-  if (payer){
-    ixPayer = payer
-    ixProposer = proposer || payer
+  if (payer) {
+    ixPayer = payer;
+    ixProposer = proposer || payer;
   }
 
   return sendTransaction({
