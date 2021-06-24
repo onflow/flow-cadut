@@ -1,3 +1,5 @@
+/** pragma type script **/
+
 import {
   getEnvironment,
   replaceImportAddresses,

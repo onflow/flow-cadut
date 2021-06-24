@@ -1,3 +1,5 @@
+/** pragma type transaction **/
+
 import {
   getEnvironment,
   replaceImportAddresses,
@@ -34,15 +36,16 @@ export const panicTemplate = async (addressMap = {}) => {
 
 /**
 * Sends panic transaction to the network
-* @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
-* @param Array<*> args - list of arguments
-* @param Array<string> - list of signers
+* @param {Object.<string, string>} props.addressMap - contract name as a key and address where it's deployed as value
+* @param Array<*> props.args - list of arguments
+* @param Array<*> props.signers - list of signers
 */
-export const panic = async ({ addressMap = {}, args = [], signers = [] }) => {
+export const panic = async (props) => {
+  const { addressMap, args, signers } = props;
   const code = await panicTemplate(addressMap);
 
   reportMissing("arguments", args.length, 0, `panic =>`);
   reportMissing("signers", signers.length, 1, `panic =>`);
 
-  return sendTransaction({ code, args, signers })
+  return sendTransaction({code, ...props})
 }

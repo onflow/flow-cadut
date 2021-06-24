@@ -1,3 +1,5 @@
+/** pragma type transaction **/
+
 import {
   getEnvironment,
   replaceImportAddresses,
@@ -34,15 +36,16 @@ export const logTemplate = async (addressMap = {}) => {
 
 /**
 * Sends log transaction to the network
-* @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
-* @param Array<*> args - list of arguments
-* @param Array<string> - list of signers
+* @param {Object.<string, string>} props.addressMap - contract name as a key and address where it's deployed as value
+* @param Array<*> props.args - list of arguments
+* @param Array<*> props.signers - list of signers
 */
-export const log = async ({ addressMap = {}, args = [], signers = [] }) => {
+export const log = async (props) => {
+  const { addressMap, args, signers } = props;
   const code = await logTemplate(addressMap);
 
   reportMissing("arguments", args.length, 0, `log =>`);
   reportMissing("signers", signers.length, 1, `log =>`);
 
-  return sendTransaction({ code, args, signers })
+  return sendTransaction({code, ...props})
 }

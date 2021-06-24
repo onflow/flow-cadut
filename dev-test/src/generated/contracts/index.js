@@ -1,6 +1,6 @@
-import { BasicTemplate, Basic } from "./Basic";
+import { BasicTemplate, deployBasic } from "./Basic";
 
 export default {
-  Basic,
   BasicTemplate,
+  deployBasic,
 };

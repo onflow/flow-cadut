@@ -1,9 +1,10 @@
+/** pragma type contract **/
+
 import {
   getEnvironment,
   replaceImportAddresses,
   reportMissingImports,
   deployContract,
-  updateContract
 } from '../../../../src'
 
 export const CODE = `
@@ -40,7 +41,7 @@ export const BasicTemplate = async (addressMap = {}) => {
 * @param Array<*> args - list of arguments
 * param Array<string> - list of signers
 */
-export const  Basic = async ({ addressMap = {}, args = [], to, update = false }) => {
+export const  deployBasic = async ({ addressMap = {}, args = [], to, update = false }) => {
   const code = await BasicTemplate(addressMap);
   const name = "Basic"
 

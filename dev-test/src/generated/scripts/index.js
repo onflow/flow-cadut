@@ -4,12 +4,12 @@ import { metadataTemplate, metadata } from "./metadata";
 import { panicTemplate, panic } from "./panic";
 
 export default {
-  basic,
   basicTemplate,
-  log,
+  basic,
   logTemplate,
-  metadata,
+  log,
   metadataTemplate,
-  panic,
+  metadata,
   panicTemplate,
+  panic,
 };
