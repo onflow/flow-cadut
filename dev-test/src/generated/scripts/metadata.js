@@ -7,8 +7,9 @@ import {
 } from '../../../../src'
 
 export const CODE = `
-  pub fun main(){
-    panic("Nope!")
+  pub fun main(metadata: {String:String}): String{
+    let name = metadata["name"]!
+    return name
 }
 `;
 
@@ -16,7 +17,7 @@ export const CODE = `
 * Method to generate cadence code for TestAsset
 * @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
 */
-export const panicTemplate = async (addressMap = {}) => {
+export const metadataTemplate = async (addressMap = {}) => {
   const envMap = await getEnvironment();
   const fullMap = {
   ...envMap,
@@ -24,15 +25,15 @@ export const panicTemplate = async (addressMap = {}) => {
   };
 
   // If there are any missing imports in fullMap it will be reported via console
-  reportMissingImports(CODE, fullMap, `panic =>`)
+  reportMissingImports(CODE, fullMap, `metadata =>`)
 
   return replaceImportAddresses(CODE, fullMap);
 };
 
-export const panic = async ({ addressMap = {}, args = [] }) => {
-  const code = await panicTemplate(addressMap);
+export const metadata = async ({ addressMap = {}, args = [] }) => {
+  const code = await metadataTemplate(addressMap);
 
-  reportMissing("arguments", args.length, 0, `panic =>`);
+  reportMissing("arguments", args.length, 1, `metadata =>`);
 
   return executeScript({ code, args})
 }

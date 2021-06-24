@@ -33,7 +33,7 @@ export const basicTemplate = async (addressMap = {}) => {
 export const basic = async ({ addressMap = {}, args = [] }) => {
   const code = await basicTemplate(addressMap);
 
-  reportMissing("arguments", args.length, 1, `basic =>`);
+  reportMissing("arguments", args.length, 0, `basic =>`);
 
   return executeScript({ code, args})
 }
