@@ -29,7 +29,8 @@
     "test": "jest",
     "check-headers": "sh ./check-headers.sh",
     "prepublishOnly": "npm test && npm run build",
-    "precompile-handlebars": "node_modules/.bin/handlebars src/templates -f ./src/templates/index.js -e hbs -c handlebars"
+    "precompile-handlebars": "node_modules/.bin/handlebars src/templates -f ./src/templates/index.js -e hbs -c handlebars",
+    "regenerate-dev": "npm run precompile-handlebars && flow-generate ./dev-test/cadence ./dev-test/src/generated -d ../../../../src"
   },
   "bin": {
     "flow-generate": "./bin/generate.js"
