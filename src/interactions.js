@@ -17,7 +17,7 @@
  */
 
 import * as fcl from "@onflow/fcl";
-import { resolveArguments } from "./args";
+import { mapValuesToCode, resolveArguments } from "./args";
 import { replaceImportAddresses } from "./imports";
 
 export const prepareInteraction = async (props, type) => {
@@ -78,11 +78,64 @@ export const sendTransaction = async (props, waitForExecution = true) => {
   }
 };
 
-// TODO: Implement contract interactions
+// TODO: add arguments for "init" method into template
+export const addContractTemplate = `
+    transaction(name: String, code: String) {
+      prepare(acct: AuthAccount){
+        let decoded = code.decodeHex()
+        
+        acct.contracts.add(
+          name: name,
+          code: decoded,
+        )
+      }
+    }
+  `;
+export const updateContractTemplate = `
+  transaction(name: String, code: String){
+    prepare(acct: AuthAccount){
+      let decoded = code.decodeHex()
+      
+      if acct.contracts.get(name: name) == nil {
+        acct.contracts.add(name: name, code: decoded)
+      } else {
+        acct.contracts.update__experimental(name: name, code: decoded)
+      }
+    }
+  }
+`;
+
+// TODO: add jsdoc
+export const hexContract = (contract) => Buffer.from(contract, "utf8").toString("hex");
+
 export const deployContract = async (props) => {
-  throw new Error("not implemented");
+  const { name, to, payer, proposer, update = false, code: contractCode, args: initArgs } = props;
+
+  // TODO: Implement arguments for "init" method
+  const template = update ? addContractTemplate : updateContractTemplate;
+
+  const hexedCode = hexContract(contractCode);
+  const args = mapValuesToCode(template, [name, hexedCode]);
+
+  // Set roles
+  let ixProposer = to
+  let ixPayer = to
+  let ixSigners = [to]
+
+  if (payer){
+    ixPayer = payer
+    ixProposer = proposer || payer
+  }
+
+  return sendTransaction({
+    payer: ixPayer,
+    proposer: ixProposer,
+    signers: ixSigners,
+    code: template,
+    args,
+  });
 };
 
 export const updateContract = async (props) => {
-  throw new Error("not implemented");
+  return deployContract({ ...props, update: true });
 };
