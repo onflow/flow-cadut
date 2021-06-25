@@ -11,6 +11,7 @@ import { init } from "./utils";
   console.log({ result, err });
    */
 
+  /*
   // Deploy Basic contract
   const code = await flow.contracts.BasicTemplate()
   console.log({code})
@@ -22,5 +23,12 @@ import { init } from "./utils";
     code,
   });
   console.log({ result, err });
+  */
 
+  // Query Basic
+  const addressMap = {
+    Basic: "0xf8d6e0586b0a20c7",
+  };
+  const [result, err] = await flow.scripts.basic({ addressMap });
+  console.log({ result, err });
 })();
