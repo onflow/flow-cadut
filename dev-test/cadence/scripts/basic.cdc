@@ -1,4 +1,5 @@
-pub fun main(): Int{
-    log("This works")
-    return 42
+import Basic from 0x1
+
+pub fun main(): String{
+    return Basic.message
 }
