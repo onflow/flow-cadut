@@ -30,7 +30,8 @@
     "check-headers": "sh ./check-headers.sh",
     "prepublishOnly": "npm test && npm run build",
     "precompile-handlebars": "node_modules/.bin/handlebars src/templates -f ./src/templates/index.js -e hbs -c handlebars",
-    "regenerate-dev": "npm run precompile-handlebars && flow-generate ./dev-test/cadence ./dev-test/src/generated -d ../../../../src"
+    "generate-dev": "flow-generate ./dev-test/cadence ./dev-test/src/generated -d ../../../../src",
+    "regenerate-test": "npm run precompile-handlebars && npm run generate-dev"
   },
   "bin": {
     "flow-generate": "./bin/generate.js"
