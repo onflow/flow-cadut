@@ -32,10 +32,11 @@ export const metadataTemplate = async (addressMap = {}) => {
   return replaceImportAddresses(CODE, fullMap);
 };
 
-export const metadata = async ({ addressMap = {}, args = [] }) => {
+export const metadata = async (props) => {
+  const { addressMap = {}, args = [] } = props
   const code = await metadataTemplate(addressMap);
 
   reportMissing("arguments", args.length, 1, `metadata =>`);
 
-  return executeScript({ code, args})
+  return executeScript({code, ...props})
 }

@@ -9,9 +9,10 @@ import {
 } from '../../../../src'
 
 export const CODE = `
-  pub fun main(): Int{
-    log("This works")
-    return 42
+  import Basic from 0x1
+
+pub fun main(): String{
+    return Basic.message
 }
 `;
 
@@ -32,10 +33,11 @@ export const basicTemplate = async (addressMap = {}) => {
   return replaceImportAddresses(CODE, fullMap);
 };
 
-export const basic = async ({ addressMap = {}, args = [] }) => {
+export const basic = async (props) => {
+  const { addressMap = {}, args = [] } = props
   const code = await basicTemplate(addressMap);
 
   reportMissing("arguments", args.length, 0, `basic =>`);
 
-  return executeScript({ code, args})
+  return executeScript({code, ...props})
 }

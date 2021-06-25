@@ -32,10 +32,11 @@ export const logTemplate = async (addressMap = {}) => {
   return replaceImportAddresses(CODE, fullMap);
 };
 
-export const log = async ({ addressMap = {}, args = [] }) => {
+export const log = async (props) => {
+  const { addressMap = {}, args = [] } = props
   const code = await logTemplate(addressMap);
 
   reportMissing("arguments", args.length, 1, `log =>`);
 
-  return executeScript({ code, args})
+  return executeScript({code, ...props})
 }

@@ -31,10 +31,11 @@ export const panicTemplate = async (addressMap = {}) => {
   return replaceImportAddresses(CODE, fullMap);
 };
 
-export const panic = async ({ addressMap = {}, args = [] }) => {
+export const panic = async (props) => {
+  const { addressMap = {}, args = [] } = props
   const code = await panicTemplate(addressMap);
 
   reportMissing("arguments", args.length, 0, `panic =>`);
 
-  return executeScript({ code, args})
+  return executeScript({code, ...props})
 }
