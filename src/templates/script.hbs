@@ -29,10 +29,11 @@ export const {{ assetName }}Template = async (addressMap = {}) => {
   return replaceImportAddresses(CODE, fullMap);
 };
 
-export const {{ assetName }} = async ({ addressMap = {}, args = [] }) => {
+export const {{ assetName }} = async (props) => {
+  const { addressMap = {}, args = [] } = props
   const code = await {{ assetName}}Template(addressMap);
 
   reportMissing("arguments", args.length, {{ argsAmount }}, `{{ name }} =>`);
 
-  return executeScript({ code, args})
+  return executeScript({code, ...props})
 }
