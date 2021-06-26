@@ -34,7 +34,14 @@ const throwTypeError = (msg) => {
   throw new Error("Type Error: " + msg);
 };
 
-export const argType = (pair) => pair.split(":")[1];
+export const splitArgs = (pair) => {
+  return pair
+    .split(/(\w+)\s*:\s*([\w{}[\]:\s]*)/)
+    .filter((item) => item !== "")
+    .map((item) => item.replace(/\s*/g, ""));
+};
+
+export const argType = (pair) => splitArgs(pair)[1];
 
 export const getDictionaryTypes = (type) => type.replace(/[\s{}]/g, "").split(":");
 export const getArrayType = (type) => type.replace(/[\s[\]]/g, "");
@@ -153,11 +160,44 @@ export const mapArguments = (schema = [], values) => {
 
 /**
  * Map arguments via Cadence template.
- * @param {[string]} code - Cadence template
+ * @param {string} code - Cadence template
  * @param {[any]} values - array of values
  * @returns [any] - array of mapped fcl.arg
  */
 export const mapValuesToCode = (code, values = []) => {
   const schema = getTemplateInfo(code).args.map(argType);
   return mapArguments(schema, values);
+};
+
+export const unwrap = (arr, convert) => {
+  const type = arr[arr.length - 1];
+  return arr.slice(0, -1).map((value) => convert(value, type));
+};
+
+const rawArgs = (args) => {
+  return args.reduce((acc, arg) => {
+    const unwrapped = unwrap(arg, (value, type) => {
+      return fcl.arg(value, type);
+    });
+    acc = [...acc, ...unwrapped];
+    return acc;
+  }, []);
+};
+
+export const resolveArguments = (args, code) => {
+  if (args.length === 0) {
+    return [];
+  }
+
+  // We can check first element in array. If it's last value is instance
+  // of @onflow/types then we assume that the rest of them are also unprocessed
+  const first = args[0];
+  if (Array.isArray(first)) {
+    const last = first[first.length - 1];
+    if (last.asArgument) {
+      return rawArgs(args);
+    }
+  }
+  // Otherwise we process them and try to match them against the code
+  return mapValuesToCode(code, args);
 };

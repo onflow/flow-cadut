@@ -9,6 +9,16 @@ import {
 } from "../src/parser";
 
 describe("parser", () => {
+  test("extract script arguments - no arguments", () => {
+    const input = `
+      pub fun main(){
+        log(a)
+      }
+    `;
+    const output = extractScriptArguments(input);
+    expect(output.length).toBe(0);
+  });
+
   test("extract script arguments", () => {
     const input = `
       pub fun main(a: Int){
@@ -18,6 +28,18 @@ describe("parser", () => {
     const output = extractScriptArguments(input);
     expect(output.length).toBe(1);
   });
+
+  test("extract script arguments - complex arguments", () => {
+    const input = `
+      pub fun main(metadata: {String:String}){
+        log(a)
+      }
+    `;
+    const output = extractScriptArguments(input);
+    expect(output.length).toBe(1);
+  });
+
+
   test("extract transaction arguments - no arguments", () => {
     const input = `
       transaction {

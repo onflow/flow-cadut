@@ -1,6 +1,6 @@
 {
   "name": "flow-cadut",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Flow Cadence Template Utilities",
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
@@ -29,30 +29,35 @@
     "test": "jest",
     "check-headers": "sh ./check-headers.sh",
     "prepublishOnly": "npm test && npm run build",
-    "precompile-handlebars": "node_modules/.bin/handlebars src/templates -f ./src/templates/index.js -e hbs -c handlebars"
+    "precompile-handlebars": "node_modules/.bin/handlebars src/templates -f ./src/templates/index.js -e hbs -c handlebars",
+    "generate-dev": "flow-generate ./dev-test/cadence ./dev-test/src/generated -d ../../../../src",
+    "regenerate-test": "npm run precompile-handlebars && npm run generate-dev"
   },
   "bin": {
     "flow-generate": "./bin/generate.js"
   },
   "dependencies": {
-    "@babel/preset-env": "^7.14.2",
+    "@babel/preset-env": "^7.14.5",
     "@onflow/config": "0.0.2",
     "@onflow/fcl": "^0.0.71",
     "@onflow/types": "^0.0.4",
     "esm": "^3.2.25",
     "handlebars": "^4.7.7",
-    "handlebars-loader": "^1.7.1"
+    "handlebars-loader": "^1.7.1",
+    "rimraf": "^3.0.2",
+    "simple-git": "^2.40.0",
+    "yargs": "^15.4.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.3",
     "@babel/core": "^7.14.3",
+    "babel-jest": "^26.6.3",
     "eslint": "^7.24.0",
     "eslint-plugin-jest": "^24.3.6",
     "jest": "^26.6.3",
     "jest-esm-transformer": "^1.0.0",
     "microbundle": "^0.13.0",
-    "prettier": "^2.3.0",
-    "yargs": "^15.4.1"
+    "prettier": "^2.3.0"
   },
   "eslintConfig": {
     "ignorePatterns": [
@@ -78,9 +83,6 @@
     "coveragePathIgnorePatterns": [
       "/node_modules/"
     ],
-    "transform": {
-      ".js": "jest-esm-transformer"
-    },
     "testEnvironment": "node",
     "verbose": true
   },
@@ -92,10 +94,5 @@
     "singleQuote": false,
     "trailingComma": "es5",
     "tabWidth": 2
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ]
   }
 }

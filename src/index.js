@@ -44,4 +44,6 @@ export {
   capitalizeFirstLetter,
 } from "./strings";
 
+export { executeScript, sendTransaction, deployContract, updateContract } from "./interactions";
+
 export { processFolder } from "./processor";

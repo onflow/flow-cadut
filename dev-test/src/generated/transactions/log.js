@@ -6,17 +6,21 @@ import {
   reportMissingImports,
   reportMissing,
   sendTransaction
-} from '{{ ixDependency }}'
+} from '../../../../src'
 
 export const CODE = `
-  {{{ code }}}
+  transaction{
+    prepare(signer: AuthAccount){
+        log(signer.address)
+    }
+}
 `;
 
 /**
-* Method to generate cadence code for {{ assetName }} transaction
+* Method to generate cadence code for log transaction
 * @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
 */
-export const {{ assetName }}Template = async (addressMap = {}) => {
+export const logTemplate = async (addressMap = {}) => {
   const envMap = await getEnvironment();
   const fullMap = {
   ...envMap,
@@ -24,24 +28,24 @@ export const {{ assetName }}Template = async (addressMap = {}) => {
   };
 
   // If there are any missing imports in fullMap it will be reported via console
-  reportMissingImports(CODE, fullMap, `{{ name }} =>`)
+  reportMissingImports(CODE, fullMap, `log =>`)
 
   return replaceImportAddresses(CODE, fullMap);
 };
 
 
 /**
-* Sends {{ assetName }} transaction to the network
+* Sends log transaction to the network
 * @param {Object.<string, string>} props.addressMap - contract name as a key and address where it's deployed as value
 * @param Array<*> props.args - list of arguments
 * @param Array<*> props.signers - list of signers
 */
-export const {{ assetName }} = async (props) => {
+export const log = async (props) => {
   const { addressMap, args = [], signers = [] } = props;
-  const code = await {{ assetName}}Template(addressMap);
+  const code = await logTemplate(addressMap);
 
-  reportMissing("arguments", args.length, {{ argsAmount }}, `{{ assetName }} =>`);
-  reportMissing("signers", signers.length, {{ signersAmount }}, `{{ assetName }} =>`);
+  reportMissing("arguments", args.length, 0, `log =>`);
+  reportMissing("signers", signers.length, 1, `log =>`);
 
   return sendTransaction({code, ...props})
 }

@@ -1,3 +1,10 @@
+### 0.1.5 - 2021-06-27
+- Removed `flow-js-testing` dependency
+- Refactored code generation for all types of interactions
+- Added support for contract templates
+- Added tests for main functionality
+- Updated `flow-generate` CLI. Added GitHub support and flags.
+
 ### 0.1.4 - 2021-06-11
 - Update regexp matchers to properly catch script and transaction arguments
 

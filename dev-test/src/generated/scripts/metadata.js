@@ -6,17 +6,20 @@ import {
   reportMissingImports,
   reportMissing,
   executeScript
-} from '{{ ixDependency }}'
+} from '../../../../src'
 
 export const CODE = `
-  {{{ code }}}
+  pub fun main(metadata: {String:String}): String{
+    let name = metadata["name"]!
+    return name
+}
 `;
 
 /**
 * Method to generate cadence code for TestAsset
 * @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
 */
-export const {{ assetName }}Template = async (addressMap = {}) => {
+export const metadataTemplate = async (addressMap = {}) => {
   const envMap = await getEnvironment();
   const fullMap = {
   ...envMap,
@@ -24,16 +27,16 @@ export const {{ assetName }}Template = async (addressMap = {}) => {
   };
 
   // If there are any missing imports in fullMap it will be reported via console
-  reportMissingImports(CODE, fullMap, `{{ name }} =>`)
+  reportMissingImports(CODE, fullMap, `metadata =>`)
 
   return replaceImportAddresses(CODE, fullMap);
 };
 
-export const {{ assetName }} = async (props) => {
+export const metadata = async (props) => {
   const { addressMap = {}, args = [] } = props
-  const code = await {{ assetName}}Template(addressMap);
+  const code = await metadataTemplate(addressMap);
 
-  reportMissing("arguments", args.length, {{ argsAmount }}, `{{ name }} =>`);
+  reportMissing("arguments", args.length, 1, `metadata =>`);
 
   return executeScript({code, ...props})
 }

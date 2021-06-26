@@ -2,6 +2,39 @@ import { mapArgument, mapArguments, argType, mapValuesToCode } from "../src/args
 import { toFixedValue, withPrefix } from "../src/fixer";
 import { getTemplateInfo } from "../src/parser";
 
+describe("argument types", ()=>{
+  test("Basic Type", async ()=>{
+    const input = "a: Int"
+    const expected = "Int"
+    const output = argType(input)
+    expect(output).toBe(expected)
+  })
+  test("Dictionary", async ()=>{
+    const input = "metadata       : {String:     String}"
+    const expected = "{String:String}"
+    const output = argType(input)
+    expect(output).toBe(expected)
+  })
+  test("Array", async ()=>{
+    const input = "list: [String]"
+    const expected = "[String]"
+    const output = argType(input)
+    expect(output).toBe(expected)
+  })
+  test("Array of Dictionaries", async ()=>{
+    const input = "list: [{String :   String      }]"
+    const expected = "[{String:String}]"
+    const output = argType(input)
+    expect(output).toBe(expected)
+  })
+  test("Dictionary of Arrays", async ()=>{
+    const input = "metadata: {UFix64:[String]}"
+    const expected = "{UFix64:[String]}"
+    const output = argType(input)
+    expect(output).toBe(expected)
+  })
+})
+
 describe("simple map", () => {
   test("Int", async () => {
     const type = "Int";
@@ -11,7 +44,6 @@ describe("simple map", () => {
     expect(output.xform.label).toBe(type);
     expect(output.value).toBe(input);
   });
-
   test("UInt", async () => {
     const type = "UInt";
     const input = 42;
@@ -28,7 +60,6 @@ describe("simple map", () => {
     expect(output.xform.label).toBe(type);
     expect(output.value).toBe(toFixedValue(input));
   });
-
   test("UFix", async () => {
     const type = "UFix64";
     const input = 1.337;
@@ -37,7 +68,6 @@ describe("simple map", () => {
     expect(output.xform.label).toBe(type);
     expect(output.value).toBe(toFixedValue(input));
   });
-
   test("String", async () => {
     const type = "String";
     const input = "Hello, Cadence";
@@ -46,7 +76,6 @@ describe("simple map", () => {
     expect(output.xform.label).toBe(type);
     expect(output.value).toBe(toFixedValue(input));
   });
-
   test("Character", async () => {
     const type = "Character";
     const input = "a";
@@ -55,7 +84,6 @@ describe("simple map", () => {
     expect(output.xform.label).toBe(type);
     expect(output.value).toBe(toFixedValue(input));
   });
-
   test("Bool", async () => {
     const type = "Bool";
     const input = true;
@@ -64,7 +92,6 @@ describe("simple map", () => {
     expect(output.xform.label).toBe(type);
     expect(output.value).toBe(input);
   });
-
   test("Address - with prefix", async () => {
     const type = "Address";
     const input = "0x01";
@@ -73,7 +100,6 @@ describe("simple map", () => {
     expect(output.xform.label).toBe(type);
     expect(output.value).toBe(input);
   });
-
   test("Address - no prefix", async () => {
     const type = "Address";
     const input = "01";
@@ -82,7 +108,6 @@ describe("simple map", () => {
     expect(output.xform.label).toBe(type);
     expect(output.value).toBe(withPrefix(input));
   });
-
   test("Array - of Int", async () => {
     const type = "[Int]";
     const input = [1, 2, 3, 4, 5];
@@ -91,7 +116,6 @@ describe("simple map", () => {
     expect(output.xform.label).toBe("Array");
     expect(output.value.length).toBe(5);
   });
-
   test("Dictionary - {String: String}", async () => {
     const type = "{String: String}";
     const input = {
@@ -109,9 +133,8 @@ describe("simple map", () => {
     expect(output.value[1].key).toBe("surname");
     expect(output.value[1].value).toBe("Hunter");
   });
-
   test("Dictionary - {String: UFix64}", async () => {
-    const type = "{String: String}";
+    const type = "{String: UFix64}";
     const input = {
       balance: "1.337",
     };
@@ -122,9 +145,8 @@ describe("simple map", () => {
     expect(output.value[0].key).toBe("balance");
     expect(output.value[0].value).toBe("1.337");
   });
-
   test("Array of Dictionaries - [{String: UFix64}]", async () => {
-    const type = "[{String: String}]";
+    const type = "[{String: UFix64}]";
     const input = [
       {
         balance: "1.337",
@@ -137,7 +159,6 @@ describe("simple map", () => {
     expect(output.value[0].value[0].key).toBe("balance");
     expect(output.value[0].value[0].value).toBe("1.337");
   });
-
   test("Dictionaries of Arrays  - {String: [String]}", async () => {
     const type = "{String: String}";
     const input = {

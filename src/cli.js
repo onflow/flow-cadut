@@ -16,11 +16,70 @@
  * limitations under the License.
  */
 
-import { processFolder } from "./processor";
+import fs from "fs";
+
+import { processFolder, processGitRepo } from "./processor";
 import "./templates";
+
+// Initially we will support only GitHub repos
+// TODO: support other urls. List can be found here:
+// https://stackoverflow.com/questions/2514859/regular-expression-for-git-repository
+const isGitUrl = (input) => /https:\/\/github.com/.test(input);
+
+export const parseArgs = (argv) => {
+  let input, output;
+  let branch = argv.branch;
+  const dependency = argv.dependency;
+
+  switch (argv._.length) {
+    // Case to pull from GitHub in "no flags" form
+    case 3: {
+      input = argv._[0];
+      branch = argv._[1];
+      output = argv._[2];
+      break;
+    }
+
+    case 2: {
+      input = argv._[0];
+      output = argv._[1];
+      break;
+    }
+    case 1: {
+      input = argv._[0];
+      output = argv.output;
+      break;
+    }
+    default: {
+      input = argv.input;
+      output = argv.output;
+    }
+  }
+
+  if (argv._.length === 2) {
+    input = argv._[0];
+    output = argv._[1];
+  }
+
+  return { input, output, branch, dependency };
+};
 
 export async function run(args) {
   const hideBin = args.slice(2);
-  const [input, output, ixDependency] = hideBin;
-  await processFolder(input, output, { ixDependency });
+
+  const argv = require("yargs/yargs")(hideBin)
+    .alias("i", "input")
+    .alias("o", "output")
+    .alias("b", "branch")
+    .alias("d", "dependency")
+    .default({ i: "./cadence", o: "./src/generated", dependency: "flow-cadut" }).argv;
+  // console.log(argv)
+  const { input, output, branch, dependency } = parseArgs(argv);
+
+  if (isGitUrl(input)) {
+    await processGitRepo(input, output, branch, { dependency });
+  } else {
+    fs.rmdirSync(output, { recursive: true });
+    await processFolder(input, output, { dependency });
+  }
 }

@@ -90,18 +90,29 @@ export const generateExports = async (dir, template) => {
       } else {
         const camelCased = underscoreToCamelCase(entity.name);
         const fileName = sansExtension(camelCased);
-        acc.files.push(fileName);
+
+        const contractPragma = "/** pragma type contract **/";
+
+        if (entity.isFile()) {
+          const filePath = resolve(dir, entity.name);
+          const content = fs.readFileSync(filePath, "utf8");
+          if (content.includes(contractPragma)) {
+            acc.contracts.push(fileName);
+          } else {
+            acc.files.push(fileName);
+          }
+        }
       }
       return acc;
     },
-    { folderNames: [], folders: [], files: [] }
+    { folderNames: [], folders: [], files: [], contracts: [] }
   );
 
   currentFolder.name = dir;
-
   const packageData = template({
     folders: currentFolder.folderNames,
     files: currentFolder.files,
+    contracts: currentFolder.contracts,
   });
   writeFile(`${dir}/index.js`, prettify(packageData));
 
