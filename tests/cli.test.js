@@ -67,7 +67,7 @@ describe("branch extractor", () => {
     expect(list.length).toBe(0);
   });
 
-  it("shall return empty list", () => {
+  it("shall return formatted list of branches", () => {
     const branches = [
       "master",
       "remotes/origin/feature/epochs",
@@ -84,28 +84,6 @@ describe("branch extractor", () => {
 
     const remotes = [{ name: "origin" }];
     const list = getBranchesList(branches, remotes);
-    console.log({ list });
-    expect(list.length).toBe(branches.length);
-  });
-
-  it("shall return empty list", () => {
-    const branches = [
-      "master",
-      "remotes/origin/feature/epochs",
-      "remotes/origin/feature/js-templates",
-      "remotes/origin/josh/freeze",
-      "remotes/origin/josh/test-on-testnet",
-      "remotes/origin/kan/staking-id-bench",
-      "remotes/origin/kan/test-on-testnet",
-      "remotes/origin/master",
-      "remotes/origin/max/js-test-tools",
-      "remotes/origin/max/storage-testing",
-      "remotes/origin/template-manifest-sample-values",
-    ];
-
-    const remotes = [{ name: "origin" }];
-    const list = getBranchesList(branches, remotes);
-
     expect(list.length).toBe(branches.length);
   });
 });

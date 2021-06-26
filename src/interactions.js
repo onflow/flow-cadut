@@ -17,7 +17,7 @@
  */
 
 import * as fcl from "@onflow/fcl";
-import { mapValuesToCode, resolveArguments } from "./args";
+import { resolveArguments } from "./args";
 import { replaceImportAddresses } from "./imports";
 
 export const prepareInteraction = async (props, type) => {
@@ -110,7 +110,7 @@ export const updateContractTemplate = `
 export const hexContract = (contract) => Buffer.from(contract, "utf8").toString("hex");
 
 export const deployContract = async (props) => {
-  const { name, to, payer, proposer, update = false, code: contractCode, args: initArgs } = props;
+  const { name, to, payer, proposer, update = false, code: contractCode } = props;
 
   // TODO: Implement arguments for "init" method
   const template = update ? addContractTemplate : updateContractTemplate;

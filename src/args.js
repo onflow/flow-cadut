@@ -36,7 +36,7 @@ const throwTypeError = (msg) => {
 
 export const splitArgs = (pair) => {
   return pair
-    .split(/(\w+)\s*:\s*([\w\{\}\[\]:\s]*)/)
+    .split(/(\w+)\s*:\s*([\w{}[\]:\s]*)/)
     .filter((item) => item !== "")
     .map((item) => item.replace(/\s*/g, ""));
 };
