@@ -41,9 +41,10 @@ export const BasicTemplate = async (addressMap = {}) => {
 * @param Array<*> args - list of arguments
 * param Array<string> - list of signers
 */
-export const  deployBasic = async ({ addressMap = {}, args = [], to, update = false }) => {
+export const  deployBasic = async (props) => {
+  const { addressMap = {} } = props;
   const code = await BasicTemplate(addressMap);
   const name = "Basic"
 
-  return deployContract({ code, args, to, update, name })
+  return deployContract({ code, name, ...props })
 }

@@ -41,7 +41,7 @@ export const panicTemplate = async (addressMap = {}) => {
 * @param Array<*> props.signers - list of signers
 */
 export const panic = async (props) => {
-  const { addressMap, args, signers } = props;
+  const { addressMap, args = [], signers = [] } = props;
   const code = await panicTemplate(addressMap);
 
   reportMissing("arguments", args.length, 0, `panic =>`);

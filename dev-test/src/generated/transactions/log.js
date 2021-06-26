@@ -41,7 +41,7 @@ export const logTemplate = async (addressMap = {}) => {
 * @param Array<*> props.signers - list of signers
 */
 export const log = async (props) => {
-  const { addressMap, args, signers } = props;
+  const { addressMap, args = [], signers = [] } = props;
   const code = await logTemplate(addressMap);
 
   reportMissing("arguments", args.length, 0, `log =>`);
