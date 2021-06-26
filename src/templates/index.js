@@ -41,11 +41,11 @@ templates['contract'] = template({"compiler":[8,">= 4.3.0"],"main":function(cont
     + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":33,"column":10},"end":{"line":33,"column":25}}}) : helper)))
     + " transaction to the network\n* @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value\n* @param Array<*> args - list of arguments\n* param Array<string> - list of signers\n*/\nexport const  deploy"
     + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":38,"column":20},"end":{"line":38,"column":35}}}) : helper)))
-    + " = async ({ addressMap = {}, args = [], to, update = false }) => {\n  const code = await "
-    + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":39,"column":21},"end":{"line":39,"column":36}}}) : helper)))
+    + " = async (props) => {\n  const { addressMap = {} } = props;\n  const code = await "
+    + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":40,"column":21},"end":{"line":40,"column":36}}}) : helper)))
     + "Template(addressMap);\n  const name = \""
-    + alias4(((helper = (helper = lookupProperty(helpers,"contractName") || (depth0 != null ? lookupProperty(depth0,"contractName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"contractName","hash":{},"data":data,"loc":{"start":{"line":40,"column":16},"end":{"line":40,"column":34}}}) : helper)))
-    + "\"\n\n  return deployContract({ code, args, to, update, name })\n}";
+    + alias4(((helper = (helper = lookupProperty(helpers,"contractName") || (depth0 != null ? lookupProperty(depth0,"contractName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"contractName","hash":{},"data":data,"loc":{"start":{"line":41,"column":16},"end":{"line":41,"column":34}}}) : helper)))
+    + "\"\n\n  return deployContract({ code, name, ...props })\n}";
 },"useData":true});
 templates['package'] = template({"1":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
@@ -162,7 +162,7 @@ templates['transaction'] = template({"compiler":[8,">= 4.3.0"],"main":function(c
     + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":34,"column":8},"end":{"line":34,"column":23}}}) : helper)))
     + " transaction to the network\n* @param {Object.<string, string>} props.addressMap - contract name as a key and address where it's deployed as value\n* @param Array<*> props.args - list of arguments\n* @param Array<*> props.signers - list of signers\n*/\nexport const "
     + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":39,"column":13},"end":{"line":39,"column":28}}}) : helper)))
-    + " = async (props) => {\n  const { addressMap, args, signers } = props;\n  const code = await "
+    + " = async (props) => {\n  const { addressMap, args = [], signers = [] } = props;\n  const code = await "
     + alias4(((helper = (helper = lookupProperty(helpers,"assetName") || (depth0 != null ? lookupProperty(depth0,"assetName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"assetName","hash":{},"data":data,"loc":{"start":{"line":41,"column":21},"end":{"line":41,"column":35}}}) : helper)))
     + "Template(addressMap);\n\n  reportMissing(\"arguments\", args.length, "
     + alias4(((helper = (helper = lookupProperty(helpers,"argsAmount") || (depth0 != null ? lookupProperty(depth0,"argsAmount") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"argsAmount","hash":{},"data":data,"loc":{"start":{"line":43,"column":42},"end":{"line":43,"column":58}}}) : helper)))

@@ -37,7 +37,7 @@ export const {{ assetName }}Template = async (addressMap = {}) => {
 * @param Array<*> props.signers - list of signers
 */
 export const {{ assetName }} = async (props) => {
-  const { addressMap, args, signers } = props;
+  const { addressMap, args = [], signers = [] } = props;
   const code = await {{ assetName}}Template(addressMap);
 
   reportMissing("arguments", args.length, {{ argsAmount }}, `{{ assetName }} =>`);
