@@ -2,38 +2,45 @@ import { mapArgument, mapArguments, argType, mapValuesToCode } from "../src/args
 import { toFixedValue, withPrefix } from "../src/fixer";
 import { getTemplateInfo } from "../src/parser";
 
-describe("argument types", ()=>{
-  test("Basic Type", async ()=>{
-    const input = "a: Int"
-    const expected = "Int"
-    const output = argType(input)
-    expect(output).toBe(expected)
-  })
-  test("Dictionary", async ()=>{
-    const input = "metadata       : {String:     String}"
-    const expected = "{String:String}"
-    const output = argType(input)
-    expect(output).toBe(expected)
-  })
-  test("Array", async ()=>{
-    const input = "list: [String]"
-    const expected = "[String]"
-    const output = argType(input)
-    expect(output).toBe(expected)
-  })
-  test("Array of Dictionaries", async ()=>{
-    const input = "list: [{String :   String      }]"
-    const expected = "[{String:String}]"
-    const output = argType(input)
-    expect(output).toBe(expected)
-  })
-  test("Dictionary of Arrays", async ()=>{
-    const input = "metadata: {UFix64:[String]}"
-    const expected = "{UFix64:[String]}"
-    const output = argType(input)
-    expect(output).toBe(expected)
-  })
-})
+describe("argument types", () => {
+  test("Basic Type", async () => {
+    const input = "a: Int";
+    const expected = "Int";
+    const output = argType(input);
+    expect(output).toBe(expected);
+  });
+  test("Dictionary", async () => {
+    const input = "metadata       : {String:     String}";
+    const expected = "{String:String}";
+    const output = argType(input);
+    expect(output).toBe(expected);
+  });
+  test("Array", async () => {
+    const input = "list: [String]";
+    const expected = "[String]";
+    const output = argType(input);
+    expect(output).toBe(expected);
+  });
+  test("Array of Dictionaries", async () => {
+    const input = "list: [{String :   String      }]";
+    const expected = "[{String:String}]";
+    const output = argType(input);
+    expect(output).toBe(expected);
+  });
+  test("Dictionary of Arrays", async () => {
+    const input = "metadata: {UFix64:[String]}";
+    const expected = "{UFix64:[String]}";
+    const output = argType(input);
+    expect(output).toBe(expected);
+  });
+
+  test("Nested Arrays", async () => {
+    const input = "listOfLists: [[String]]";
+    const expected = "[[String]]";
+    const output = argType(input);
+    expect(output).toBe(expected);
+  });
+});
 
 describe("simple map", () => {
   test("Int", async () => {
@@ -173,6 +180,16 @@ describe("simple map", () => {
     expect(output.value[0].value[0]).toBe("Alice");
     expect(output.value[0].value[1]).toBe("Bob");
     expect(output.value[0].value[2]).toBe("Charlie");
+  });
+
+  test("Nested Array - [[String]]", async () => {
+    const type = "[[String]]";
+    const input = [["Cadence"]];
+    const output = mapArgument(type, input);
+    expect(output.xform.label).toBe("Array");
+    expect(output.value.length).toBe(input.length);
+    expect(output.value[0].length).toBe(input[0].length);
+    expect(output.value[0][0]).toBe(input[0][0]);
   });
 });
 
