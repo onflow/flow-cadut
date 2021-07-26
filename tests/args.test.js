@@ -216,11 +216,10 @@ describe("mapArgument", () => {
       },
     ];
     const output = mapArgument(type, input);
-
+    
     expect(output.xform.label).toBe("Array");
     expect(output.value.length).toBe(input.length);
-    expect(output.value[0].value[0].key).toBe("balance");
-    expect(output.value[0].value[0].value).toBe("1.337");
+    expect(output.value[0].balance).toBe(input[0].balance);
   });
   test("Dictionaries of Arrays  - {String: [String]}", async () => {
     const type = "{String: String}";
@@ -244,9 +243,8 @@ describe("mapArgument", () => {
     const output = mapArgument(type, input);
 
     expect(output.xform.label).toBe("Array");
-    expect(output.value.length).toBe(input.length);
-    expect(output.value[0].value.length).toBe(input[0].length);
-    expect(output.value[0].value[0]).toBe(input[0][0]);
+    expect(output.value[0].length).toBe(input[0].length);
+    expect(output.value[0][0]).toBe(input[0][0]);
   });
 });
 
