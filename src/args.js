@@ -43,8 +43,18 @@ export const splitArgs = (pair) => {
 
 export const argType = (pair) => splitArgs(pair)[1];
 
-export const getDictionaryTypes = (type) => type.replace(/[\s{}]/g, "").split(":");
-export const getArrayType = (type) => type.replace(/[\s[\]]/g, "");
+export const getDictionaryTypes = (type) => {
+  const match = /{(.*)}/.exec(type);
+  return match[1]
+    .split(/([^:]*):(.*)/)
+    .map((item) => item.replace(/\s/g, ""))
+    .filter((item) => item);
+};
+
+export const getArrayType = (type) => {
+  const match = /\[(.*)\]/.exec(type);
+  return match[1];
+};
 
 /**
  * Reports missing arguments.
@@ -75,6 +85,25 @@ export const reportMissing = (itemType = "items", found, required, prefix = "") 
   }
 };
 
+export const resolveType = (type) => {
+  if (isComplexType(type)) {
+    switch (true) {
+      case isArray(type): {
+        const arrayType = getArrayType(type);
+        let finalType = t[arrayType];
+        if (isArray(arrayType)) {
+          finalType = resolveType(arrayType);
+        }
+        return t.Array(finalType);
+      }
+      default:
+        return t[type];
+    }
+  }
+
+  return t[type];
+};
+
 /**
  * Map single argument to fcl.arg representation.
  * @param {string} type - Cadence value type
@@ -101,15 +130,17 @@ export const mapArgument = (type, value) => {
 
     case isArray(type): {
       const arrayType = getArrayType(type);
+      const resolvedType = resolveType(type);
 
       if (isComplexType(arrayType)) {
         return fcl.arg(
-          value.map((v) => mapArgument(arrayType, v)),
-          t.Array(t[arrayType])
+          value,
+          // value.map((v) => mapArgument(arrayType, v)),
+          resolvedType
         );
       }
 
-      return fcl.arg(value, t.Array(t[arrayType]));
+      return fcl.arg(value, resolvedType);
     }
 
     case isDictionary(type): {
