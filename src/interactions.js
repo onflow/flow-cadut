@@ -116,7 +116,7 @@ export const deployContract = async (props) => {
   const template = update ? addContractTemplate : updateContractTemplate;
 
   const hexedCode = hexContract(contractCode);
-  const args = [name, hexedCode]
+  const args = [name, hexedCode];
   // Set roles
   let ixProposer = to;
   let ixPayer = to;
@@ -132,7 +132,7 @@ export const deployContract = async (props) => {
     proposer: ixProposer,
     signers: ixSigners,
     code: template,
-    args
+    args,
   });
 };
 

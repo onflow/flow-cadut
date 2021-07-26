@@ -39,7 +39,6 @@ describe("parser", () => {
     expect(output.length).toBe(1);
   });
 
-
   test("extract transaction arguments - no arguments", () => {
     const input = `
       transaction {

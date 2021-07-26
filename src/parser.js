@@ -35,7 +35,7 @@ export const extract = (code, keyWord) => {
     const match = target.match(/(?:\()(.*)(?:\))/);
     if (match) {
       if (match[1] === "") {
-        return []
+        return [];
       }
       return match[1].split(",").map((item) => item.replace(/\s*/g, ""));
     }
