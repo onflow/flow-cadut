@@ -1,4 +1,4 @@
-import { mapArgument, mapArguments, argType, mapValuesToCode } from "../src/args";
+import { mapArgument, mapArguments, argType, mapValuesToCode, resolveType } from "../src/args";
 import { toFixedValue, withPrefix } from "../src/fixer";
 import { getTemplateInfo } from "../src/parser";
 
@@ -42,7 +42,63 @@ describe("argument types", () => {
   });
 });
 
-describe("simple map", () => {
+describe("type resolvers", () => {
+  test("basic type - Address", () => {
+    const cases = [
+      {
+        type: "Address",
+        argInput: "0x11",
+      },
+      {
+        type: "String",
+        argInput: "Cadence",
+      },
+      {
+        type: "Int",
+        argInput: 42,
+      },
+      {
+        type: "UFix64",
+        argInput: "0.1337",
+      },
+      {
+        type: "Bool",
+        argInput: true,
+      },
+    ];
+
+    for (let i = 0; i < cases.length; i++) {
+      const { type, argInput } = cases[i];
+      const output = resolveType(type);
+      const asArgument = output.asArgument(argInput);
+
+      expect(asArgument.type).toBe(type);
+      expect(asArgument.value.toString()).toBe(argInput.toString());
+    }
+  });
+  test("simple array = [String]", () => {
+    const input = "[String]";
+    const output = resolveType(input);
+    const argInput = ["Cadence"];
+    const asArgument = output.asArgument(argInput);
+
+    expect(output.label).toBe("Array");
+    expect(asArgument.value[0].type).toBe("String");
+    expect(asArgument.value[0].value).toBe(argInput[0]);
+  });
+  test("nested array - [[String]]", () => {
+    const input = "[[String]]";
+    const output = resolveType(input);
+    const argInput = [["Cadence"]];
+    const asArgument = output.asArgument(argInput);
+
+    expect(output.label).toBe("Array");
+    expect(asArgument.value[0].type).toBe("Array");
+    expect(asArgument.value[0].value.length).toBe(argInput[0].length);
+  });
+});
+
+describe("mapArgument", () => {
   test("Int", async () => {
     const type = "Int";
     const input = 42;
@@ -186,10 +242,11 @@ describe("simple map", () => {
     const type = "[[String]]";
     const input = [["Cadence"]];
     const output = mapArgument(type, input);
+
     expect(output.xform.label).toBe("Array");
     expect(output.value.length).toBe(input.length);
-    expect(output.value[0].length).toBe(input[0].length);
-    expect(output.value[0][0]).toBe(input[0][0]);
+    expect(output.value[0].value.length).toBe(input[0].length);
+    expect(output.value[0].value[0]).toBe(input[0][0]);
   });
 });
 
@@ -242,5 +299,24 @@ describe("complex example", () => {
     expect(invoke([42, "0x01", ["Hello"], "hello"])).toThrow(
       "Type Error: Expected proper value for fixed type"
     );
+  });
+});
+
+describe("mapValuesToCode", () => {
+  test("nested array", () => {
+    const code = `
+      pub fun main(list: [[Int]]){
+        log(list)
+      }
+    `;
+    const values = [[[1, 3, 3, 7]]];
+    const result = mapValuesToCode(code, values);
+    const [first] = result;
+
+    expect(first.xform.label).toBe("Array");
+    expect(first.value[0].length).toBe(values[0][0].length);
+    for (let i = 0; i < values[0][0].length; i++) {
+      expect(first.value[0][i]).toBe(values[0][0][i]);
+    }
   });
 });
