@@ -37,6 +37,8 @@ export {
 
 export { reportArguments, reportMissing, mapArguments, mapArgument, mapValuesToCode } from "./args";
 
+export { getTemplateInfo } from "./parser";
+
 export {
   trimAndSplit,
   underscoreToCamelCase,

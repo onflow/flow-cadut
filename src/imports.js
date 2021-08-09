@@ -50,7 +50,7 @@ export const extractImports = (code) => {
  * @param {string} code - template cadence code
  * @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
  */
-export const missingImports = (code, addressMap) => {
+export const missingImports = (code, addressMap = {}) => {
   const importsList = extractImports(code);
   const missing = [];
 
