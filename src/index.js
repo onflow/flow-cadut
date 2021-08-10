@@ -35,11 +35,32 @@ export {
   replaceImportAddresses,
 } from "./imports";
 
-export { reportArguments, reportMissing, mapArguments, mapArgument, mapValuesToCode } from "./args";
-
-export { getTemplateInfo } from "./parser";
+export {
+  reportArguments,
+  reportMissing,
+  mapArguments,
+  mapArgument,
+  mapValuesToCode,
+  splitArgs,
+  argType,
+  getDictionaryTypes,
+  getArrayType
+} from "./args";
 
 export {
+  extract,
+  extractSigners,
+  extractScriptArguments,
+  extractTransactionArguments,
+  extractContractName,
+  getTemplateInfo,
+  CONTRACT,
+  TRANSACTION,
+  SCRIPT,
+} from "./parser";
+
+export {
+  collapseSpaces,
   trimAndSplit,
   underscoreToCamelCase,
   getSplitCharacter,
@@ -48,4 +69,4 @@ export {
 
 export { executeScript, sendTransaction, deployContract, updateContract } from "./interactions";
 
-export { processFolder } from "./processor";
+export { processFolder, processGitRepo } from "./processor";
