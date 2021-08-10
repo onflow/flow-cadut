@@ -1,3 +1,5 @@
+import path from "path";
+
 import {
   // files
   sansExtension,
@@ -25,12 +27,14 @@ import {
   getArrayType,
 } from "../src";
 
-describe("documentation examples", function () {
+import { processGitRepo, processFolder } from "../src";
+import "../src/templates";
 
+describe("documentation examples", function () {
   // Files
-  it("should strip extension from filename", function() {
+  it("should strip extension from filename", function () {
     const fileName = sansExtension("log-message-and-return.cdc");
-    expect(fileName).toBe("log-message-and-return")
+    expect(fileName).toBe("log-message-and-return");
   });
 
   // Imports
@@ -300,4 +304,20 @@ describe("documentation examples", function () {
     expect(simpleType).toBe("String");
     expect(complexType).toBe("{String:String}");
   });
+
+  // Generator
+  // This block is commented out for CI to work properly
+  /*
+  it("should generate files from local folder", async function () {
+    const input = path.resolve("./tests/cadence");
+    const output = path.resolve("./tests/generated/localRegistry");
+    await processFolder(input, output);
+  });
+
+  it("should generate files from github", async function () {
+    const url = "https://github.com/onflow/flow-core-contracts";
+    const output = path.resolve("./tests/generated/remoteRegistry");
+    await processGitRepo(url, output);
+  });
+   */
 });
