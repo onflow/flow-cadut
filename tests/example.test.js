@@ -1,6 +1,39 @@
-import { extractImports, missingImports, report, replaceImportAddresses } from "../src";
+import {
+  // files
+  sansExtension,
+  // imports
+  extractImports,
+  missingImports,
+  report,
+  replaceImportAddresses,
+  // arguments
+  mapArgument,
+  mapArguments,
+  mapValuesToCode,
+  // parser
+  CONTRACT,
+  TRANSACTION,
+  SCRIPT,
+  getTemplateInfo,
+  extractSigners,
+  extractScriptArguments,
+  extractTransactionArguments,
+  extractContractName,
+  splitArgs,
+  argType,
+  getDictionaryTypes,
+  getArrayType,
+} from "../src";
 
 describe("documentation examples", function () {
+
+  // Files
+  it("should strip extension from filename", function() {
+    const fileName = sansExtension("log-message-and-return.cdc");
+    expect(fileName).toBe("log-message-and-return")
+  });
+
+  // Imports
   it("should return import list", function () {
     const code = `
       import Message from 0x01
@@ -50,6 +83,221 @@ describe("documentation examples", function () {
       Messages: "0xf8d6e0586b0a20c7",
     };
     const replaced = replaceImportAddresses(code, addressMap);
-    console.log({ replaced });
+    expect(replaced.includes("import Messages from 0xf8d6e0586b0a20c7")).toBe(true);
+  });
+
+  // Arguments
+  it("should convert value to sdk argument", function () {
+    const type = "String";
+    const value = "Hello from Cadence";
+    const arg = mapArgument(type, value);
+
+    expect(arg.value).toBe(value);
+    expect(arg.xform.label).toBe(type);
+  });
+
+  it("should convert values to sdk arguments", function () {
+    const schema = ["String", "Int"];
+    const values = ["Hello from Cadence", 1337];
+    const args = mapArguments(schema, values);
+
+    for (let i = 0; i < schema.length; i++) {
+      const type = schema[i];
+      const value = values[i];
+      const arg = args[i];
+
+      expect(arg.value).toBe(value);
+      expect(arg.xform.label).toBe(type);
+    }
+  });
+
+  it("should convert values to sdk arguments", function () {
+    const code = `
+      pub fun main(metadata: {String:String}, key: String):String {
+        return metadata[key]!
+      }
+    `;
+    const values = [
+      { language: "Cadence", languageRating: "Cadence is Awesome 🤟" },
+      "languageRating",
+    ];
+    const [metadata, key] = mapValuesToCode(code, values);
+
+    expect(metadata.xform.label).toBe("Dictionary");
+    expect(metadata.value[0].key).toBe("language");
+    expect(metadata.value[0].value).toBe("Cadence");
+
+    expect(metadata.value[1].key).toBe("languageRating");
+    expect(metadata.value[1].value).toBe("Cadence is Awesome 🤟");
+
+    expect(key.value).toBe("languageRating");
+  });
+
+  it("should throw an error if not enough arguments", function () {
+    const error = "Not enough arguments";
+
+    expect(() => {
+      const code = `
+      pub fun main(metadata: {String:String}, key: String):String {
+        return metadata[key]!
+      }
+    `;
+      const values = [{ language: "Cadence", languageRating: "Cadence is Awesome 🤟" }];
+      const [metadata, key] = mapValuesToCode(code, values);
+    }).toThrow(error);
+  });
+
+  // Parser
+  it("should return information for contract code", function () {
+    const contract = `
+      pub contract HelloWorld{
+        init(){}
+      }
+    `;
+    const info = getTemplateInfo(contract);
+
+    expect(info.type).toBe(CONTRACT);
+    expect(info.contractName).toBe("HelloWorld");
+    expect(info.signers).toBe(1);
+    expect(info.args.length).toBe(0);
+  });
+
+  it("should return information for transaction code", function () {
+    const tx = `
+      transaction(message: String){
+        prepare(signer: AuthAccount){
+          log("done")  
+        }
+      }
+    `;
+    const info = getTemplateInfo(tx);
+
+    expect(info.type).toBe(TRANSACTION);
+    expect(info.signers).toBe(1);
+    expect(info.args.length).toBe(1);
+    expect(info.args[0]).toBe("message:String");
+  });
+
+  it("should return information for script code", function () {
+    const script = `
+      pub fun main(message:String):String{
+        return 42
+      }
+    `;
+    const info = getTemplateInfo(script);
+
+    expect(info.type).toBe(SCRIPT);
+    expect(info.args.length).toBe(1);
+    expect(info.args[0]).toBe("message:String");
+  });
+
+  it("should return array of signer pairs", function () {
+    const tx = `
+      transaction(message: String){
+        prepare(signer: AuthAccount, payer: AuthAccount){
+          log("done")  
+        }
+      }
+    `;
+    const signers = extractSigners(tx);
+    expect(signers.length).toBe(2);
+  });
+
+  it("should return 0 signers for script", function () {
+    const script = `
+      pub fun main(){
+        log("nothing to see here :)")
+      }
+    `;
+    const signers = extractSigners(script);
+    expect(signers.length).toBe(0);
+  });
+
+  it("should extract script arguments", function () {
+    const script = `
+      pub fun main(message: String, metadata: {String:String}){
+        log(message)
+      }
+    `;
+    const args = extractScriptArguments(script);
+
+    expect(args.length).toBe(2);
+    expect(args[0]).toBe("message:String");
+    expect(args[1]).toBe("metadata:{String:String}");
+  });
+
+  it("should extract transaction arguments", function () {
+    const tx = `
+      transaction(message: String, metadata: {String:String}){
+        prepare(signer:AuthAccount){
+          
+        }
+      }
+    `;
+    const args = extractTransactionArguments(tx);
+
+    expect(args.length).toBe(2);
+    expect(args[0]).toBe("message:String");
+    expect(args[1]).toBe("metadata:{String:String}");
+  });
+
+  it("should extract contract name", function () {
+    const contract = `
+      pub contract HelloWorld{
+        init(){}
+      }
+    `;
+    const name = extractContractName(contract);
+    expect(name).toBe("HelloWorld");
+  });
+
+  it("should properly split argument pair - String", function () {
+    const pair = "message:String";
+    const [name, type] = splitArgs(pair);
+    expect(name).toBe("message");
+    expect(type).toBe("String");
+  });
+
+  it("should properly split argument pair - Dictionary", function () {
+    const pair = "metadata: {String:String}";
+    const [name, type] = splitArgs(pair);
+    expect(name).toBe("metadata");
+    expect(type).toBe("{String:String}");
+  });
+
+  it("should properly split argument pair - Complex", function () {
+    const pair = "metadata: [{String:String}]";
+    const [name, type] = splitArgs(pair);
+    expect(name).toBe("metadata");
+    expect(type).toBe("[{String:String}]");
+  });
+
+  it("should properly get argument type", function () {
+    const simplePair = "message:String";
+    const metaPair = "metadata: {String:String}";
+
+    const simple = argType(simplePair);
+    const meta = argType(metaPair);
+
+    expect(simple).toBe("String");
+    expect(meta).toBe("{String:String}");
+  });
+
+  it("should resolve Dictionary type", function () {
+    const type = "{String: String}";
+    const types = getDictionaryTypes(type);
+    const [keyType, valueType] = types;
+
+    expect(types.length).toBe(2);
+    expect(keyType).toBe("String");
+    expect(valueType).toBe("String");
+  });
+
+  it("should resolve Array type", function () {
+    const simpleType = getArrayType("[String]");
+    const complexType = getArrayType("[{String: String}]");
+
+    expect(simpleType).toBe("String");
+    expect(complexType).toBe("{String:String}");
   });
 });

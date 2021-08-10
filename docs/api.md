@@ -2,6 +2,31 @@
 
 ## File System
 
+### sansExtension(filename)
+
+#### Arguments
+
+| Name       | Type   | Description              |
+| ---------- | ------ | ------------------------ |
+| `filename` | string | file name with extension |
+
+#### Returns
+
+| Type   | Description                |
+| ------ | -------------------------- |
+| string | filename without extension |
+
+#### Usage
+
+```javascript
+import { sansExtension } from "flow-cadut";
+
+const fileName = sansExtension("log-message-and-return.cdc");
+console.log({ fileName });
+```
+
+📣 This method is used internally to get value for module name during code generation.
+
 ### `readFile(path)`
 
 Reads the contents fo the file as `utf8`. Syntax sugar for `fs.readFileSync(path, "utf8")`
@@ -261,7 +286,9 @@ console.log({ replaced });
 
 ### `mapArgument(type, value)`
 
-Converts provided value to `sdk` argument
+Converts provided value to `sdk` argument.
+
+📣 Best usage of this method is with combination of `query`/`mutate` methods from Javascript SDK.
 
 #### Arguments
 
@@ -286,18 +313,66 @@ import { mapArgument } from "flow-cadut";
   config().put("accessNode.api", "https://access-testnet.onflow.org");
 
   const cadence = `
-    pub fun main(message: String){
-      log(message)
+    pub fun main(message: String): String{
+      return message
     }
 `;
 
+  // Script expects a single argument of type "String"
   const message = mapArgument("String", "Hello from Cadence!");
 
-  const result = await query({
-    cadence,
-    args: () => [message],
-  });
+  // "args" shall return array of arguments.
+  // We will pass "message" value into it
+  const args = () => [message];
 
+  const result = await query({ cadence, args });
+  console.log(result);
+})();
+```
+
+### `mapArguments(schema, values)`
+
+Converts provided values to `sdk` arguments.
+
+📣 Best usage of this method is with combination of `query`/`mutate` methods from Javascript SDK.
+
+#### Arguments
+
+| Name     | Type          | Description                                         |
+| -------- | ------------- | --------------------------------------------------- |
+| `schema` | array[string] | Array of Cadence types represented as string        |
+| `values` | array[any]    | array of correspondent values to use for conversion |
+
+#### Returns
+
+| Type                         | Description              |
+| ---------------------------- | ------------------------ |
+| array[[Argument](#Argument)] | array of `sdk` arguments |
+
+#### Usage
+
+```javascript
+import { query, config } from "@onflow/fcl";
+import { mapArgument } from "flow-cadut";
+
+(async () => {
+  config().put("accessNode.api", "https://access-testnet.onflow.org");
+
+  const cadence = `
+    pub fun main(message: String, amount: Int): Int{
+      log(message)
+      return amount
+    }
+`;
+
+  // Script expects multiple arguments - "String" and "Int"
+  const schema = ["String", "Int"];
+  // These are the values we will convert to arguments
+  const values = ["Hello from Cadence", 1337];
+  // mapArguments will return an array, no extra steps are required
+  const args = () => mapArguments(schema, values);
+
+  const result = await query({ cadence, args });
   console.log(result);
 })();
 ```
@@ -343,11 +418,281 @@ import { mapValuesToCode } from "flow-cadut";
     cadence,
     args: () =>
       mapValuesToCode(cadence, [
-        { language: "Flow", languageRating: "Cadence is Awesome 🤟" },
+        { language: "Cadence", languageRating: "Cadence is Awesome 🤟" },
         "languageRating",
       ]),
   });
 
   console.log(result);
 })();
+```
+
+## Parser
+
+### `getTemplateInfo(code)`
+
+Parses the code and returns [TemplateInfo](#TemplateInfo)
+
+#### Arguments
+
+| Name   | Type   | Description                      |
+| ------ | ------ | -------------------------------- |
+| `code` | string | Cadence template code to process |
+
+#### Usage
+
+```javascript
+import { getTemplateInfo } from "flow-cadut";
+
+const script = `
+  pub fun main(message:String):String{
+    return 42
+  }
+`;
+const info = getTemplateInfo(script);
+
+/*
+ * "info" will contain an object:
+ *   {
+ *     type: "script",
+ *     args: [ 'message:String' ]
+ *   }
+ */
+console.log({ info });
+```
+
+## `extractSigners(code)`
+
+Parses the code and returns array of [SignerPair](#SignerPair)
+
+#### Arguments
+
+| Name   | Type   | Description                      |
+| ------ | ------ | -------------------------------- |
+| `code` | string | Cadence template code to process |
+
+#### Returns
+
+| Type                      | Description                          |
+| ------------------------- | ------------------------------------ |
+| [SignerPair](#SignerPair) | String representation of signer pair |
+
+#### Usage
+
+```javascript
+import { extractSigners } from "flow-cadut";
+
+const script = `
+  pub fun main(){
+    log("nothing to see here :)")
+  }
+`;
+const signers = extractSigners(script);
+console.log({ signers });
+```
+
+## `extractScriptArguments(code)`
+
+Parses the code and returns array of [ArgumentPair](#ArgumentPair)
+
+#### Arguments
+
+| Name   | Type   | Description                      |
+| ------ | ------ | -------------------------------- |
+| `code` | string | Cadence template code to process |
+
+#### Returns
+
+| Type                          | Description                            |
+| ----------------------------- | -------------------------------------- |
+| [ArgumentPair](#ArgumentPair) | String representation of argument pair |
+
+#### Usage
+
+```javascript
+import { extractScriptArguments } from "flow-cadut";
+
+const script = `
+  pub fun main(message: String, metadata: {String:String}){
+    log(message)
+  }
+`;
+const args = extractScriptArguments(script);
+console.log({ args });
+```
+
+## `extractTransactionArguments(code)`
+
+Parses the code and returns array of [ArgumentPair](#ArgumentPair)
+
+#### Arguments
+
+| Name   | Type   | Description                      |
+| ------ | ------ | -------------------------------- |
+| `code` | string | Cadence template code to process |
+
+#### Returns
+
+| Type                          | Description                            |
+| ----------------------------- | -------------------------------------- |
+| [ArgumentPair](#ArgumentPair) | String representation of argument pair |
+
+#### Usage
+
+```javascript
+import { extractTransactionArguments } from "flow-cadut";
+
+const tx = `
+  transaction(message: String, metadata: {String:String}){
+    prepare(signer:AuthAccount){
+      
+    }
+  }
+`;
+const args = extractTransactionArguments(tx);
+console.log({ args });
+```
+
+## `extractContractName(code)`
+
+Parses the code and returns contract name
+
+#### Arguments
+
+| Name   | Type   | Description                      |
+| ------ | ------ | -------------------------------- |
+| `code` | string | Cadence template code to process |
+
+#### Returns
+
+| Type   | Description                                   |
+| ------ | --------------------------------------------- |
+| string | name of the contract defined in template code |
+
+#### Usage
+
+```javascript
+import { extractContractName } from "flow-cadut";
+
+const contract = `
+  pub contract HelloWorld{
+    init(){}
+  }
+`;
+const name = extractContractName(contract);
+console.log({ name });
+```
+
+### `splitArgs(pair)`
+
+Splits [ArgumentPair](#ArgumentPair) into array of two items
+
+#### Arguments
+
+| Name   | Type                          | Description                       |
+| ------ | ----------------------------- | --------------------------------- |
+| `pair` | [ArgumentPair](#ArgumentPair) | argument pair in form of a string |
+
+#### Returns
+
+| Type  | Description                                                  |
+| ----- | ------------------------------------------------------------ |
+| array | first item is a name, second - string representation of type |
+
+#### Usage
+
+```javascript
+import { splitArgs } from "flow-cadut";
+const simplePair = "message:String";
+const metaPair = "metadata: {String:String}";
+
+const simple = splitArgs(simplePair);
+const meta = splitArgs(metaPair);
+
+console.log({ simple, meta });
+```
+
+### `argType(pair)`
+
+Splits [ArgumentPair](#ArgumentPair) and returns type of the argument
+
+#### Arguments
+
+| Name  | Type                          | Description                       |
+| ----- | ----------------------------- | --------------------------------- |
+| `pair | [ArgumentPair](#ArgumentPair) | argument pair in form of a string |
+
+#### Returns
+
+| Type   | Description                            |
+| ------ | -------------------------------------- |
+| string | string representation of argument type |
+
+#### Usage
+
+```javascript
+import { argType } from "flow-cadut";
+
+const simplePair = "message:String";
+const metaPair = "metadata: {String:String}";
+
+const simple = argType(simplePair);
+const meta = argType(metaPair);
+
+console.log({ simple, meta });
+```
+
+### `getArrayType(type)`
+
+Extracts item type from array type
+
+#### Arguments
+
+| Name   | Type   | Description                         |
+| ------ | ------ | ----------------------------------- |
+| `type` | string | string representation of Array type |
+
+#### Returns
+
+| Type   | Description                        |
+| ------ | ---------------------------------- |
+| string | string representation of item type |
+
+#### Usage
+
+```javascript
+import { getArrayType } from "flow-cadut";
+
+const simpleType = getArrayType("[String]");
+const complexType = getArrayType("[{String: String}]");
+
+console.log({ simpleType, complexType });
+```
+
+### `getDictionaryTypes(type)`
+
+Extracts key and value types from Dictionary type
+
+#### Arguments
+
+| Name   | Type   | Description                              |
+| ------ | ------ | ---------------------------------------- |
+| `type` | string | string representation of Dictionary type |
+
+#### Returns
+
+| Type  | Description                                                                   |
+| ----- | ----------------------------------------------------------------------------- |
+| array | array of strings - first item for the `key` type, second for the `value` type |
+
+#### Usage
+
+```javascript
+import { getDictionaryTypes } from "flow-cadut";
+
+const type = "{String: UFix64}";
+const types = getDictionaryTypes(type);
+const [keyType, valueType] = types;
+
+console.log({ keyType, valueType });
 ```
