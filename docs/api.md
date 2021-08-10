@@ -114,6 +114,50 @@ import { getFileList } from "flow-cadut";
 const list = getFileList("./cadence");
 ```
 
+### `prettify(code, options)`
+
+Prettifies `code` using Prettier and set of `options`.
+Default `options` are:
+
+```json
+{
+  "printWidth": 100,
+  "endOfLine": "lf",
+  "trailingComma": "es5",
+  "tabWidth": 2,
+  "semi": true,
+  "useTabs": false,
+  "singleQuote": false
+}
+```
+
+#### Arguments
+
+| Name      | Type   | Optional | Description                                                                                                         |
+| --------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------- |
+| `code`    | string |          | valid Javascript code                                                                                               |
+| `options` | object | ✅       | Prettier options. Consult [Prettier Options Documentation](https://prettier.io/docs/en/options.html) to learn more. |
+
+#### Returns
+
+| Type   | Description                         |
+| ------ | ----------------------------------- |
+| string | prettified version of provided code |
+
+#### Usage
+
+```javascript
+import { prettify } from "flow-cadut";
+
+const code = `
+  const a         = "Hello"
+  const b    = "World
+  console.log(a    +b);
+`;
+
+const pretty = prettify(code);
+```
+
 ## Imports
 
 ### `extractImports(code)`
@@ -695,4 +739,75 @@ const types = getDictionaryTypes(type);
 const [keyType, valueType] = types;
 
 console.log({ keyType, valueType });
+```
+
+## Generator
+
+### `processFolder(input, output, options)`
+
+Recursively goes through `input` folder and generates code for found contracts, transactions and scripts.
+Write files under `output` path.
+
+#### Arguments
+
+| Name      | Type   | Optional | Description                       |
+| --------- | ------ | -------- | --------------------------------- |
+| `input`   | string |          | path to the input folder          |
+| `output`  | string |          | path to output folder             |
+| `options` | object | ✅       | additional options. Default: `{}` |
+
+#### Options
+
+| Name         | Type   | Optional | Description                                    |
+| ------------ | ------ | -------- | ---------------------------------------------- |
+| `dependency` | string | ✅       | interactions dependency. Default: `flow-cadut` |
+
+#### Usage
+
+```javascript
+import path from "path";
+import { processFolder } from "flow-cadut";
+
+(async () => {
+  const input = path.resolve("./cadence");
+  const output = path.resolve("./src/generated/localRegistry");
+
+  await processFolder(input, output);
+  console.log("✅ Done!");
+})();
+```
+
+### `processGitRepo(url, output, branch, options)`
+
+Fetches GitHub repository from provided `url` and `branch`. Then generates code for found contracts, transactions and scripts.
+Write files under `output` path.
+
+#### Arguments
+
+| Name      | Type   | Optional | Description                       |
+| --------- | ------ | -------- | --------------------------------- |
+| `url`     | string |          | url to GitHub repo                |
+| `output`  | string |          | path to output folder             |
+| `branch`  | string | ✅       | branch to use. Default: `main`    |
+| `options` | object | ✅       | additional options. Default: `{}` |
+
+#### Options
+
+| Name         | Type   | Optional | Description                                    |
+| ------------ | ------ | -------- | ---------------------------------------------- |
+| `dependency` | string | ✅       | interactions dependency. Default: `flow-cadut` |
+
+#### Usage
+
+```javascript
+import path from "path";
+import { processGitRepo } from "flow-cadut";
+
+(async () => {
+  const url = path.resolve("https://github.com/onflow/flow-core-contracts");
+  const output = path.resolve("./src/generated/localRegistry");
+
+  await processGitRepo(url, output);
+  console.log("✅ Done!");
+})();
 ```
