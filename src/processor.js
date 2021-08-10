@@ -40,7 +40,9 @@ const getFetchUrl = (input) => {
 
 const TEMP_REPO_FOLDER = path.resolve(process.cwd(), "./temp-generator-repo");
 const clean = () => {
-  fs.rmdirSync(TEMP_REPO_FOLDER, { recursive: true });
+  if (fs.existsSync(TEMP_REPO_FOLDER)) {
+    fs.rmdirSync(TEMP_REPO_FOLDER, { recursive: true });
+  }
 };
 
 export const getBranchesList = (branches, remotes) => {
