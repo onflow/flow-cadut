@@ -94,7 +94,7 @@ clearPath("./ready-to-go");
 
 ### `getFileList(path)`
 
-Returns list of paths to files on provided path
+Recursively looking for files under `path` and returns list of paths to found items.
 
 | Name   | Type   | Description               |
 | ------ | ------ | ------------------------- |
@@ -156,6 +156,7 @@ const code = `
 `;
 
 const pretty = prettify(code);
+console.log(pretty)
 ```
 
 ## Imports
@@ -505,7 +506,7 @@ const info = getTemplateInfo(script);
 console.log({ info });
 ```
 
-## `extractSigners(code)`
+### `extractSigners(code)`
 
 Parses the code and returns array of [SignerPair](#SignerPair)
 
@@ -535,7 +536,7 @@ const signers = extractSigners(script);
 console.log({ signers });
 ```
 
-## `extractScriptArguments(code)`
+### `extractScriptArguments(code)`
 
 Parses the code and returns array of [ArgumentPair](#ArgumentPair)
 
@@ -565,7 +566,7 @@ const args = extractScriptArguments(script);
 console.log({ args });
 ```
 
-## `extractTransactionArguments(code)`
+### `extractTransactionArguments(code)`
 
 Parses the code and returns array of [ArgumentPair](#ArgumentPair)
 
@@ -597,7 +598,7 @@ const args = extractTransactionArguments(tx);
 console.log({ args });
 ```
 
-## `extractContractName(code)`
+### `extractContractName(code)`
 
 Parses the code and returns contract name
 
