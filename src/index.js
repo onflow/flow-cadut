@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-export { getEnvironment } from "./env";
+export { getEnvironment, setEnvironment } from "./env";
 
 export {
   clearPath,
