@@ -156,7 +156,7 @@ const code = `
 `;
 
 const pretty = prettify(code);
-console.log(pretty)
+console.log(pretty);
 ```
 
 ## Imports
@@ -810,5 +810,148 @@ import { processGitRepo } from "flow-cadut";
 
   await processGitRepo(url, output);
   console.log("✅ Done!");
+})();
+```
+
+## Interactions
+
+### `setEnvironment(network, options)`
+
+Sets `ix.env` config value
+
+#### Arguments
+
+| Name      | Type   | Optional | Description                         |
+| --------- | ------ | -------- | ----------------------------------- |
+| `network` | string | ✅       | network to use. Default: `emulator` |
+| `options` | object | ✅       | extra options to adjust config      |
+
+#### Network Variants
+
+| Variants   | Description                                                  |
+| ---------- | ------------------------------------------------------------ |
+| `emulator` | Emulator instance running locally at "http://localhost:8080" |
+| `testnet`  | Testnet access node at https://access-testnet.onflow.org     |
+| `mainnet`  | Mainnet access node at "https://access.mainnet.onflow.org"   |
+
+#### Options
+
+| Name               | Type   | Optional | Description                        |
+| ------------------ | ------ | -------- | ---------------------------------- |
+| `options.port`     | number | ✅       | port for emulator. Default: `8080` |
+| `options.endpoint` | string | ✅       | Access API endpoint.               |
+
+> ⚠️ Attention: `endpoint` will override `port` and provided `network`. Don't mix endpoint from different `network` - it might lead to unexpected result.
+
+#### Usage
+
+```javascript
+import { setEnvironment } from "flow-cadut";
+
+(async () => {
+  await setEnvironment("testnet");
+})();
+```
+
+### `getEnvironment()`
+
+Returns a set of deployed contracts for current environment
+
+#### Returns
+
+| Type   | Description                                                                   |
+| ------ | ----------------------------------------------------------------------------- |
+| object | [AddressMap](#AddressMap) for known contracts deployed in current environment |
+
+#### Usage
+
+```javascript
+import { setEnvironment, getEnvironment } from "flow-cadut";
+
+(async () => {
+  await setEnvironment("mainnet");
+  const addressMap = await getEnvironment();
+  console.log({ addressMap });
+})();
+```
+
+### `hexContract(code)`
+
+Prepares Cadence template code to pass into deployment transaction.
+Syntax sugar for `Buffer.from(code, "utf8").toString("hex");`
+
+#### Arguments
+
+| Name   | Type   | Description           |
+| ------ | ------ | --------------------- |
+| `code` | string | Cadence template code |
+
+#### Returns
+
+| Type   | Description                         |
+| ------ | ----------------------------------- |
+| string | hex representation of template code |
+
+#### Usage
+
+```javascript
+import { hexContract } from "flow-cadut";
+
+const code = `
+  pub contract HelloWorld{
+    init(){}
+  }
+`;
+const hexed = hexContract(code);
+```
+
+### `executeScript(args)`
+
+Sends script to the network
+
+#### Arguments
+
+| Name   | Type                                | Description      |
+| ------ | ----------------------------------- | ---------------- |
+| `args` | [ScriptArguments](#ScriptArguments) | script arguments |
+
+#### Returns
+
+| Type                          | Description                 |
+| ----------------------------- | --------------------------- |
+| [ScriptResult](#ScriptResult) | Result of script execution. |
+
+##### ScriptArguments
+
+| Name         | Type                                             | Optional | Description                                                 |
+| ------------ | ------------------------------------------------ | -------- | ----------------------------------------------------------- |
+| `code`       | string                                           |          | Cadence code to execute                                     |
+| `args`       | array[InteractionArgument](#InteractionArgument) | ✅       | Optional if script does not expect arguments. Default: `[]` |
+| `addressMap` | [AddressMap](#AddressMap)                        | ✅       | address map to use for import replacement. Default: `{}`    |
+| `limit`      | number                                           | ✅       | gas limit. Default: `100`                                   |
+
+##### ScriptResult
+
+Script result is represented as tuple `[result, error]`
+
+| Name     | Type  | Description                                                                   |
+| -------- | ----- | ----------------------------------------------------------------------------- |
+| `result` | any   | result of script execution. Type of this value depends on script return value |
+| `error`  | error | Caught error. This will be `null` if script executed successfully             |
+
+#### Usage
+
+```javascript
+import { executeScript } from "flow-cadut";
+
+(async () => {
+  const code = `
+    pub fun main():Int{
+      return 42
+    }
+  `;
+
+  const [result, err] = executeScript({ code });
+  console.log({ result });
 })();
 ```
