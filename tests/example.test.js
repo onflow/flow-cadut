@@ -1,18 +1,16 @@
 import path from "path";
 
+// files
+import { sansExtension } from "../src";
+
+// imports
+import { extractImports, missingImports, report, replaceImportAddresses } from "../src";
+
+// arguments
+import { mapArgument, mapArguments, mapValuesToCode } from "../src";
+
+// parser
 import {
-  // files
-  sansExtension,
-  // imports
-  extractImports,
-  missingImports,
-  report,
-  replaceImportAddresses,
-  // arguments
-  mapArgument,
-  mapArguments,
-  mapValuesToCode,
-  // parser
   CONTRACT,
   TRANSACTION,
   SCRIPT,
@@ -27,7 +25,13 @@ import {
   getArrayType,
 } from "../src";
 
+// Interactions
+import { setEnvironment, getEnvironment } from "../src";
+
+// Generator
 import { processGitRepo, processFolder } from "../src";
+
+// Templates
 import "../src/templates";
 
 describe("documentation examples", function () {
@@ -320,4 +324,18 @@ describe("documentation examples", function () {
     await processGitRepo(url, output);
   });
    */
+
+  // Interactions
+  it("should throw error for unknown network", async function () {
+    await expect(async () => {
+      await setEnvironment("Rinkeby");
+    }).rejects.toThrow();
+  });
+
+  it("should properly interact with environments", async function () {
+    await setEnvironment("Mainnet");
+
+    const addressMap = await getEnvironment();
+    expect(addressMap.FlowToken).toBe("0x1654653399040a61");
+  });
 });
