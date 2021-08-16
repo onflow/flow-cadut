@@ -67,6 +67,8 @@ export {
   capitalizeFirstLetter,
 } from "./strings";
 
+export { processFolder, processGitRepo } from "./processor";
 export { executeScript, sendTransaction, deployContract, updateContract } from "./interactions";
 
-export { processFolder, processGitRepo } from "./processor";
+// Below is a set of aliases to bring it in line with FCL
+export { executeScript as query, sendTransaction as mutate} from "./interactions";
