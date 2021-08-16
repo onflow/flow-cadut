@@ -932,7 +932,7 @@ Sends script to the network
 
 ##### ScriptResult
 
-Script result is represented as tuple `[result, error]`
+Script result is represented as a tuple `[result, error]`
 
 | Name     | Type  | Description                                                                   |
 | -------- | ----- | ----------------------------------------------------------------------------- |
@@ -955,3 +955,80 @@ import { executeScript } from "flow-cadut";
   console.log({ result });
 })();
 ```
+
+##### Alias
+This method is also available under alias `query`
+
+### `sendTransaction`
+
+Sends script to the network
+
+#### Arguments
+
+| Name               | Type                                          | Optional | Description                           |
+| ------------------ | --------------------------------------------- | -------- | ------------------------------------- |
+| `args`             | [TransactionArguments](#TransactionArguments) |          | transaction arguments                 |
+| `waitForExecution` | boolean                                       | ✅       | wait for transaction execution or not |
+
+> If `waitForExecution` flag is set to true, method will not return result until `fcl.tx(hash).onceExecuted()` is resolved
+
+#### Returns
+
+| Type                                    | Description                 |
+| --------------------------------------- | --------------------------- |
+| [TransactionResult](#TransactionResult) | Result of script execution. |
+
+#### TransactionArguments
+
+| Name         | Type                                                                            | Optional | Description                                                                                                                                                                 |
+| ------------ | ------------------------------------------------------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `code`       | string                                                                          |          | Cadence code to execute                                                                                                                                                     |
+| `payer`      | [AuthorizationFunction](https://docs.onflow.org/fcl/api/#authorizationfunction) |          | The authorization function that returns a valid [AuthorizationObject](https://docs.onflow.org/fcl/api/#authorizationobject) for the payer role.                             |
+| `signers`    | [AuthorizationFunction]                                                         | ✅       | an array of [AuthorizationObject](https://docs.onflow.org/fcl/api/#authorizationobject) representing transaction authorizers. Default: same as `payer`                      |
+| `proposer`   | [AuthorizationFunction](https://docs.onflow.org/fcl/api/#authorizationfunction) | ✅       | The authorization function that returns a valid [AuthorizationObject](https://docs.onflow.org/fcl/api/#authorizationobject) for the proposer role. Default: same as `payer` |
+| `args`       | [Any]                                                                           | ✅       | Optional if transactions does not expect arguments. Default: `[]`                                                                                                           |
+| `addressMap` | [AddressMap](#AddressMap)                                                       | ✅       | address map to use for import replacement. Default: `{}`                                                                                                                    |
+| `limit`      | number                                                                          | ✅       | gas limit. Default: `100`                                                                                                                                                   |
+
+> When being used in the browser, you can pass built-in `fcl.authz` function to produce the authorization (signatures) for the current user.
+> When calling this method from Node.js, you will need to supply your own custom authorization functions.
+
+##### TransactionResult
+
+Transaction result is represented as a tuple `[result, error]`
+
+| Name                                                              | Type  | Description                                                                        |
+| ----------------------------------------------------------------- | ----- | ---------------------------------------------------------------------------------- |
+| [ResponseObject][https://docs.onflow.org/fcl/api/#responseobject] | any   | result of transaction execution. Type of this value depends on script return value |
+| `error`                                                           | error | Caught error. This will be `null` if script executed successfully                  |
+
+#### Usage
+
+```javascript
+import { authenticate, currentUser, authz, config } from "@onflow/fcl";
+import { sendTransaction } from "flow-cadut";
+
+config()
+  .put("accessNode.api", "https://access-testnet.onflow.org") // Configure FCL's Access Node
+  .put("challenge.handshake", "https://fcl-discovery.onflow.org/testnet/authn") // Configure FCL's Wallet Discovery mechanism
+  .put("0xProfile", "0xba1132bc08f82fe2"); // Will let us use `0xProfile` in our Cadence
+
+(async () => {
+  currentUser().subscribe(async (user) => {
+    const code = `
+    transaction {
+      prepare(currentUser: AuthAccount) {
+        log("hello")
+      }
+    }`;
+
+    const [result] = await sendTransaction({ code, payer: authz });
+    console.log({ result });
+  });
+
+  authenticate();
+})();
+```
+
+##### Alias
+This method is also available under alias `mutate`
