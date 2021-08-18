@@ -66,11 +66,11 @@ export const executeScript = async (props) => {
  * Submits transaction to emulator network and waits before it will be sealed.
  * Returns transaction result.
  */
-export const sendTransaction = async (props, waitForExecution = true) => {
+export const sendTransaction = async (props, waitForSeal = true) => {
   try {
     const response = await prepareInteraction(props, "transaction");
-    if (waitForExecution) {
-      const txResult = await fcl.tx(response).onceExecuted();
+    if (waitForSeal) {
+      const txResult = await fcl.tx(response).onceSealed();
       return [txResult, null];
     }
     return [response, null];
