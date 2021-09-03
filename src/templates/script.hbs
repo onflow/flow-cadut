@@ -29,7 +29,7 @@ export const {{ assetName }}Template = async (addressMap = {}) => {
   return replaceImportAddresses(CODE, fullMap);
 };
 
-export const {{ assetName }} = async (props) => {
+export const {{ assetName }} = async (props = {}) => {
   const { addressMap = {}, args = [] } = props
   const code = await {{ assetName}}Template(addressMap);
 
