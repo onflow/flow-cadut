@@ -101,7 +101,7 @@ export const resolveType = (type) => {
     switch (true) {
       case isArray(type): {
         const arrayType = getArrayType(type);
-        let finalType = t[arrayType];
+        let finalType = resolveBasicType(arrayType);
         if (isArray(arrayType)) {
           finalType = resolveType(arrayType);
         }
@@ -154,7 +154,6 @@ export const mapArgument = (type, value) => {
           resolvedType
         );
       }
-
       return fcl.arg(value, resolvedType);
     }
 
@@ -176,7 +175,9 @@ export const mapArgument = (type, value) => {
           value: resolvedValue,
         });
       }
-      return fcl.arg(finalValue, t.Dictionary({ key: t[keyType], value: t[valueType] }));
+      const resolvedKeyType = resolveType(keyType);
+      const resolvedValueType = resolveType(valueType);
+      return fcl.arg(finalValue, t.Dictionary({ key: resolvedKeyType, value: resolvedValueType }));
     }
 
     default: {
