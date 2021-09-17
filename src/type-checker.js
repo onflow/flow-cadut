@@ -29,8 +29,16 @@ export const isCharacter = (type) => type === "Character";
 export const isBoolean = (type) => type === "Bool";
 export const isAddress = (type) => type === "Address";
 
-export const isBasicType = (type) =>
-  isBasicNumType(type) || isString(type) || isCharacter(type) || isBoolean(type);
+export const isBasicType = (type) => {
+  let fixedType = type.includes("?") ? type.slice(0, -1) : type;
+  return (
+    isBasicNumType(fixedType) ||
+    isString(fixedType) ||
+    isCharacter(fixedType) ||
+    isBoolean(fixedType) ||
+    isAddress(fixedType)
+  );
+};
 
 export const isArray = (type) => {
   const clearType = type.replace(/\s/g, "");

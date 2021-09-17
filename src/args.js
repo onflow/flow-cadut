@@ -107,11 +107,12 @@ export const resolveType = (type) => {
         }
         return t.Array(finalType);
       }
-      default:{
+      default: {
         return resolveBasicType(type);
       }
     }
   }
+  return resolveBasicType(type);
 };
 
 /**
@@ -121,26 +122,30 @@ export const resolveType = (type) => {
  * @returns any - mapped fcl.arg value
  */
 export const mapArgument = (type, value) => {
+  const resolvedType = resolveType(type);
+
   switch (true) {
     case isBasicType(type): {
-      return fcl.arg(value, t[type]);
+      return fcl.arg(value, resolvedType);
     }
 
     case isFixedNumType(type): {
       // Try to parse value and throw if it fails
+      if (value === null) {
+        return fcl.arg(null, resolvedType);
+      }
       if (isNaN(parseFloat(value))) {
         throwTypeError("Expected proper value for fixed type");
       }
-      return fcl.arg(toFixedValue(value), t[type]);
+      return fcl.arg(toFixedValue(value), resolvedType);
     }
 
     case isAddress(type): {
-      return fcl.arg(withPrefix(value), t[type]);
+      return fcl.arg(withPrefix(value), resolvedType);
     }
 
     case isArray(type): {
       const arrayType = getArrayType(type);
-      const resolvedType = resolveType(type);
 
       if (isComplexType(arrayType)) {
         return fcl.arg(
