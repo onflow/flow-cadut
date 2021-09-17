@@ -119,7 +119,7 @@ describe("documentation examples", function () {
     }
   });
 
-  it("should convert values to sdk arguments", function () {
+  it("should convert values to sdk arguments - code", function () {
     const code = `
       pub fun main(metadata: {String:String}, key: String):String {
         return metadata[key]!
