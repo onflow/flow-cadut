@@ -1,4 +1,4 @@
-import { mapArgument, mapArguments, argType, mapValuesToCode, resolveType } from "../src/args";
+import { mapArgument, mapArguments, argType, mapValuesToCode, resolveType, raw } from "../src/args";
 import { toFixedValue, withPrefix } from "../src/fixer";
 import { getTemplateInfo } from "../src/parser";
 
@@ -318,3 +318,52 @@ describe("mapValuesToCode", () => {
     }
   });
 });
+
+describe("optionals", ()=>{
+  test("Basic Type", async () => {
+    const input = "a: Int?";
+    const expected = "Int?";
+    const output = argType(input);
+    expect(output).toBe(expected);
+  });
+
+  test("Dictionary", async () => {
+    const input = "metadata       : {String:     String?}";
+    const expected = "{String:String?}";
+    const output = argType(input);
+    expect(output).toBe(expected);
+  });
+
+  test("simple type", async ()=>{
+    const type = "String?"
+    const input = "Cadence"
+    const output = resolveType(type);
+    const asArgument = output.asArgument(input);
+
+    expect(asArgument.type).toBe("Optional");
+    expect(asArgument.value.type).toBe(raw(type));
+    expect(asArgument.value.value.toString()).toBe(input.toString());
+  })
+
+  test("Dictionary - as argument", async () => {
+    const type = "{String: String?}";
+    const input = {
+      name: "James",
+      surname: "Hunter",
+      middlename: null
+    };
+    const output = mapArgument(type, input);
+
+    expect(output.xform.label).toBe("Dictionary");
+    expect(output.value.length).toBe(3);
+
+    expect(output.value[0].key).toBe("name");
+    expect(output.value[0].value).toBe(input.name);
+
+    expect(output.value[1].key).toBe("surname");
+    expect(output.value[1].value).toBe(input.surname);
+
+    expect(output.value[2].key).toBe("middlename");
+    expect(output.value[2].value).toBe(input.middlename);
+  });
+})

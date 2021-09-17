@@ -38,7 +38,7 @@ const throwTypeError = (msg) => {
 
 export const splitArgs = (pair) => {
   return pair
-    .split(/(\w+)\s*:\s*([\w{}[\]:\s]*)/)
+    .split(/(\w+)\s*:\s*([\w{}[\]:\s?]*)/)
     .filter((item) => item !== "")
     .map((item) => item.replace(/\s*/g, ""));
 };
@@ -87,6 +87,15 @@ export const reportMissing = (itemType = "items", found, required, prefix = "") 
   }
 };
 
+export const raw = (type) => type.slice(0, -1);
+
+export const resolveBasicType = (type) => {
+  if (type.includes("?")) {
+    return t.Optional(t[raw(type)]);
+  }
+  return t[type];
+};
+
 export const resolveType = (type) => {
   if (isComplexType(type)) {
     switch (true) {
@@ -98,12 +107,11 @@ export const resolveType = (type) => {
         }
         return t.Array(finalType);
       }
-      default:
-        return t[type];
+      default:{
+        return resolveBasicType(type);
+      }
     }
   }
-
-  return t[type];
 };
 
 /**
