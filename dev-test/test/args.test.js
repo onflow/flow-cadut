@@ -15,8 +15,8 @@ describe("optional arguments", () => {
     // Setting logging flag to true will pipe emulator output to console
     const logging = false;
 
-    await init(basePath, { port, logging });
-    return emulator.start(port);
+    await init(basePath, { port });
+    return emulator.start(port, logging);
   });
 
   // Stop emulator, so it could be restarted
@@ -84,6 +84,67 @@ describe("optional arguments", () => {
 
     expect(output).toBe(expected);
   });
+  it("optionals - [String?] - no value", async () => {
+    const input = [null];
+    const expected = null;
+    const cadence = `
+      pub fun main(names: [String?]): String?{
+          return names[0]
+      }
+    `;
+
+    const args = () => mapValuesToCode(cadence, [input]);
+    const output = await query({ cadence, args });
+
+    expect(output).toBe(expected);
+  });
+  it("optionals - [String?] - with value", async () => {
+    const input = ["Cadence"];
+    const expected = "Cadence";
+    const cadence = `
+      pub fun main(names: [String?]): String?{
+          return names[0]
+      }
+    `;
+
+    const args = () => mapValuesToCode(cadence, [input]);
+    const output = await query({ cadence, args });
+
+    expect(output).toBe(expected);
+  });
+  it("optionals - {String: String?} - no value", async () => {
+    const input = { name: "Cadence" };
+    const expected = null;
+    const cadence = `
+      pub fun main(metadata: {String: String?}): String?{
+          log(metadata)
+          let meta = metadata["empty"]
+          if ( meta == nil){
+            return nil
+          }
+          return meta!
+      }
+    `;
+
+    const args = () => mapValuesToCode(cadence, [input]);
+    const output = await query({ cadence, args });
+
+    expect(output).toBe(expected);
+  });
+  it("optionals - {String: String?} - with value", async () => {
+    const input = { name: "Cadence" };
+    const expected = "Cadence";
+    const cadence = `
+      pub fun main(metadata: {String: String?}): String?{
+          return metadata["name"]!
+      }
+    `;
+
+    const args = () => mapValuesToCode(cadence, [input]);
+    const output = await query({ cadence, args });
+
+    expect(output).toBe(expected);
+  });
   it("case suit", async () => {
     const makeTemplate = (type) => `
       pub fun main(message: ${type}?): ${type}?{
@@ -96,6 +157,12 @@ describe("optional arguments", () => {
           return metadata[key]
       }  
       `;
+
+    const StringArray = `
+      pub fun main(names: [String?]): String?{
+          return names[0]
+      }  
+    `;
 
     const templates = {
       UFix64: makeTemplate("UFix64"),
@@ -129,6 +196,16 @@ describe("optional arguments", () => {
         cadence: templates.Address,
       },
       {
+        input: ["Cadence"],
+        cadence: StringArray,
+        expected: "Cadence",
+      },
+      {
+        input: [null],
+        cadence: StringArray,
+        expected: null,
+      },
+      {
         rawArgs: [
           {
             name: "James",
@@ -142,10 +219,12 @@ describe("optional arguments", () => {
 
     for (const i in tests) {
       const { input, expected, cadence, rawArgs } = tests[i];
-      const args = () => mapValuesToCode(cadence, rawArgs || [input]);
+
+      const mapped = mapValuesToCode(cadence, rawArgs || [input]);
+      const args = () => mapped;
       const output = await query({ cadence, args });
       await expect(output).toBe(expected || input);
     }
-    await expect.assertions(tests.length);
+    // await expect.assertions(tests.length);
   });
 });
