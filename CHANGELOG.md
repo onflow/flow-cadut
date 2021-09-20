@@ -1,5 +1,5 @@
 ### 0.1.7 - 2021-09-20
-- Added support for optionals
+- Added support for Optionals
 - Added support for multi-line arguments
 
 ### 0.1.6 - 2021-07-26
