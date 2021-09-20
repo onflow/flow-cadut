@@ -141,7 +141,8 @@ export const mapArgument = (type, value) => {
     }
 
     case isAddress(type): {
-      return fcl.arg(withPrefix(value), resolvedType);
+      const prefixedAddress = withPrefix(value)
+      return fcl.arg(prefixedAddress, resolvedType);
     }
 
     case isArray(type): {

@@ -137,7 +137,7 @@ describe("mapArgument", () => {
     const output = mapArgument(type, input);
 
     expect(output.xform.label).toBe(type);
-    expect(output.value).toBe(toFixedValue(input));
+    expect(output.value).toBe(input);
   });
   test("Character", async () => {
     const type = "Character";
@@ -145,7 +145,7 @@ describe("mapArgument", () => {
     const output = mapArgument(type, input);
 
     expect(output.xform.label).toBe(type);
-    expect(output.value).toBe(toFixedValue(input));
+    expect(output.value).toBe(input);
   });
   test("Bool", async () => {
     const type = "Bool";
@@ -267,7 +267,7 @@ describe("complex example", () => {
     expect(output[2].value).toEqual(["Hello, World"]);
     expect(output[2].xform.label).toBe("Array");
 
-    expect(output[3].value).toBe("1.337");
+    expect(output[3].value).toBe(toFixedValue("1.337"));
     expect(output[3].xform.label).toBe("UFix64");
   });
 
