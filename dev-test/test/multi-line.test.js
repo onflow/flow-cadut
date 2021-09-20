@@ -91,6 +91,7 @@ describe("arguments - scripts", () => {
   });
 });
 
+// Transaction templates
 const txSingleLine = `
   transaction(a: UInt64, b: UInt64, sum: UInt64){
     prepare(signer: AuthAccount){
@@ -98,7 +99,6 @@ const txSingleLine = `
     }
   }
 `;
-
 const txSingleLineTrailingComma = `
   transaction(a: UInt64, b: UInt64, sum: UInt64,){
     prepare(signer: AuthAccount){
@@ -106,7 +106,6 @@ const txSingleLineTrailingComma = `
     }
   }
 `;
-
 const txMultiLine = `
   transaction(
     a: UInt64, 
@@ -118,7 +117,6 @@ const txMultiLine = `
     }
   }
 `;
-
 const txMultiLineTrailingComma = `
   transaction(
     a: UInt64, 
