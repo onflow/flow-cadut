@@ -83,6 +83,9 @@
     "coveragePathIgnorePatterns": [
       "/node_modules/"
     ],
+    "testPathIgnorePatterns": [
+      "/dev-test/"
+    ],
     "testEnvironment": "node",
     "verbose": true
   },
