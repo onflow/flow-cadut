@@ -154,7 +154,7 @@ describe("optional arguments", () => {
 
     const StringMap = `
       pub fun main(metadata: {String: String?}, key: String): String?{
-          return metadata[key]
+          return metadata[key]!
       }  
       `;
 
@@ -223,8 +223,8 @@ describe("optional arguments", () => {
       const mapped = mapValuesToCode(cadence, rawArgs || [input]);
       const args = () => mapped;
       const output = await query({ cadence, args });
-      await expect(output).toBe(expected || input);
+      await expect(output).toBe(expected === undefined ? input : expected);
     }
-    // await expect.assertions(tests.length);
+    await expect.assertions(tests.length);
   });
 });
