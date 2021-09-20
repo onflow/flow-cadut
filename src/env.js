@@ -18,7 +18,7 @@
 
 import { config } from "@onflow/config";
 
-const ENVIRONMENTS = {
+export const DEPLOYED_CONTRACTS = {
   emulator: {
     FlowToken: "0xee82856bf20e2aa6",
     FungibleToken: "0x0ae53cb6e3f42a79",
@@ -37,7 +37,31 @@ const ENVIRONMENTS = {
   },
 };
 
+export const ACCESS_NODES = {
+  mainnet: "https://access.mainnet.onflow.org",
+  testnet: "https://access-testnet.onflow.org",
+  emulator: "http://localhost:8080",
+};
+
 export const getEnvironment = async () => {
-  const env = (await config().get("ENVIRONMENT")) || "emulator";
-  return ENVIRONMENTS[env] || ENVIRONMENTS.emulator;
+  const env = (await config().get("ix.env")) || "emulator";
+  return DEPLOYED_CONTRACTS[env] || DEPLOYED_CONTRACTS.emulator;
+};
+
+export const setEnvironment = async (networkName = "emulator", options = {}) => {
+  const network = networkName.toLowerCase();
+
+  if (!DEPLOYED_CONTRACTS[network]) {
+    throw new Error(
+      `Provided value "${network}" is not supported. Try "emulator", "testnet" or "mainnet". Default: "emulator"`
+    );
+  }
+
+  const { port, endpoint } = options;
+  const portBased =
+    network === "emulator" && port ? `http://localhost:${port}` : ACCESS_NODES[network];
+  const accessNode = endpoint || portBased;
+
+  await config().put("ix.env", network);
+  await config().put("accessNode.api", accessNode);
 };

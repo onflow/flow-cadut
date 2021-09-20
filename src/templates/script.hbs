@@ -13,7 +13,7 @@ export const CODE = `
 `;
 
 /**
-* Method to generate cadence code for TestAsset
+* Method to generate cadence code for {{ assetName }} script
 * @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
 */
 export const {{ assetName }}Template = async (addressMap = {}) => {
@@ -29,7 +29,7 @@ export const {{ assetName }}Template = async (addressMap = {}) => {
   return replaceImportAddresses(CODE, fullMap);
 };
 
-export const {{ assetName }} = async (props) => {
+export const {{ assetName }} = async (props = {}) => {
   const { addressMap = {}, args = [] } = props
   const code = await {{ assetName}}Template(addressMap);
 

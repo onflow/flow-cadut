@@ -17,7 +17,7 @@ export const set = (key, env, conf, fallback) => {
 };
 
 export const init = () => {
-    set("PRIVATE_KEY", process.env.PK, "accounts/emulator-account/keys");
+    set("PRIVATE_KEY", process.env.PK, "accounts/emulator-account/key");
     set(
         "SERVICE_ADDRESS",
         process.env.SERVICE_ADDRESS,

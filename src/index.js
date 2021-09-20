@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-export { getEnvironment } from "./env";
+export { getEnvironment, setEnvironment } from "./env";
 
 export {
   clearPath,
@@ -35,15 +35,40 @@ export {
   replaceImportAddresses,
 } from "./imports";
 
-export { reportArguments, reportMissing, mapArguments, mapArgument, mapValuesToCode } from "./args";
+export {
+  reportArguments,
+  reportMissing,
+  mapArguments,
+  mapArgument,
+  mapValuesToCode,
+  splitArgs,
+  argType,
+  getDictionaryTypes,
+  getArrayType
+} from "./args";
 
 export {
+  extract,
+  extractSigners,
+  extractScriptArguments,
+  extractTransactionArguments,
+  extractContractName,
+  getTemplateInfo,
+  CONTRACT,
+  TRANSACTION,
+  SCRIPT,
+} from "./parser";
+
+export {
+  collapseSpaces,
   trimAndSplit,
   underscoreToCamelCase,
   getSplitCharacter,
   capitalizeFirstLetter,
 } from "./strings";
 
+export { processFolder, processGitRepo } from "./processor";
 export { executeScript, sendTransaction, deployContract, updateContract } from "./interactions";
 
-export { processFolder } from "./processor";
+// Below is a set of aliases to bring it in line with FCL
+export { executeScript as query, sendTransaction as mutate} from "./interactions";

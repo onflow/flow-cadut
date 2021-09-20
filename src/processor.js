@@ -40,7 +40,9 @@ const getFetchUrl = (input) => {
 
 const TEMP_REPO_FOLDER = path.resolve(process.cwd(), "./temp-generator-repo");
 const clean = () => {
-  fs.rmdirSync(TEMP_REPO_FOLDER, { recursive: true });
+  if (fs.existsSync(TEMP_REPO_FOLDER)) {
+    fs.rmdirSync(TEMP_REPO_FOLDER, { recursive: true });
+  }
 };
 
 export const getBranchesList = (branches, remotes) => {
@@ -138,7 +140,7 @@ export const processFolder = async (input, output, options = {}) => {
     const pathPackages = packages.slice(0, -1);
     const file = packages.slice(-1)[0];
 
-    const ixDependency = options.dependency || "flow-js-testing";
+    const ixDependency = options.dependency || "flow-cadut";
 
     const code = readFile(path).replace(/`/g, "'");
     const name = underscoreToCamelCase(file.replace(".cdc", ""));

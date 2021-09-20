@@ -30,6 +30,8 @@ import {
   isComplexType,
 } from "./type-checker";
 
+import { removeSpaces } from "./strings";
+
 const throwTypeError = (msg) => {
   throw new Error("Type Error: " + msg);
 };
@@ -53,7 +55,7 @@ export const getDictionaryTypes = (type) => {
 
 export const getArrayType = (type) => {
   const match = /\[(.*)\]/.exec(type);
-  return match[1];
+  return removeSpaces(match[1]);
 };
 
 /**

@@ -64,7 +64,7 @@ export const sansExtension = (fileName) => {
   return fileName.replace(/\..*/, "");
 };
 
-export const prettify = (code) => {
+export const prettify = (code, props) => {
   // Use the same formatting options as in this repository
   // TODO: read prettier config from local folder
   const options = {
@@ -75,6 +75,7 @@ export const prettify = (code) => {
     singleQuote: false,
     trailingComma: "es5",
     tabWidth: 2,
+    ...props
   };
   return prettier.format(code, { parser: "babel", plugins: [parserBabel], ...options });
 };
