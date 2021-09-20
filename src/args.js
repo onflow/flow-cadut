@@ -38,7 +38,7 @@ const throwTypeError = (msg) => {
 
 export const splitArgs = (pair) => {
   return pair
-    .split(/(\w+)\s*:\s*([\w{}[\]:\s]*)/)
+    .split(/(\w+)\s*:\s*([\w{}[\]:\s?]*)/)
     .filter((item) => item !== "")
     .map((item) => item.replace(/\s*/g, ""));
 };
@@ -87,23 +87,32 @@ export const reportMissing = (itemType = "items", found, required, prefix = "") 
   }
 };
 
+export const raw = (type) => type.slice(0, -1);
+
+export const resolveBasicType = (type) => {
+  if (type.includes("?")) {
+    return t.Optional(t[raw(type)]);
+  }
+  return t[type];
+};
+
 export const resolveType = (type) => {
   if (isComplexType(type)) {
     switch (true) {
       case isArray(type): {
         const arrayType = getArrayType(type);
-        let finalType = t[arrayType];
+        let finalType = resolveBasicType(arrayType);
         if (isArray(arrayType)) {
           finalType = resolveType(arrayType);
         }
         return t.Array(finalType);
       }
-      default:
-        return t[type];
+      default: {
+        return resolveBasicType(type);
+      }
     }
   }
-
-  return t[type];
+  return resolveBasicType(type);
 };
 
 /**
@@ -113,26 +122,31 @@ export const resolveType = (type) => {
  * @returns any - mapped fcl.arg value
  */
 export const mapArgument = (type, value) => {
+  const resolvedType = resolveType(type);
+
   switch (true) {
     case isBasicType(type): {
-      return fcl.arg(value, t[type]);
+      return fcl.arg(value, resolvedType);
     }
 
     case isFixedNumType(type): {
       // Try to parse value and throw if it fails
+      if (value === null) {
+        return fcl.arg(null, resolvedType);
+      }
       if (isNaN(parseFloat(value))) {
         throwTypeError("Expected proper value for fixed type");
       }
-      return fcl.arg(toFixedValue(value), t[type]);
+      return fcl.arg(toFixedValue(value), resolvedType);
     }
 
     case isAddress(type): {
-      return fcl.arg(withPrefix(value), t[type]);
+      const prefixedAddress = withPrefix(value)
+      return fcl.arg(prefixedAddress, resolvedType);
     }
 
     case isArray(type): {
       const arrayType = getArrayType(type);
-      const resolvedType = resolveType(type);
 
       if (isComplexType(arrayType)) {
         return fcl.arg(
@@ -141,7 +155,6 @@ export const mapArgument = (type, value) => {
           resolvedType
         );
       }
-
       return fcl.arg(value, resolvedType);
     }
 
@@ -163,7 +176,9 @@ export const mapArgument = (type, value) => {
           value: resolvedValue,
         });
       }
-      return fcl.arg(finalValue, t.Dictionary({ key: t[keyType], value: t[valueType] }));
+      const resolvedKeyType = resolveType(keyType);
+      const resolvedValueType = resolveType(valueType);
+      return fcl.arg(finalValue, t.Dictionary({ key: resolvedKeyType, value: resolvedValueType }));
     }
 
     default: {

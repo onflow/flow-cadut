@@ -27,10 +27,17 @@ export const isFixedNumType = (type) => {
 export const isString = (type) => type === "String";
 export const isCharacter = (type) => type === "Character";
 export const isBoolean = (type) => type === "Bool";
-export const isAddress = (type) => type === "Address";
+export const isAddress = (type) => type === "Address" || type === "Address?";
 
-export const isBasicType = (type) =>
-  isBasicNumType(type) || isString(type) || isCharacter(type) || isBoolean(type);
+export const isBasicType = (type) => {
+  let fixedType = type.endsWith("?") ? type.slice(0, -1) : type;
+  return (
+    isBasicNumType(fixedType) ||
+    isString(fixedType) ||
+    isCharacter(fixedType) ||
+    isBoolean(fixedType)
+  );
+};
 
 export const isArray = (type) => {
   const clearType = type.replace(/\s/g, "");

@@ -5,7 +5,7 @@ import {
   SCRIPT,
   TRANSACTION,
   extractTransactionArguments,
-  extractScriptArguments,
+  extractScriptArguments
 } from "../src/parser";
 
 describe("parser", () => {
@@ -62,6 +62,22 @@ describe("parser", () => {
     `;
     const output = extractTransactionArguments(input);
     expect(output.length).toBe(1);
+  });
+
+  test("extract transaction arguments - multiline declaration", () => {
+    const input = ` // nothing here
+      // this is some basic transaction we want to send
+      transaction(
+          a: Int,
+          b: String
+        ) {
+        prepare(){
+          log("hello")
+        }
+      }
+    `;
+    const output = extractTransactionArguments(input);
+    expect(output.length).toBe(2);
   });
 });
 
@@ -149,3 +165,21 @@ describe("template type checker", () => {
     expect(type).toBe(TRANSACTION);
   });
 });
+
+describe("interaction signatures", ()=>{
+  test("multi line transaction signature", async ()=>{
+    const code = `
+      // this is some basic transaction we want to send
+      transaction(
+        a: Int,
+        b: String
+      ) {
+        prepare(){}
+      }
+    `
+    const args = extractTransactionArguments(code);
+    expect(args.length).toBe(2)
+    expect(args[0]).toBe("a:Int")
+    expect(args[1]).toBe("b:String")
+  })
+})

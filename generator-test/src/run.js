@@ -1,5 +1,4 @@
 import flow from "./generated";
-import { deployContract } from "../../src";
 import { authorization } from "./crypto";
 import { init } from "./utils";
 

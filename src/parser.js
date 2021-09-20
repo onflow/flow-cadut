@@ -23,36 +23,37 @@ export const TRANSACTION = "transaction";
 export const SCRIPT = "script";
 export const UNKNOWN = "unknown";
 
+
 export const extract = (code, keyWord) => {
-  const target = code
-    .split(/\r\n|\n|\r/)
-    .map(collapseSpaces)
-    .find((line) => {
-      return new RegExp(keyWord, "g").test(line);
-    });
+  const target = collapseSpaces(code.replace(/[\n\r]/g, ""))
 
   if (target) {
-    const match = target.match(/(?:\()(.*)(?:\))/);
+    const regexp = new RegExp(keyWord, "g")
+    const match = regexp.exec(target);
+
     if (match) {
       if (match[1] === "") {
         return [];
       }
-      return match[1].split(",").map((item) => item.replace(/\s*/g, ""));
+      return match[1]
+        .split(",")
+        .map((item) => item.replace(/\s*/g, ""))
+        .filter(item => item !== "")
     }
   }
   return [];
 };
 
 export const extractSigners = (code) => {
-  return extract(code, "prepare");
+  return extract(code, `(?:prepare\\s*\\(\\s*)([^\\)]*)(?:\\))`);
 };
 
 export const extractScriptArguments = (code) => {
-  return extract(code, "fun\\s+main");
+  return extract(code, `(?:fun\\s+main\\(\\s*)([^\\)]*)(?:\\))`);
 };
 
 export const extractTransactionArguments = (code) => {
-  return extract(code, `transaction\\s*(?:\\()(.*)(?:\\))`);
+  return extract(code, `(?:transaction\\(\\s*)([^\\)]*)(?:\\))`);
 };
 
 export const extractContractName = (code) => {

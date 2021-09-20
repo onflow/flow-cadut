@@ -1,6 +1,6 @@
 {
   "name": "flow-cadut",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Flow Cadence Template Utilities",
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
@@ -30,7 +30,7 @@
     "check-headers": "sh ./check-headers.sh",
     "prepublishOnly": "npm test && npm run build",
     "precompile-handlebars": "node_modules/.bin/handlebars src/templates -f ./src/templates/index.js -e hbs -c handlebars",
-    "generate-dev": "flow-generate ./dev-test/cadence ./dev-test/src/generated -d ../../../../src",
+    "generate-dev": "flow-generate ./generator-test/cadence ./generator-test/src/generated -d ../../../../src",
     "regenerate-test": "npm run precompile-handlebars && npm run generate-dev"
   },
   "bin": {
@@ -46,7 +46,8 @@
     "handlebars-loader": "^1.7.1",
     "rimraf": "^3.0.2",
     "simple-git": "^2.40.0",
-    "yargs": "^15.4.1"
+    "yargs": "^15.4.1",
+    "prettier": "^2.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.3",
@@ -56,8 +57,7 @@
     "eslint-plugin-jest": "^24.3.6",
     "jest": "^26.6.3",
     "jest-esm-transformer": "^1.0.0",
-    "microbundle": "^0.13.0",
-    "prettier": "^2.3.0"
+    "microbundle": "^0.13.0"
   },
   "eslintConfig": {
     "ignorePatterns": [
@@ -82,6 +82,9 @@
   "jest": {
     "coveragePathIgnorePatterns": [
       "/node_modules/"
+    ],
+    "testPathIgnorePatterns": [
+      "/dev-test/"
     ],
     "testEnvironment": "node",
     "verbose": true

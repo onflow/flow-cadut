@@ -26,4 +26,8 @@ export const withPrefix = (address) => {
   return "0x" + sansPrefix(address);
 };
 
-export const toFixedValue = (val) => val.toString();
+export const padAddress = (address) => {
+  return "0x" + sansPrefix(address).padStart(16, "0");
+};
+
+export const toFixedValue = (val) => parseFloat(val).toFixed(8);
