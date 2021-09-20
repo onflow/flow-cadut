@@ -1,12 +1,13 @@
 import path from "path";
-import { query } from "@onflow/fcl";
+import { config, query } from "@onflow/fcl";
 import { emulator, init } from "flow-js-testing";
 import { mapValuesToCode } from "../../src";
+import { mutate } from "../utils";
 
 // Increase timeout if your tests failing due to timeout
 jest.setTimeout(10000);
 
-describe("multi-line", () => {
+describe("arguments - scripts", () => {
   beforeAll(async () => {
     const basePath = path.resolve(__dirname, "../cadence");
     // You can specify different port to parallelize execution of describe blocks
@@ -23,7 +24,7 @@ describe("multi-line", () => {
     return emulator.stop();
   });
 
-  test("single line arguments - script", async () => {
+  test("single line arguments", async () => {
     const cadence = `
       pub fun main(a: UInt64,b: UInt64): UInt64 {
         return a + b
@@ -38,7 +39,7 @@ describe("multi-line", () => {
     expect(result).toBe(a + b);
   });
 
-  test("single line arguments - script - trailing comma", async () => {
+  test("single line arguments - trailing comma", async () => {
     const cadence = `
       pub fun main(a: UInt64,b: UInt64,): UInt64 {
         return a + b
@@ -53,7 +54,7 @@ describe("multi-line", () => {
     expect(result).toBe(a + b);
   });
 
-  test("multi line arguments - script", async () => {
+  test("multi line arguments", async () => {
     const cadence = `
       pub fun main(
         a: UInt64,
@@ -71,7 +72,7 @@ describe("multi-line", () => {
     expect(result).toBe(a + b);
   });
 
-  test("multi line arguments - script - trailing comma", async () => {
+  test("multi line arguments - trailing comma", async () => {
     const cadence = `
       pub fun main(
         a: UInt64,
@@ -87,5 +88,138 @@ describe("multi-line", () => {
       args: () => mapValuesToCode(cadence, [a, b]),
     });
     expect(result).toBe(a + b);
+  });
+});
+
+const txSingleLine = `
+  transaction(a: UInt64, b: UInt64, sum: UInt64){
+    prepare(signer: AuthAccount){
+      assert(a + b == sum, message: "wrong!")
+    }
+  }
+`;
+
+const txSingleLineTrailingComma = `
+  transaction(a: UInt64, b: UInt64, sum: UInt64,){
+    prepare(signer: AuthAccount){
+      assert(a + b == sum, message: "wrong!")
+    }
+  }
+`;
+
+const txMultiLine = `
+  transaction(
+    a: UInt64, 
+    b: UInt64, 
+    sum: UInt64
+  ){
+    prepare(signer: AuthAccount){
+      assert(a + b == sum, message: "wrong!")
+    }
+  }
+`;
+
+const txMultiLineTrailingComma = `
+  transaction(
+    a: UInt64, 
+    b: UInt64, 
+    sum: UInt64,
+  ){
+    prepare(signer: AuthAccount){
+      assert(a + b == sum, message: "wrong!")
+    }
+  }
+`;
+
+describe("arguments - transactions", () => {
+  beforeAll(async () => {
+    await config().put(
+      "PRIVATE_KEY",
+      "11554395857c7995938f7c7b1f985bc3b3b829a9596c6a1a747e10a87cd3f8a6"
+    );
+    await config().put("SERVICE_ADDRESS", "f8d6e0586b0a20c7");
+
+    const basePath = path.resolve(__dirname, "../cadence");
+    // You can specify different port to parallelize execution of describe blocks
+    const port = 8080;
+    // Setting logging flag to true will pipe emulator output to console
+    const logging = false;
+
+    await init(basePath, { port, logging });
+    return emulator.start(port);
+  });
+
+  // Stop emulator, so it could be restarted
+  afterAll(async () => {
+    return emulator.stop();
+  });
+
+  test("single line", async () => {
+    const cadence = txSingleLine;
+    const a = 1;
+    const b = 2;
+    const sum = a + b;
+
+    const args = [a, b, sum];
+    const { status, errorMessage } = await mutate({ cadence, args });
+
+    expect(status).toBe(4);
+    expect(errorMessage).toBe("");
+  });
+
+  test("single line - trailing comma", async () => {
+    const cadence = txSingleLineTrailingComma;
+    const a = 1;
+    const b = 2;
+    const sum = a + b;
+
+    const args = [a, b, sum];
+    const { status, errorMessage } = await mutate({ cadence, args });
+
+    expect(status).toBe(4);
+    expect(errorMessage).toBe("");
+  });
+
+  test("single line - failing", async () => {
+    const cadence = txSingleLine;
+    const a = 1;
+    const b = 2;
+    const sum = 42;
+
+    const args = [a, b, sum];
+
+    let errorMessage = "";
+    try {
+      await mutate({ cadence, args });
+    } catch (e) {
+      errorMessage = e.toString();
+    }
+    expect(errorMessage.includes("wrong!")).toBe(true);
+  });
+
+  test("multi line", async () => {
+    const cadence = txMultiLine;
+    const a = 1;
+    const b = 2;
+    const sum = a + b;
+
+    const args = [a, b, sum];
+    const { status, errorMessage } = await mutate({ cadence, args });
+
+    expect(status).toBe(4);
+    expect(errorMessage).toBe("");
+  });
+
+  test("multi line - trailing comma", async () => {
+    const cadence = txMultiLineTrailingComma;
+    const a = 1;
+    const b = 2;
+    const sum = a + b;
+
+    const args = [a, b, sum];
+    const { status, errorMessage } = await mutate({ cadence, args });
+
+    expect(status).toBe(4);
+    expect(errorMessage).toBe("");
   });
 });
