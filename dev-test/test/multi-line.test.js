@@ -135,7 +135,7 @@ describe("arguments - transactions", () => {
   beforeAll(async () => {
     await config().put(
       "PRIVATE_KEY",
-      "11554395857c7995938f7c7b1f985bc3b3b829a9596c6a1a747e10a87cd3f8a6"
+      "2594485368239971d66c1017f887e7265609d8a568cd6271b7626f5f14d0c2b4"
     );
     await config().put("SERVICE_ADDRESS", "f8d6e0586b0a20c7");
 
