@@ -214,6 +214,26 @@ describe("spaces in definitions", ()=>{
 })
 
 describe("interaction signatures", () => {
+  test("multi line transaction signature - no arguments", async () => {
+    const code = `
+      // this is some basic transaction we want to send
+      transaction     {
+        prepare(){}
+      }
+    `;
+    const args = extractTransactionArguments(code);
+    expect(args.length).toBe(0);
+  });
+
+  test("multi line script signature", async () => {
+    const code = `
+      // this is some basic transaction we want to send
+      pub fun main      (       ) : String { return "Hello" }
+    `;
+    const args = extractTransactionArguments(code);
+    expect(args.length).toBe(0);
+  });
+
   test("multi line transaction signature", async () => {
     const code = `
       // this is some basic transaction we want to send
