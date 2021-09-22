@@ -23,22 +23,24 @@ export const TRANSACTION = "transaction";
 export const SCRIPT = "script";
 export const UNKNOWN = "unknown";
 
+export const generateSchema = (argsDefinition) =>
+  argsDefinition
+    .split(",")
+    .map((item) => item.replace(/\s*/g, ""))
+    .filter((item) => item !== "");
 
 export const extract = (code, keyWord) => {
-  const target = collapseSpaces(code.replace(/[\n\r]/g, ""))
+  const target = collapseSpaces(code.replace(/[\n\r]/g, ""));
 
   if (target) {
-    const regexp = new RegExp(keyWord, "g")
+    const regexp = new RegExp(keyWord, "g");
     const match = regexp.exec(target);
 
     if (match) {
       if (match[1] === "") {
         return [];
       }
-      return match[1]
-        .split(",")
-        .map((item) => item.replace(/\s*/g, ""))
-        .filter(item => item !== "")
+      return generateSchema(match[1])
     }
   }
   return [];
@@ -68,6 +70,23 @@ export const extractContractName = (code) => {
   return matches[1];
 };
 
+export const extractContractParameters = (code) => {
+  const complexMatcher = /(resource|struct)\s+\w+\s*{[\s\S]+?}/g;
+  const contractNameMatcher =
+    /\w+\s+contract\s+(?:interface)*\s*(\w*)(\s*{[.\s\S]*init\s*\((.*?)\)[.\s\S]*})?/g;
+  const clean = code.replace(complexMatcher, "");
+  const matches = contractNameMatcher.exec(clean);
+
+  if (matches.length < 2) {
+    throw new Error("Contract Error: can't find name of the contract");
+  }
+
+  return {
+    contractName: matches[1],
+    args: matches[3] || "",
+  };
+};
+
 export const getTemplateInfo = (code) => {
   const contractMatcher = /\w+\s+contract\s+(\w*\s*)\w*/g;
   const transactionMatcher = /transaction\s*(\(\s*\))*\s*/g;
@@ -93,11 +112,11 @@ export const getTemplateInfo = (code) => {
 
   if (contractMatcher.test(code)) {
     // TODO: implement extraction from `init` method
-    const contractName = extractContractName(code);
+    const { contractName, args } = extractContractParameters(code);
     return {
       type: CONTRACT,
       signers: 1,
-      args: [],
+      args,
       contractName,
     };
   }
