@@ -5,7 +5,7 @@ import {
   SCRIPT,
   TRANSACTION,
   extractTransactionArguments,
-  extractScriptArguments
+  extractScriptArguments,
 } from "../src/parser";
 
 describe("parser", () => {
@@ -78,6 +78,16 @@ describe("parser", () => {
     `;
     const output = extractTransactionArguments(input);
     expect(output.length).toBe(2);
+  });
+
+  test("extract transaction arguments - spaces in definition", () => {
+    const input = `
+      transaction ( code: String ) {
+        prepare( admin: AuthAccount) { }  
+      }
+    `;
+    const output = extractTransactionArguments(input);
+    expect(output.length).toBe(1);
   });
 });
 
@@ -166,8 +176,45 @@ describe("template type checker", () => {
   });
 });
 
-describe("interaction signatures", ()=>{
-  test("multi line transaction signature", async ()=>{
+describe("spaces in definitions", ()=>{
+  test("spaces in definition - transaction", () => {
+    const input = `
+      transaction ( code: String ) {
+        prepare(  signer:   AuthAccount    ) {}
+      }
+    `;
+    const { type, signers, args } = getTemplateInfo(input);
+    expect(type).toBe(TRANSACTION);
+    expect(signers).toBe(1);
+    expect(args.length).toBe(1);
+  });
+
+  test("spaces in definition - more spaces", () => {
+    const input = `
+      transaction      (    code:            String        ) {
+        prepare(  signer:                AuthAccount          ) {}
+      }
+    `;
+    const { type, signers, args } = getTemplateInfo(input);
+    expect(type).toBe(TRANSACTION);
+    expect(signers).toBe(1);
+    expect(args.length).toBe(1);
+  });
+
+  test("script", () => {
+    const input = `
+      pub fun main ( code:        String ) {
+         log(code)
+      }
+    `;
+    const { type, args } = getTemplateInfo(input);
+    expect(type).toBe(SCRIPT);
+    expect(args.length).toBe(1);
+  });
+})
+
+describe("interaction signatures", () => {
+  test("multi line transaction signature", async () => {
     const code = `
       // this is some basic transaction we want to send
       transaction(
@@ -176,10 +223,10 @@ describe("interaction signatures", ()=>{
       ) {
         prepare(){}
       }
-    `
+    `;
     const args = extractTransactionArguments(code);
-    expect(args.length).toBe(2)
-    expect(args[0]).toBe("a:Int")
-    expect(args[1]).toBe("b:String")
-  })
-})
+    expect(args.length).toBe(2);
+    expect(args[0]).toBe("a:Int");
+    expect(args[1]).toBe("b:String");
+  });
+});
