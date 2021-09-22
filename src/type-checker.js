@@ -16,11 +16,15 @@
  * limitations under the License.
  */
 
+export const wrongType = (type) => !type || typeof type != "string";
+
 export const isBasicNumType = (type) => {
+  if (wrongType(type)) return false;
   return type.startsWith("Int") || type.startsWith("UInt") || type.startsWith("Word");
 };
 
 export const isFixedNumType = (type) => {
+  if (wrongType(type)) return false;
   return type.startsWith("Fix64") || type.startsWith("UFix64");
 };
 
@@ -30,6 +34,8 @@ export const isBoolean = (type) => type === "Bool";
 export const isAddress = (type) => type === "Address" || type === "Address?";
 
 export const isBasicType = (type) => {
+  if (wrongType(type)) return false;
+
   let fixedType = type.endsWith("?") ? type.slice(0, -1) : type;
   return (
     isBasicNumType(fixedType) ||
@@ -40,12 +46,15 @@ export const isBasicType = (type) => {
 };
 
 export const isArray = (type) => {
+  if (wrongType(type)) return false;
+
   const clearType = type.replace(/\s/g, "");
-  const result = clearType.startsWith("[") && clearType.endsWith("]");
-  return result;
+  return clearType.startsWith("[") && clearType.endsWith("]");
 };
 
 export const isDictionary = (type) => {
+  if (wrongType(type)) return false;
+
   const clearType = type.replace(/\s/g, "");
   return clearType.startsWith("{") && clearType.endsWith("}");
 };
