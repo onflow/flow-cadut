@@ -49,11 +49,11 @@ export const extractSigners = (code) => {
 };
 
 export const extractScriptArguments = (code) => {
-  return extract(code, `(?:fun\\s+main\\(\\s*)([^\\)]*)(?:\\))`);
+  return extract(code, `(?:fun\\s+main\\s*\\(\\s*)([^\\)]*)(?:\\))`);
 };
 
 export const extractTransactionArguments = (code) => {
-  return extract(code, `(?:transaction\\(\\s*)([^\\)]*)(?:\\))`);
+  return extract(code, `(?:transaction\\s*\\(\\s*)([^\\)]*)(?:\\))`);
 };
 
 export const extractContractName = (code) => {
