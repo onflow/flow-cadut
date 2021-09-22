@@ -192,7 +192,7 @@ describe("spaces in definitions", ()=>{
   test("spaces in definition - more spaces", () => {
     const input = `
       transaction      (    code:            String        ) {
-        prepare(  signer:                AuthAccount          ) {}
+        prepare       (  signer:                AuthAccount          ) {}
       }
     `;
     const { type, signers, args } = getTemplateInfo(input);
