@@ -6,6 +6,7 @@ import {
   TRANSACTION,
   extractTransactionArguments,
   extractScriptArguments,
+  extractContractParameters,
 } from "../src/parser";
 
 describe("parser", () => {
@@ -111,6 +112,114 @@ describe("extract contract name", () => {
   });
 });
 
+describe("extract contract parameters", () => {
+  test("no init method in code", () => {
+    const contractName = "Hello";
+    const input = `
+    pub contract ${contractName}     {
+      // no init method here either
+    }
+  `;
+    const output = extractContractParameters(input);
+    expect(output.contractName).toBe(contractName);
+    expect(output.args).toBe("");
+  });
+
+  test("no init method in code - interface", () => {
+    const contractName = "Hello";
+    const input = `
+    pub contract interface ${contractName}     {
+      // no init method here either
+    }
+  `;
+    const output = extractContractParameters(input);
+    expect(output.contractName).toBe(contractName);
+    expect(output.args).toBe("");
+  });
+
+  test("with init method in code - no arguments", () => {
+    const contractName = "Hello";
+    const input = `
+    pub contract interface ${contractName}     {
+      // init method here
+      init(){}
+    }
+  `;
+    const output = extractContractParameters(input);
+    expect(output.contractName).toBe(contractName);
+    expect(output.args).toBe("");
+  });
+
+  test("with init method in code - single argument", () => {
+    const contractName = "Hello";
+    const args = "a: String";
+    const input = `
+    pub contract interface ${contractName}     {
+      // init method here
+      init(${args}){}
+    }
+  `;
+    const output = extractContractParameters(input);
+    expect(output.contractName).toBe(contractName);
+    expect(output.args).toBe(args);
+  });
+
+  test("with init method in code - multiple argument", () => {
+    const contractName = "Hello";
+    const args = "a: String, b: {String: String}";
+    const input = `
+    pub contract interface ${contractName}     {
+      // init method here
+      init(${args}){}
+    }
+  `;
+    const output = extractContractParameters(input);
+    expect(output.contractName).toBe(contractName);
+    expect(output.args).toBe(args);
+  });
+
+  test("init method on resource", () => {
+    const contractName = "Hello";
+    const input = `
+    pub contract interface ${contractName}     {
+      // init method on resource
+      resource Token{
+        pub let balance: UInt
+        init(balance: UInt){
+          self.balance = balance
+        }
+      }
+    }
+  `;
+    const output = extractContractParameters(input);
+    expect(output.contractName).toBe(contractName);
+    expect(output.args).toBe("");
+  });
+
+  test("init method on resource - contract init before resource", () => {
+    const contractName = "Hello";
+    const args = "a: String, b: {String: String}";
+    const input = `
+    pub contract interface ${contractName}     {
+      init(${args}){ 
+        // contract initialization here
+      }
+      
+      // init method on resource
+      resource Token{
+        pub let balance: UInt
+        init(balance: UInt){
+          self.balance = balance
+        }
+      }
+    }
+  `;
+    const output = extractContractParameters(input);
+    expect(output.contractName).toBe(contractName);
+    expect(output.args).toBe(args);
+  });
+});
+
 describe("template type checker", () => {
   test("is contract - script", () => {
     const input = `
@@ -176,7 +285,7 @@ describe("template type checker", () => {
   });
 });
 
-describe("spaces in definitions", ()=>{
+describe("spaces in definitions", () => {
   test("spaces in definition - transaction", () => {
     const input = `
       transaction ( code: String ) {
@@ -211,7 +320,7 @@ describe("spaces in definitions", ()=>{
     expect(type).toBe(SCRIPT);
     expect(args.length).toBe(1);
   });
-})
+});
 
 describe("interaction signatures", () => {
   test("multi line transaction signature - no arguments", async () => {
