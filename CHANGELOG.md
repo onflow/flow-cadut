@@ -1,3 +1,6 @@
+### 0.1.8 - 2021-09-22
+- Fixed parser issue, when extra spaces are present in argument definition
+
 ### 0.1.7 - 2021-09-20
 - Added support for Optionals
 - Added support for multi-line arguments
