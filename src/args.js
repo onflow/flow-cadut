@@ -28,6 +28,7 @@ import {
   isArray,
   isDictionary,
   isComplexType,
+  wrongType,
 } from "./type-checker";
 
 import { removeSpaces } from "./strings";
@@ -90,6 +91,8 @@ export const reportMissing = (itemType = "items", found, required, prefix = "") 
 export const raw = (type) => type.slice(0, -1);
 
 export const resolveBasicType = (type) => {
+  if (wrongType(type)) return false;
+
   if (type.includes("?")) {
     return t.Optional(t[raw(type)]);
   }
@@ -141,7 +144,7 @@ export const mapArgument = (type, value) => {
     }
 
     case isAddress(type): {
-      const prefixedAddress = withPrefix(value)
+      const prefixedAddress = withPrefix(value);
       return fcl.arg(prefixedAddress, resolvedType);
     }
 

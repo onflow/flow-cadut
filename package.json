@@ -1,6 +1,6 @@
 {
   "name": "flow-cadut",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Flow Cadence Template Utilities",
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
@@ -39,15 +39,15 @@
   "dependencies": {
     "@babel/preset-env": "^7.14.5",
     "@onflow/config": "0.0.2",
-    "@onflow/fcl": "^0.0.71",
+    "@onflow/fcl": "^0.0.76",
     "@onflow/types": "^0.0.4",
     "esm": "^3.2.25",
     "handlebars": "^4.7.7",
     "handlebars-loader": "^1.7.1",
+    "prettier": "^2.3.0",
     "rimraf": "^3.0.2",
     "simple-git": "^2.40.0",
-    "yargs": "^15.4.1",
-    "prettier": "^2.3.0"
+    "yargs": "^15.4.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.3",

@@ -24,6 +24,34 @@ describe("optional arguments", () => {
     return emulator.stop();
   });
 
+  it("failing split", async () => {
+    const input = ["Hello"];
+    const cadence = `
+      pub fun main(message: String):String {
+        return message
+      }
+    `;
+
+    const args = () => mapValuesToCode(cadence, input);
+    const output = await query({ cadence, args });
+
+    expect(output).toBe(input[0]);
+  });
+
+  it("basic - UFix64 and Address", async () => {
+    const input = [1337, "0x01"];
+    const cadence = `
+      pub fun main(number: UFix64, address: Address):UFix64{
+        return number
+      }
+    `;
+
+    const args = () => mapValuesToCode(cadence, input);
+    const output = await query({ cadence, args });
+
+    expect(output).toBe(toFixedValue(input[0]));
+  });
+
   it("optionals - String? - no value", async () => {
     const input = null;
     const cadence = `
