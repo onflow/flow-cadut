@@ -21,6 +21,7 @@
   "homepage": "https://github.com/onflow/flow-cadut#readme",
   "source": "src/index.js",
   "main": "dist/index.js",
+  "module": "dist/index.js",
   "scripts": {
     "build": "microbundle",
     "watch": "microbundle watch",
