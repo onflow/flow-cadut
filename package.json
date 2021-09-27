@@ -1,6 +1,6 @@
 {
   "name": "flow-cadut",
-  "version": "0.1.9-alpha.2",
+  "version": "0.1.9-alpha.3",
   "description": "Flow Cadence Template Utilities",
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
@@ -21,7 +21,8 @@
   "homepage": "https://github.com/onflow/flow-cadut#readme",
   "source": "src/index.js",
   "main": "dist/index.js",
-  "module": "dist/index.js",
+  "module": "dist/index.module.js",
+  "unpkg": "dist/index.umd.js",
   "scripts": {
     "build": "microbundle",
     "watch": "microbundle watch",
