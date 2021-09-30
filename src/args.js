@@ -150,13 +150,18 @@ export const mapArgument = (type, value) => {
 
     case isArray(type): {
       const arrayType = getArrayType(type);
+      console.log({ arrayType, resolvedType });
 
       if (isComplexType(arrayType)) {
-        return fcl.arg(
-          value,
-          // value.map((v) => mapArgument(arrayType, v)),
-          resolvedType
-        );
+        const mappedValue = value.map((v) => {
+          const mapped = mapArgument(arrayType, v).value;
+          return mapped;
+        });
+        const finalArg = fcl.arg(mappedValue, resolvedType);
+        console.log({ mappedValue: JSON.stringify(mappedValue) });
+        console.log({ finalArg: JSON.stringify(finalArg) });
+
+        return finalArg
       }
       return fcl.arg(value, resolvedType);
     }
