@@ -30,26 +30,33 @@ describe("arguments - scripts", () => {
       }
     `;
 
+
     const meta = [
       {
-        name: "first",
-        powerLevel: "James",
+        name: "James",
+        powerLevel: "3000",
       },
       {
-        name: "second",
-        powerLevel: "Hunter",
+        name: "Hunter",
+        powerLevel: "9000",
       },
     ];
 
+    /*
+    const meta = {
+      name: "James"
+    }
+     */
+
     var data = [
       [
-        { key: "first", value: "James" },
-        { key: "second", value: "Hunter" },
+        { key: "name", value: "James" },
+        { key: "powerLevel", value: "3000" },
       ],
 
       [
-        { key: "foo1", value: "bar1" },
-        { key: "woot1", value: "boot1" },
+        { key: "name", value: "Hunter" },
+        { key: "powerLevel", value: "9000" },
       ],
     ];
 
@@ -60,10 +67,17 @@ describe("arguments - scripts", () => {
       // args: () => mapped,
 
       args: (arg, t) => {
-        const single = arg(data, t.Array(t.Dictionary({ key: t.String, value: t.String })));
-        console.log({ single: JSON.stringify(single) });
-        return [single];
+        /*
+        const arrayType = t.Array(t.Dictionary({ key: t.String, value: t.String }));
+        const single = [arg(data, arrayType)];
+        const singleString = JSON.stringify(single);
+        const mappedString = JSON.stringify(mapped);
+        console.log({ singleString, mappedString, equal: singleString == mappedString });
+        console.log({ arrayType: JSON.stringify(arrayType) });
+        */
+        return mapped;
       },
+
 
     });
     console.log({ result });

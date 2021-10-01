@@ -158,12 +158,16 @@ export const mapArgument = (type, value) => {
           return mapped;
         });
         const finalArg = fcl.arg(mappedValue, resolvedType);
-        console.log({ mappedValue: JSON.stringify(mappedValue) });
+        // console.log({ mappedValue: JSON.stringify(mappedValue) });
         console.log({ finalArg: JSON.stringify(finalArg) });
+        console.log({ resolvedType: JSON.stringify(resolvedType) });
 
-        return finalArg
+        return finalArg;
       }
-      return fcl.arg(value, resolvedType);
+      return fcl.arg(
+        value,
+        fcl.t.Array(fcl.t.Dictionary({ key: fcl.t.String, value: fcl.t.String }))
+      );
     }
 
     case isDictionary(type): {
@@ -186,7 +190,13 @@ export const mapArgument = (type, value) => {
       }
       const resolvedKeyType = resolveType(keyType);
       const resolvedValueType = resolveType(valueType);
-      return fcl.arg(finalValue, t.Dictionary({ key: resolvedKeyType, value: resolvedValueType }));
+      const finalType = t.Dictionary({ key: resolvedKeyType, value: resolvedValueType });
+
+      console.log({ finalType });
+
+      const returnValue =  fcl.arg(finalValue, finalType);
+      console.log({ returnValue });
+      return returnValue;
     }
 
     default: {
@@ -209,6 +219,7 @@ export const mapArguments = (schema = [], values) => {
   }
   return values.map((value, i) => {
     const mapped = mapArgument(schema[i], value);
+    console.log({ schema: schema[i], mapped: JSON.stringify(mapped) });
     assertType(mapped);
     return mapped;
   });
