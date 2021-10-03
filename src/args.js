@@ -104,12 +104,14 @@ export const resolveType = (type) => {
     switch (true) {
       case isArray(type): {
         const arrayType = getArrayType(type);
-        let finalType = resolveBasicType(arrayType);
-        if (isArray(arrayType)) {
-          finalType = resolveType(arrayType);
-        }
-        return t.Array(finalType);
+        return t.Array(resolveType(arrayType));
       }
+
+      case isDictionary(type): {
+        const [key, value] = getDictionaryTypes(type);
+        return t.Dictionary({ key: resolveType(key), value: resolveType(value) });
+      }
+
       default: {
         return resolveBasicType(type);
       }
@@ -150,28 +152,17 @@ export const mapArgument = (type, value) => {
 
     case isArray(type): {
       const arrayType = getArrayType(type);
-      console.log({ arrayType, resolvedType });
 
       if (isComplexType(arrayType)) {
-        const mappedValue = value.map((v) => {
-          const mapped = mapArgument(arrayType, v).value;
-          return mapped;
-        });
-        const finalArg = fcl.arg(mappedValue, resolvedType);
-        // console.log({ mappedValue: JSON.stringify(mappedValue) });
-        console.log({ finalArg: JSON.stringify(finalArg) });
-        console.log({ resolvedType: JSON.stringify(resolvedType) });
-
-        return finalArg;
+        const mappedValue = value.map((v) => mapArgument(arrayType, v).value);
+        return fcl.arg(mappedValue, resolvedType);
       }
-      return fcl.arg(
-        value,
-        fcl.t.Array(fcl.t.Dictionary({ key: fcl.t.String, value: fcl.t.String }))
-      );
+
+      return fcl.arg(value, resolvedType);
     }
 
     case isDictionary(type): {
-      const [keyType, valueType] = getDictionaryTypes(type);
+      const valueType = getDictionaryTypes(type)[1];
       const finalValue = [];
       const keys = Object.keys(value);
       for (let i = 0; i < keys.length; i++) {
@@ -188,15 +179,8 @@ export const mapArgument = (type, value) => {
           value: resolvedValue,
         });
       }
-      const resolvedKeyType = resolveType(keyType);
-      const resolvedValueType = resolveType(valueType);
-      const finalType = t.Dictionary({ key: resolvedKeyType, value: resolvedValueType });
 
-      console.log({ finalType });
-
-      const returnValue =  fcl.arg(finalValue, finalType);
-      console.log({ returnValue });
-      return returnValue;
+      return fcl.arg(finalValue, resolvedType);
     }
 
     default: {
@@ -219,7 +203,6 @@ export const mapArguments = (schema = [], values) => {
   }
   return values.map((value, i) => {
     const mapped = mapArgument(schema[i], value);
-    console.log({ schema: schema[i], mapped: JSON.stringify(mapped) });
     assertType(mapped);
     return mapped;
   });
