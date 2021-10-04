@@ -104,12 +104,14 @@ export const resolveType = (type) => {
     switch (true) {
       case isArray(type): {
         const arrayType = getArrayType(type);
-        let finalType = resolveBasicType(arrayType);
-        if (isArray(arrayType)) {
-          finalType = resolveType(arrayType);
-        }
-        return t.Array(finalType);
+        return t.Array(resolveType(arrayType));
       }
+
+      case isDictionary(type): {
+        const [key, value] = getDictionaryTypes(type);
+        return t.Dictionary({ key: resolveType(key), value: resolveType(value) });
+      }
+
       default: {
         return resolveBasicType(type);
       }
@@ -152,17 +154,15 @@ export const mapArgument = (type, value) => {
       const arrayType = getArrayType(type);
 
       if (isComplexType(arrayType)) {
-        return fcl.arg(
-          value,
-          // value.map((v) => mapArgument(arrayType, v)),
-          resolvedType
-        );
+        const mappedValue = value.map((v) => mapArgument(arrayType, v).value);
+        return fcl.arg(mappedValue, resolvedType);
       }
+
       return fcl.arg(value, resolvedType);
     }
 
     case isDictionary(type): {
-      const [keyType, valueType] = getDictionaryTypes(type);
+      const valueType = getDictionaryTypes(type)[1];
       const finalValue = [];
       const keys = Object.keys(value);
       for (let i = 0; i < keys.length; i++) {
@@ -179,9 +179,8 @@ export const mapArgument = (type, value) => {
           value: resolvedValue,
         });
       }
-      const resolvedKeyType = resolveType(keyType);
-      const resolvedValueType = resolveType(valueType);
-      return fcl.arg(finalValue, t.Dictionary({ key: resolvedKeyType, value: resolvedValueType }));
+
+      return fcl.arg(finalValue, resolvedType);
     }
 
     default: {
