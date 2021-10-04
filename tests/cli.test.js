@@ -1,4 +1,4 @@
-import { parseArgs } from "../src/cli";
+import { parseArgs } from "../src/generator/cli";
 import { getBranchesList, getParamsFromUrl } from "../src/processor";
 
 const input = "./cadence";

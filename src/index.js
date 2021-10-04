@@ -19,15 +19,6 @@
 export { getEnvironment, setEnvironment } from "./env";
 
 export {
-  clearPath,
-  generateExports,
-  getFilesList,
-  readFile,
-  writeFile,
-  sansExtension,
-} from "./file";
-
-export {
   extractImports,
   missingImports,
   reportMissingImports,
@@ -69,7 +60,6 @@ export {
   capitalizeFirstLetter,
 } from "./strings";
 
-export { processFolder, processGitRepo } from "./processor";
 export { executeScript, sendTransaction, deployContract, updateContract } from "./interactions";
 
 // Below is a set of aliases to bring it in line with FCL
