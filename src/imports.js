@@ -101,6 +101,9 @@ export const replaceImportAddresses = (code, addressMap, byName = true) => {
   return code.replace(REGEXP_IMPORT, (match, imp, contract, _, address) => {
     const key = byName ? contract : address;
     const newAddress = addressMap instanceof Function ? addressMap(key) : addressMap[key];
-    return `${imp}${contract} from ${newAddress}`;
+
+    // If the address is not inside addressMap we shall not alter import statement
+    const validAddress = newAddress || address;
+    return `${imp}${contract} from ${validAddress}`;
   });
 };
