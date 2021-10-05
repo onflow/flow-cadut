@@ -1,5 +1,7 @@
 ### 0.1.9 - 2021-09-23
 - Add parser logic for extracting contract arguments
+- Fix argument resolver for complex types
+- Extract server side logic into separate file for proper tree shaking
 
 ### 0.1.8 - 2021-09-22
 - Fixed parser issue, when extra spaces are present in argument definition
