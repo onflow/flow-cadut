@@ -20,7 +20,7 @@ import fs from "fs";
 import { resolve, dirname } from "path";
 import prettier from "prettier";
 import parserBabel from "prettier/parser-babel";
-import { underscoreToCamelCase } from "./strings";
+import { underscoreToCamelCase } from "../strings";
 
 /**
  * Syntax sugar for file reading
@@ -75,7 +75,7 @@ export const prettify = (code, props) => {
     singleQuote: false,
     trailingComma: "es5",
     tabWidth: 2,
-    ...props
+    ...props,
   };
   return prettier.format(code, { parser: "babel", plugins: [parserBabel], ...options });
 };

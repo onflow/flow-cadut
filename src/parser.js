@@ -40,7 +40,7 @@ export const extract = (code, keyWord) => {
       if (match[1] === "") {
         return [];
       }
-      return generateSchema(match[1])
+      return generateSchema(match[1]);
     }
   }
   return [];

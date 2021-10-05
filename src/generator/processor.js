@@ -22,9 +22,9 @@ import { resolve } from "path";
 import Handlebars from "handlebars";
 import simpleGit from "simple-git";
 
-import { getSplitCharacter, trimAndSplit, underscoreToCamelCase } from "./strings";
+import { getSplitCharacter, trimAndSplit, underscoreToCamelCase } from "../strings";
 import { generateExports, getFilesList, readFile, writeFile } from "./file";
-import { getTemplateInfo, CONTRACT, SCRIPT, TRANSACTION, extractSigners } from "./parser";
+import { getTemplateInfo, CONTRACT, SCRIPT, TRANSACTION, extractSigners } from "../parser";
 
 const getFetchUrl = (input) => {
   // eslint-disable-next-line no-useless-escape
