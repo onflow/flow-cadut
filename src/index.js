@@ -35,7 +35,7 @@ export {
   splitArgs,
   argType,
   getDictionaryTypes,
-  getArrayType
+  getArrayType,
 } from "./args";
 
 export {
@@ -63,4 +63,4 @@ export {
 export { executeScript, sendTransaction, deployContract, updateContract } from "./interactions";
 
 // Below is a set of aliases to bring it in line with FCL
-export { executeScript as query, sendTransaction as mutate} from "./interactions";
+export { executeScript as query, sendTransaction as mutate } from "./interactions";

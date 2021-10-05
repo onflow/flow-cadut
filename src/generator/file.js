@@ -75,7 +75,7 @@ export const prettify = (code, props) => {
     singleQuote: false,
     trailingComma: "es5",
     tabWidth: 2,
-    ...props
+    ...props,
   };
   return prettier.format(code, { parser: "babel", plugins: [parserBabel], ...options });
 };

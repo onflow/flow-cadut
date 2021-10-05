@@ -1,7 +1,5 @@
-import path from "path";
-
 // files
-import { sansExtension } from "../src";
+import { sansExtension } from "../src/generator";
 
 // imports
 import { extractImports, missingImports, report, replaceImportAddresses } from "../src";
@@ -27,9 +25,6 @@ import {
 
 // Interactions
 import { setEnvironment, getEnvironment } from "../src";
-
-// Generator
-import { processGitRepo, processFolder } from "../src";
 
 // Templates
 import "../src/templates";
