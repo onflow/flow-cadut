@@ -21,9 +21,13 @@ import { resolveArguments } from "./args";
 import { replaceImportAddresses } from "./imports";
 
 export const prepareInteraction = async (props, type) => {
-  const { code, args, addressMap, limit } = props;
+  const { code, cadence, args, addressMap, limit, processed } = props;
 
-  const ixCode = replaceImportAddresses(code, addressMap);
+  // allow to pass code via "cadence" field simillar to fcl.query/mutate
+  const codeTemplate = code || cadence;
+
+  const ixCode = processed ? codeTemplate : replaceImportAddresses(codeTemplate, addressMap);
+
   const ixLimit = limit || 100;
 
   const ix = type === "script" ? [fcl.script(ixCode)] : [fcl.transaction(ixCode)];
@@ -53,24 +57,56 @@ export const prepareInteraction = async (props, type) => {
  */
 
 export const executeScript = async (props) => {
+  const { raw = false } = props;
   try {
     const response = await prepareInteraction(props, "script");
-    const result = await fcl.decode(response);
-    return [result, null];
+
+    // In some cases one might want to have raw output without decoding the response
+    if (raw) {
+      return [response.encodedData, null];
+    }
+
+    const decoded = await fcl.decode(response);
+    return [decoded, null];
   } catch (e) {
     return [null, e.message];
   }
+};
+
+export const waitForStatus = (statusValue) => {
+  if (typeof statusValue === "string") {
+    const status = statusValue.toLowerCase();
+    if (status.includes("final")) {
+      return "onceFinalized";
+    }
+
+    if (status.includes("exec")) {
+      return "onceExecuted";
+    }
+
+    if (status.includes("seal")) {
+      return "onceExecuted";
+    }
+  }
+
+  // wait for transaction to be sealed by default
+  console.log(
+    `⚠️ \x1b[33mStatus value \x1b[1m\x1b[35m"${statusValue}"\x1b[33m\x1b[2m is not supported. Reverting to \x1b[32m"onceSealed"\x1b[0m`
+  );
+  return "onceSealed";
 };
 
 /**
  * Submits transaction to emulator network and waits before it will be sealed.
  * Returns transaction result.
  */
-export const sendTransaction = async (props, waitForSeal = true) => {
+export const sendTransaction = async (props) => {
+  const { wait = null } = props;
   try {
     const response = await prepareInteraction(props, "transaction");
-    if (waitForSeal) {
-      const txResult = await fcl.tx(response).onceSealed();
+    if (wait) {
+      const waitMethod = waitForStatus(wait);
+      const txResult = await fcl.tx(response)[waitMethod]();
       return [txResult, null];
     }
     return [response, null];
@@ -110,12 +146,26 @@ export const updateContractTemplate = `
 export const hexContract = (contract) => Buffer.from(contract, "utf8").toString("hex");
 
 export const deployContract = async (props) => {
-  const { name, to, payer, proposer, update = false, code: contractCode } = props;
+  const {
+    name,
+    to,
+    payer,
+    proposer,
+    code: contractCode,
+    update = false,
+    processed = false,
+    addressMap = {},
+  } = props;
+
+  // Update imprort statement with addresses from addressMap
+  const ixContractCode = processed
+    ? contractCode
+    : replaceImportAddresses(contractCode, addressMap);
 
   // TODO: Implement arguments for "init" method
   const template = update ? addContractTemplate : updateContractTemplate;
 
-  const hexedCode = hexContract(contractCode);
+  const hexedCode = hexContract(ixContractCode);
   const args = [name, hexedCode];
   // Set roles
   let ixProposer = to;
