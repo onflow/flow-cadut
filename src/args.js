@@ -81,7 +81,7 @@ export const reportArguments = (found, required, prefix = "") => {
  * @param {string} prefix - error message prefix
  */
 export const reportMissing = (itemType = "items", found, required, prefix = "") => {
-  if (required > found) {
+  if (required !== found) {
     const errorMessage = `Incorrect number of ${itemType}: found ${found} of ${required}`;
     const message = prefix ? `${prefix} ${errorMessage}` : errorMessage;
     console.error(message);
