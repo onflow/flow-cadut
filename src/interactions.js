@@ -101,7 +101,7 @@ export const waitForStatus = (statusValue) => {
  * Returns transaction result.
  */
 export const sendTransaction = async (props) => {
-  const { wait = null } = props;
+  const { wait = "seal" } = props;
   try {
     const response = await prepareInteraction(props, "transaction");
     if (wait) {
