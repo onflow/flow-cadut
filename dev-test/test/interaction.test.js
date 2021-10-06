@@ -55,7 +55,7 @@ describe("arguments - scripts", () => {
       }
     `;
     const payer = authorization();
-    const txResult = await mutate({ cadence, payer, wait: "final" });
-    console.log({ txResult });
+    const [txId, err] = await mutate({ cadence, payer, wait: null });
+    console.log({ txId, err });
   });
 });

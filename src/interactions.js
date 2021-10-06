@@ -109,7 +109,7 @@ export const sendTransaction = async (props) => {
       const txResult = await fcl.tx(response)[waitMethod]();
       return [txResult, null];
     }
-    return [response, null];
+    return [response.transactionId, null];
   } catch (e) {
     return [null, e.message];
   }
