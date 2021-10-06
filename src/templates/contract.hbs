@@ -8,7 +8,7 @@ import {
 } from '{{ ixDependency }}'
 
 export const CODE = `
-  {{{ code }}}
+{{{ code }}}
 `;
 
 /**
@@ -40,5 +40,5 @@ export const  deploy{{ assetName }} = async (props) => {
   const code = await {{ assetName }}Template(addressMap);
   const name = "{{ contractName }}"
 
-  return deployContract({ code, name, ...props })
+  return deployContract({ code, name, processed: true, ...props })
 }

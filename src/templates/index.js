@@ -145,7 +145,7 @@ templates["contract"] = template({
             })
           : helper)
       ) +
-      "'\n\nexport const CODE = `\n  " +
+      "'\n\nexport const CODE = `\n" +
       ((stack1 =
         ((helper =
           (helper =
@@ -158,7 +158,7 @@ templates["contract"] = template({
               name: "code",
               hash: {},
               data: data,
-              loc: { start: { line: 11, column: 2 }, end: { line: 11, column: 14 } },
+              loc: { start: { line: 11, column: 0 }, end: { line: 11, column: 12 } },
             })
           : helper)) != null
         ? stack1
@@ -282,7 +282,7 @@ templates["contract"] = template({
             })
           : helper)
       ) +
-      '"\n\n  return deployContract({ code, name, ...props })\n}'
+      '"\n\n  return deployContract({ code, name, processed: true, ...props })\n}'
     );
   },
   useData: true,
@@ -497,7 +497,7 @@ templates["script"] = template({
             })
           : helper)
       ) +
-      "'\n\nexport const CODE = `\n  " +
+      "'\n\nexport const CODE = `\n" +
       ((stack1 =
         ((helper =
           (helper =
@@ -510,7 +510,7 @@ templates["script"] = template({
               name: "code",
               hash: {},
               data: data,
-              loc: { start: { line: 12, column: 2 }, end: { line: 12, column: 14 } },
+              loc: { start: { line: 12, column: 0 }, end: { line: 12, column: 12 } },
             })
           : helper)) != null
         ? stack1
@@ -583,7 +583,7 @@ templates["script"] = template({
             })
           : helper)
       ) +
-      " = async (props) => {\n  const { addressMap = {}, args = [] } = props\n  const code = await " +
+      " = async (props = {}) => {\n  const { addressMap = {}, args = [] } = props\n  const code = await " +
       alias4(
         ((helper =
           (helper =
@@ -634,7 +634,7 @@ templates["script"] = template({
             })
           : helper)
       ) +
-      " =>`);\n\n  return executeScript({code, ...props})\n}"
+      " =>`);\n\n  return executeScript({code, processed: true, ...props})\n}"
     );
   },
   useData: true,
@@ -675,7 +675,7 @@ templates["transaction"] = template({
             })
           : helper)
       ) +
-      "'\n\nexport const CODE = `\n  " +
+      "'\n\nexport const CODE = `\n" +
       ((stack1 =
         ((helper =
           (helper =
@@ -688,7 +688,7 @@ templates["transaction"] = template({
               name: "code",
               hash: {},
               data: data,
-              loc: { start: { line: 12, column: 2 }, end: { line: 12, column: 14 } },
+              loc: { start: { line: 12, column: 0 }, end: { line: 12, column: 12 } },
             })
           : helper)) != null
         ? stack1
@@ -778,7 +778,7 @@ templates["transaction"] = template({
             })
           : helper)
       ) +
-      " = async (props) => {\n  const { addressMap, args = [], signers = [] } = props;\n  const code = await " +
+      " = async (props = {}) => {\n  const { addressMap, args = [], signers = [] } = props;\n  const code = await " +
       alias4(
         ((helper =
           (helper =
@@ -791,7 +791,7 @@ templates["transaction"] = template({
               name: "assetName",
               hash: {},
               data: data,
-              loc: { start: { line: 41, column: 21 }, end: { line: 41, column: 35 } },
+              loc: { start: { line: 41, column: 21 }, end: { line: 41, column: 34 } },
             })
           : helper)
       ) +
@@ -863,7 +863,7 @@ templates["transaction"] = template({
             })
           : helper)
       ) +
-      " =>`);\n\n  return sendTransaction({code, ...props})\n}"
+      " =>`);\n\n  return sendTransaction({code, processed: true, ...props})\n}"
     );
   },
   useData: true,
