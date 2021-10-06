@@ -16,12 +16,12 @@ describe("arguments - scripts", () => {
     const logging = false;
 
     await init(basePath, { port, logging });
-    // return emulator.start(port);
+    return emulator.start(port);
   });
 
   // Stop emulator, so it could be restarted
   afterAll(async () => {
-    // return emulator.stop();
+    return emulator.stop();
   });
 
   test("raw query output", async () => {
