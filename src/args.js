@@ -28,7 +28,7 @@ import {
   isArray,
   isDictionary,
   isComplexType,
-  wrongType,
+  wrongType, isBasicNumType,
 } from "./type-checker";
 
 import { removeSpaces } from "./strings";
@@ -174,8 +174,10 @@ export const mapArgument = (type, value) => {
           resolvedValue = value[key];
         }
 
+        const fixedKey = isBasicNumType(valueType) ? parseInt(key) : key
+
         finalValue.push({
-          key,
+          key: fixedKey,
           value: resolvedValue,
         });
       }
