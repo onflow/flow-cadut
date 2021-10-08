@@ -9,7 +9,7 @@ import {
 } from '{{ ixDependency }}'
 
 export const CODE = `
-  {{{ code }}}
+{{{ code }}}
 `;
 
 /**
@@ -38,10 +38,10 @@ export const {{ assetName }}Template = async (addressMap = {}) => {
 */
 export const {{ assetName }} = async (props = {}) => {
   const { addressMap, args = [], signers = [] } = props;
-  const code = await {{ assetName}}Template(addressMap);
+  const code = await {{assetName}}Template(addressMap);
 
   reportMissing("arguments", args.length, {{ argsAmount }}, `{{ assetName }} =>`);
   reportMissing("signers", signers.length, {{ signersAmount }}, `{{ assetName }} =>`);
 
-  return sendTransaction({code, ...props})
+  return sendTransaction({code, processed: true, ...props})
 }

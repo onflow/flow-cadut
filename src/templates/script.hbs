@@ -9,7 +9,7 @@ import {
 } from '{{ ixDependency }}'
 
 export const CODE = `
-  {{{ code }}}
+{{{ code }}}
 `;
 
 /**
@@ -35,5 +35,5 @@ export const {{ assetName }} = async (props = {}) => {
 
   reportMissing("arguments", args.length, {{ argsAmount }}, `{{ name }} =>`);
 
-  return executeScript({code, ...props})
+  return executeScript({code, processed: true, ...props})
 }

@@ -9,7 +9,7 @@ describe("imports tests", () => {
     expect(imports["HelloWorld"]).toBe("0x01");
   });
 
-  it("shall return a list of imports", () => {
+  it("shall return a list for multiple imports", () => {
     const code = `
             import First from 0x01
             import Second from 0x02

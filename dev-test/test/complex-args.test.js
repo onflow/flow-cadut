@@ -23,8 +23,21 @@ describe("arguments - scripts", () => {
     return emulator.stop();
   });
 
-  test("array of dictionaries", async () => {
+  test("{UInt32: UInt32} dictionary", async () => {
+    const cadence = `
+    pub fun main(data: {UInt32: UInt32}, key: UInt32): UInt32?{
+      return data[key]
+    }
+    `;
 
+    const data = [{ 0: 1, 1: 1 }, 1];
+
+    const args = () => mapValuesToCode(cadence, data);
+    const result = await query({ cadence, args });
+    console.log({ result });
+  });
+
+  test("array of dictionaries", async () => {
     const cadence = `
       pub fun main(meta: [{ String: String }]): {String: String} {
         return meta[0]
