@@ -30,11 +30,13 @@ describe("arguments - scripts", () => {
     }
     `;
 
-    const data = [{ 0: 1, 1: 1 }, 1];
+    const dict = { 0: 1, 1: 1 };
+    const key = 1;
+    const data = [dict, key];
 
     const args = () => mapValuesToCode(cadence, data);
     const result = await query({ cadence, args });
-    console.log({ result });
+    expect(result).toBe(dict[key])
   });
 
   test("array of dictionaries", async () => {
@@ -58,6 +60,48 @@ describe("arguments - scripts", () => {
     const args = () => mapValuesToCode(cadence, [meta]);
 
     const result = await query({ cadence, args });
-    console.log({ result });
+    expect(result.name).toBe(meta[0].name)
+    expect(result.powerLevel).toBe(meta[0].powerLevel)
+  });
+
+  test("dictionary of array", async () => {
+    const cadence = `
+      pub fun main(data: {String: [UInt64]}): {String: [UInt64]} {
+        return data
+      }
+    `;
+
+    const data = {
+      Starly: [1, 3, 3, 7],
+      TopShot: [42],
+    };
+
+    const args = () => mapValuesToCode(cadence, [data]);
+
+    const result = await query({ cadence, args });
+    expect(result.Starly.length).toBe(data.Starly.length)
+    expect(result.TopShot.length).toBe(data.TopShot.length)
+  });
+
+  test("dictionary of dictionaries of arrays", async () => {
+    const cadence = `
+      pub fun main(data: {Address: {String: [UInt64]}}): {Address: {String: [UInt64]}}  {
+        return data
+      }
+    `;
+
+    const user = "0x0000000000000001"
+    const data = {
+      [user]: {
+        Starly: [1, 3, 3, 7],
+        TopShot: [42],
+      },
+    };
+
+    const args = () => mapValuesToCode(cadence, [data]);
+
+    const result = await query({ cadence, args });
+    expect(result[user].Starly.length).toBe(data[user].Starly.length)
+    expect(result[user].TopShot.length).toBe(data[user].TopShot.length)
   });
 });

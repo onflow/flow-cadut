@@ -28,7 +28,8 @@ import {
   isArray,
   isDictionary,
   isComplexType,
-  wrongType, isBasicNumType,
+  wrongType,
+  isBasicNumType,
 } from "./type-checker";
 
 import { removeSpaces } from "./strings";
@@ -109,7 +110,8 @@ export const resolveType = (type) => {
 
       case isDictionary(type): {
         const [key, value] = getDictionaryTypes(type);
-        return t.Dictionary({ key: resolveType(key), value: resolveType(value) });
+        const dictionaryType = { key: resolveType(key), value: resolveType(value) };
+        return t.Dictionary(dictionaryType);
       }
 
       default: {
@@ -158,23 +160,25 @@ export const mapArgument = (type, value) => {
         return fcl.arg(mappedValue, resolvedType);
       }
 
-      return fcl.arg(value, resolvedType);
+      const result = fcl.arg(value, resolvedType);
+      return result;
     }
 
     case isDictionary(type): {
       const valueType = getDictionaryTypes(type)[1];
       const finalValue = [];
       const keys = Object.keys(value);
+
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
         let resolvedValue;
         if (isComplexType(valueType)) {
-          resolvedValue = mapArgument(valueType, value[key]);
+          resolvedValue = mapArgument(valueType, value[key]).value;
         } else {
           resolvedValue = value[key];
         }
 
-        const fixedKey = isBasicNumType(valueType) ? parseInt(key) : key
+        const fixedKey = isBasicNumType(valueType) ? parseInt(key) : key;
 
         finalValue.push({
           key: fixedKey,
@@ -182,7 +186,8 @@ export const mapArgument = (type, value) => {
         });
       }
 
-      return fcl.arg(finalValue, resolvedType);
+      const result = fcl.arg(finalValue, resolvedType);
+      return result;
     }
 
     default: {
@@ -191,7 +196,9 @@ export const mapArgument = (type, value) => {
   }
 };
 
-export const assertType = (arg) => arg.xform.asArgument(arg.value);
+export const assertType = (arg) => {
+  return arg.xform.asArgument(arg.value);
+};
 
 /**
  * Map arguments with provided schema.
