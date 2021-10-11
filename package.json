@@ -1,6 +1,6 @@
 {
   "name": "flow-cadut",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Flow Cadence Template Utilities",
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
@@ -52,7 +52,8 @@
     "prettier": "^2.3.0",
     "rimraf": "^3.0.2",
     "simple-git": "^2.40.0",
-    "yargs": "^15.4.1"
+    "yargs": "^15.4.1",
+    "esm": "^3.2.25"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.14.5",
@@ -61,7 +62,6 @@
     "babel-jest": "^26.6.3",
     "eslint": "^7.24.0",
     "eslint-plugin-jest": "^24.3.6",
-    "esm": "^3.2.25",
     "jest": "^26.6.3",
     "jest-esm-transformer": "^1.0.0",
     "microbundle": "^0.13.0"
