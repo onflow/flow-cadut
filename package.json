@@ -1,6 +1,6 @@
 {
   "name": "flow-cadut",
-  "version": "0.1.11",
+  "version": "0.1.11-alpha.1",
   "description": "Flow Cadence Template Utilities",
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
@@ -28,7 +28,7 @@
     "default": "./dist/index.modern.js"
   },
   "scripts": {
-    "build": "microbundle",
+    "build": "microbundle -i ./src/index.js -i ./src/generator/index.js",
     "watch": "microbundle watch",
     "lint": "eslint src",
     "prettify": "prettier --write {src,tests}/**/*.js {src,tests}/*.js",
