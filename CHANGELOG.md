@@ -1,3 +1,11 @@
+### 0.1.10 - 2021-10-11
+- More fixes to complex argument resolver
+- Bundle esm into main package
+
+### 0.1.10 - 2021-10-08
+- Improved interactions - return raw values and wait for specific transaction status
+- Fix argument resolver
+
 ### 0.1.9 - 2021-09-23
 - Add parser logic for extracting contract arguments
 - Fix argument resolver for complex types
