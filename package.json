@@ -19,7 +19,6 @@
     "url": "https://github.com/onflow/flow-cadut/issues"
   },
   "homepage": "https://github.com/onflow/flow-cadut#readme",
-
   "source": "src/index.js",
   "main": "dist/index.js",
   "module": "dist/index.module.js",
@@ -45,8 +44,8 @@
   },
   "dependencies": {
     "@onflow/config": "0.0.2",
-    "@onflow/fcl": "^0.0.76",
-    "@onflow/types": "^0.0.4",
+    "@onflow/fcl": "^0.0.77",
+    "@onflow/types": "^0.0.5",
     "handlebars": "^4.7.7",
     "handlebars-loader": "^1.7.1",
     "prettier": "^2.3.0",
@@ -56,9 +55,9 @@
     "esm": "^3.2.25"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.14.5",
     "@babel/cli": "^7.14.3",
     "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.5",
     "babel-jest": "^26.6.3",
     "eslint": "^7.24.0",
     "eslint-plugin-jest": "^24.3.6",
