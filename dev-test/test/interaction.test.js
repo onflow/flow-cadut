@@ -2,7 +2,6 @@ import path from "path";
 import { query, mutate } from "../../src";
 import { emulator, init } from "flow-js-testing";
 import { authorization } from "../utils";
-import { config } from "@onflow/fcl";
 
 // Increase timeout if your tests failing due to timeout
 jest.setTimeout(10000);
