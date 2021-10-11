@@ -2,7 +2,7 @@ import path from "path";
 import { emulator, init } from "flow-js-testing";
 import { query } from "@onflow/fcl";
 import { mapValuesToCode } from "../../src";
-import { padAddress, toFixedValue } from "../../src/fixer";
+import { padAddress, toFixedValue } from "../../src/base/fixer";
 
 // Increase timeout if your tests failing due to timeout
 jest.setTimeout(10000);

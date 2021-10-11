@@ -7,7 +7,7 @@ import {
   extractTransactionArguments,
   extractScriptArguments,
   extractContractParameters,
-} from "../src/parser";
+} from "../src/base/parser";
 
 describe("parser", () => {
   test("extract script arguments - no arguments", () => {

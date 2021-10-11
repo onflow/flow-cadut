@@ -27,7 +27,7 @@ import {
 import { setEnvironment, getEnvironment } from "../src";
 
 // Templates
-import "../src/templates";
+import "../src/generator/templates";
 
 describe("documentation examples", function () {
   // Files

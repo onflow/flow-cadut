@@ -23,6 +23,6 @@ export {
   readFile,
   writeFile,
   sansExtension,
-} from "./file";
+} from "./generator/file";
 
-export { processFolder, processGitRepo } from "./processor";
+export { processFolder, processGitRepo } from "./generator/processor";

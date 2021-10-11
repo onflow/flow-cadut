@@ -19,23 +19,31 @@
     "url": "https://github.com/onflow/flow-cadut/issues"
   },
   "homepage": "https://github.com/onflow/flow-cadut#readme",
-  "source": "src/index.js",
-  "main": "dist/index.js",
-  "module": "dist/index.module.js",
-  "unpkg": "dist/index.umd.js",
+  "type": "module",
+  "main": "./dist/main.js",
   "exports": {
-    "require": "./dist/index.js",
-    "default": "./dist/index.modern.js"
+    ".": {
+      "browser": "./dist/main.module.js",
+      "umd": "./dist/main.umd.js",
+      "import": "./dist/main.mjs",
+      "require": "./dist/main.js"
+    },
+    "./generator": {
+      "browser": "./dist/generator.module.js",
+      "umd": "./dist/generator.umd.js",
+      "import": "./dist/generator.mjs",
+      "require": "./dist/generator.js"
+    }
   },
   "scripts": {
-    "build": "microbundle -i ./src/index.js -i ./src/generator/index.js",
+    "build": "microbundle ./src/*.js",
     "watch": "microbundle watch",
     "lint": "eslint src",
     "prettify": "prettier --write {src,tests}/**/*.js {src,tests}/*.js",
     "test": "jest",
     "check-headers": "sh ./check-headers.sh",
     "prepublishOnly": "npm test && npm run build",
-    "precompile-handlebars": "node_modules/.bin/handlebars src/templates -f ./src/templates/index.js -e hbs -c handlebars",
+    "precompile-handlebars": "node_modules/.bin/handlebars src/generator/templates -f ./src/templates/index.js -e hbs -c handlebars",
     "generate-dev": "flow-generate ./generator-test/cadence ./generator-test/src/generated -d ../../../../src",
     "regenerate-test": "npm run precompile-handlebars && npm run generate-dev"
   },

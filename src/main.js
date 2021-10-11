@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-export { getEnvironment, setEnvironment } from "./env";
+export { getEnvironment, setEnvironment } from "./base/env";
 
 export {
   extractImports,
@@ -24,7 +24,7 @@ export {
   reportMissingImports,
   report,
   replaceImportAddresses,
-} from "./imports";
+} from "./base/imports";
 
 export {
   reportArguments,
@@ -36,7 +36,7 @@ export {
   argType,
   getDictionaryTypes,
   getArrayType,
-} from "./args";
+} from "./base/args";
 
 export {
   extract,
@@ -50,7 +50,7 @@ export {
   CONTRACT,
   TRANSACTION,
   SCRIPT,
-} from "./parser";
+} from "./base/parser";
 
 export {
   collapseSpaces,
@@ -58,9 +58,9 @@ export {
   underscoreToCamelCase,
   getSplitCharacter,
   capitalizeFirstLetter,
-} from "./strings";
+} from "./base/strings";
 
-export { executeScript, sendTransaction, deployContract, updateContract } from "./interactions";
+export { executeScript, sendTransaction, deployContract, updateContract } from "./base/interactions";
 
 // Below is a set of aliases to bring it in line with FCL
-export { executeScript as query, sendTransaction as mutate } from "./interactions";
+export { executeScript as query, sendTransaction as mutate } from "./base/interactions";
