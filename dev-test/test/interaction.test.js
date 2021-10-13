@@ -1,5 +1,5 @@
 import path from "path";
-import { query, mutate } from "../../src";
+import { query, mutate } from "../../generator/src";
 import { emulator, init } from "flow-js-testing";
 import { authorization } from "../utils";
 

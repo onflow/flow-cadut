@@ -1,4 +1,4 @@
-import { waitForStatus } from "../src/base/interactions";
+import { waitForStatus } from "../src/interactions";
 
 describe("wait for status", () => {
   it("shall return proper status if null", () => {

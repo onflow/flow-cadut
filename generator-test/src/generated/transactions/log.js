@@ -6,7 +6,7 @@ import {
   reportMissingImports,
   reportMissing,
   sendTransaction
-} from '../../../../src'
+} from '../../../../generator/src'
 
 export const CODE = `
   transaction{

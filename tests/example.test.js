@@ -1,5 +1,5 @@
 // files
-import { sansExtension } from "../src/generator";
+import { sansExtension } from "../generator/src";
 
 // imports
 import { extractImports, missingImports, report, replaceImportAddresses } from "../src";
@@ -27,7 +27,7 @@ import {
 import { setEnvironment, getEnvironment } from "../src";
 
 // Templates
-import "../src/generator/templates";
+import "../generator/src/templates";
 
 describe("documentation examples", function () {
   // Files
@@ -114,7 +114,7 @@ describe("documentation examples", function () {
     }
   });
 
-  it("should convert values to sdk arguments", function () {
+  it("should convert values to sdk dictionary arguments", function () {
     const code = `
       pub fun main(metadata: {String:String}, key: String):String {
         return metadata[key]!

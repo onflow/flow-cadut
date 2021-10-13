@@ -1,5 +1,5 @@
-import { parseArgs } from "../src/generator/cli";
-import { getBranchesList, getParamsFromUrl } from "../src/generator/processor";
+import { parseArgs } from "../generator/src/cli";
+import { getBranchesList, getParamsFromUrl } from "../generator/src/processor";
 
 const input = "./cadence";
 const output = "./generated";

@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 
-require("esm")(module /*, options*/)("../src/generator/cli").run(process.argv);
+require("esm")(module /*, options*/)("../generator/cli").run(process.argv);

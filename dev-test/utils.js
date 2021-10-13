@@ -2,7 +2,7 @@ import { ec as EC } from "elliptic";
 import * as fcl from "@onflow/fcl";
 import { config, sansPrefix, send, tx, withPrefix } from "@onflow/fcl";
 import { SHA3 } from "sha3";
-import { mapValuesToCode } from "../src";
+import { mapValuesToCode } from "../generator/src";
 const ec = new EC("p256");
 
 const hashMsgHex = (msgHex) => {

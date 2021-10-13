@@ -6,7 +6,7 @@ import {
   reportMissingImports,
   reportMissing,
   executeScript
-} from '../../../../src'
+} from '../../../../generator/src'
 
 export const CODE = `
   import Basic from 0x1

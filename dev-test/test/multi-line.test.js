@@ -1,7 +1,7 @@
 import path from "path";
 import { config, query } from "@onflow/fcl";
 import { emulator, init } from "flow-js-testing";
-import { mapValuesToCode } from "../../src";
+import { mapValuesToCode } from "../../generator/src";
 import { mutate } from "../utils";
 
 // Increase timeout if your tests failing due to timeout
