@@ -11,9 +11,12 @@
   "source": "./src/index.js",
   "scripts": {
     "build": "microbundle",
-    "dev": "microbundle watch --raw --format cjs"
+    "dev": "microbundle watch"
   },
   "peerDependencies": {
     "flow-cadut": "^0.1.10"
+  },
+  "mangle": {
+    "regex": "^_"
   }
 }

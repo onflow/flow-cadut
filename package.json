@@ -1,6 +1,6 @@
 {
   "name": "flow-cadut",
-  "version": "0.1.11-alpha.1",
+  "version": "0.1.11-alpha.2",
   "description": "Flow Cadence Template Utilities",
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
@@ -33,19 +33,24 @@
       "import": "./dist/main.mjs",
       "require": "./dist/main.js"
     },
-    "./generator": "./dist/generator.js"
+    "./generator": {
+      "browser": "./dist/generator/generator.module.js",
+      "umd": "./dist/generator/generator.umd.js",
+      "import": "./dist/generator/generator.mjs",
+      "require": "./dist/generator/generator.js"
+    }
   },
   "scripts": {
-    "build": "microbundle ./src/*.js",
-    "build:main": "microbundle build --raw",
-    "build:generator": "microbundle build --raw --cwd generator",
+    "build": "npm-run-all --parallel build:*",
+    "build:core": "microbundle build --raw",
+    "build:generator": "microbundle build --cwd generator --external child_process",
     "watch": "microbundle watch",
     "lint": "eslint src",
     "prettify": "prettier --write {src,tests}/**/*.js {src,tests}/*.js",
     "test": "jest",
     "check-headers": "sh ./check-headers.sh",
     "prepublishOnly": "npm test && npm run build",
-    "precompile-handlebars": "node_modules/.bin/handlebars generator/src/templates -f ./src/templates/index.js -e hbs -c handlebars",
+    "precompile-handlebars": "node_modules/.bin/handlebars ./generator/src/templates -f ./generator/src/templates/index.js -e hbs -c handlebars",
     "generate-dev": "flow-generate ./generator-test/cadence ./generator-test/src/generated -d ../../../../src",
     "regenerate-test": "npm run precompile-handlebars && npm run generate-dev"
   },
@@ -113,5 +118,8 @@
     "singleQuote": false,
     "trailingComma": "es5",
     "tabWidth": 2
+  },
+  "mangle": {
+    "regex": "^_"
   }
 }
