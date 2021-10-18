@@ -39,6 +39,38 @@ describe("arguments - scripts", () => {
     expect(result).toBe(dict[key])
   });
 
+  test("{String: UInt32} dictionary", async () => {
+    const cadence = `
+    pub fun main(data: {String: UInt32}, key: String): UInt32?{
+      return data[key]
+    }
+    `;
+
+    const dict = { cadence: 42, test: 1337 };
+    const key = "test";
+    const data = [dict, key];
+
+    const args = () => mapValuesToCode(cadence, data);
+    const result = await query({ cadence, args });
+    expect(result).toBe(dict[key])
+  });
+
+  test("{String: String} dictionary", async () => {
+    const cadence = `
+    pub fun main(data: {String: String}, key: String): String?{
+      return data[key]
+    }
+    `;
+
+    const dict = { cadence: "rules!" };
+    const key = "cadence";
+    const data = [dict, key];
+
+    const args = () => mapValuesToCode(cadence, data);
+    const result = await query({ cadence, args });
+    expect(result).toBe(dict[key])
+  });
+
   test("array of dictionaries", async () => {
     const cadence = `
       pub fun main(meta: [{ String: String }]): {String: String} {

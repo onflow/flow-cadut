@@ -101,6 +101,7 @@ export const resolveBasicType = (type) => {
 };
 
 export const resolveType = (type) => {
+
   if (isComplexType(type)) {
     switch (true) {
       case isArray(type): {
@@ -165,7 +166,7 @@ export const mapArgument = (type, value) => {
     }
 
     case isDictionary(type): {
-      const valueType = getDictionaryTypes(type)[1];
+      const [keyType,valueType] = getDictionaryTypes(type);
       const finalValue = [];
       const keys = Object.keys(value);
 
@@ -178,7 +179,7 @@ export const mapArgument = (type, value) => {
           resolvedValue = value[key];
         }
 
-        const fixedKey = isBasicNumType(valueType) ? parseInt(key) : key;
+        const fixedKey = isBasicNumType(keyType) ? parseInt(key) : key;
 
         finalValue.push({
           key: fixedKey,
