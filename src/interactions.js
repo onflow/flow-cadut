@@ -106,7 +106,11 @@ export const sendTransaction = async (props) => {
     const response = await prepareInteraction(props, "transaction");
     if (wait) {
       const waitMethod = waitForStatus(wait);
-      const txResult = await fcl.tx(response)[waitMethod]();
+      const rawResult = await fcl.tx(response)[waitMethod]();
+      const txResult = {
+        txId: response,
+        ...rawResult,
+      };
       return [txResult, null];
     }
     return [response.transactionId, null];
