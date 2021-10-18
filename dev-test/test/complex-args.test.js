@@ -1,7 +1,7 @@
 import path from "path";
 import { query } from "@onflow/fcl";
 import { emulator, init } from "flow-js-testing";
-import { mapValuesToCode } from "../../generator/src";
+import { mapValuesToCode } from "../../src";
 
 // Increase timeout if your tests failing due to timeout
 jest.setTimeout(10000);
