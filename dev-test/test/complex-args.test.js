@@ -115,6 +115,53 @@ describe("arguments - scripts", () => {
     expect(result.TopShot.length).toBe(data.TopShot.length)
   });
 
+  test("dictionary of array - Address to [UInt64]", async () => {
+    const cadence = `
+      pub fun main(data: {Address: [UInt64]}): {Address: [UInt64]} {
+        return data
+      }
+    `;
+
+    const First = "0x0000000000000001"
+    const Second = "0x0000000000000002"
+
+    const data = {
+      [First]: [1, 3, 3, 7],
+      [Second]: [42],
+    };
+
+    const args = () => mapValuesToCode(cadence, [data]);
+
+    const result = await query({ cadence, args });
+    expect(result[First].length).toBe(data[First].length)
+    expect(result[Second].length).toBe(data[Second].length)
+  });
+
+  test("dictionary of array - Address to [UInt64] and another array", async () => {
+    const cadence = `
+      pub fun main(recipients:[Address], data: {Address: [UInt64]}): {Address: [UInt64]} {
+        log(recipients)
+        return data
+      }
+    `;
+
+    const First = "0x0000000000000001"
+    const Second = "0x0000000000000002"
+
+    const recipients = [First, Second]
+
+    const data = {
+      [First]: [1, 3, 3, 7],
+      [Second]: [42],
+    };
+
+    const args = () => mapValuesToCode(cadence, [recipients, data]);
+
+    const result = await query({ cadence, args });
+    expect(result[First].length).toBe(data[First].length)
+    expect(result[Second].length).toBe(data[Second].length)
+  });
+
   test("dictionary of dictionaries of arrays", async () => {
     const cadence = `
       pub fun main(data: {Address: {String: [UInt64]}}): {Address: {String: [UInt64]}}  {

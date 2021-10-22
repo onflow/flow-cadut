@@ -12,7 +12,7 @@ describe("arguments - scripts", () => {
     // You can specify different port to parallelize execution of describe blocks
     const port = 8080;
     // Setting logging flag to true will pipe emulator output to console
-    const logging = false;
+    const logging = true;
 
     await init(basePath, { port, logging });
     return emulator.start(port);
@@ -57,4 +57,28 @@ describe("arguments - scripts", () => {
     const [txId, err] = await mutate({ cadence, payer, wait: null });
     console.log({ txId, err });
   });
+
+  it("shall properly process Address: [UInt64] array", async ()=>{
+    const cadence = `
+      pub fun main(recipients: [Address], rewards: {Address: [UInt64]}) : Int{
+        for address in recipients {
+            if (rewards[address] != nil) {
+              let userRewards = rewards[address] as! [UInt64]
+              log(userRewards)
+            }
+        }
+      }
+      return 42
+    `
+    const args = [
+      ["0x01", "0x02"],
+      {
+        "0x01": [1,2,3,4],
+        "0x02": [3,4,5,6]
+      }
+    ]
+
+    const [result,err] = await query({ cadence, args });
+    console.log({result, err})
+  })
 });
