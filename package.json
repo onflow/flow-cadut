@@ -21,10 +21,11 @@
   "homepage": "https://github.com/onflow/flow-cadut#readme",
   "private": false,
   "source": "./src/index.js",
-  "main": "./dist/main.js",
+  "main": "./dist/main.modern.js",
   "module": "./dist/main.module.js",
   "umd:main": "./dist/main.umd.js",
   "unpkg": "./dist/main.min.js",
+  "type": "module",
   "exports": {
     ".": {
       "browser": "./dist/main.module.js",

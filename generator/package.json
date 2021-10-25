@@ -5,7 +5,7 @@
   "private": true,
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
-  "main": "./dist/generator.js",
+  "main": "./dist/generator.modern.js",
   "module": "./dist/generator.module.js",
   "umd:main": "./dist/generator.umd.js",
   "source": "./src/index.js",
