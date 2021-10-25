@@ -40,7 +40,7 @@ export const DEPLOYED_CONTRACTS = {
 };
 
 export const ACCESS_NODES = {
-  mainnet: "https://access.mainnet.onflow.org",
+  mainnet: "https://access-mainnet-beta.onflow.org",
   testnet: "https://access-testnet.onflow.org",
   emulator: "http://localhost:8080",
 };
