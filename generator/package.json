@@ -5,10 +5,10 @@
   "private": true,
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
-  "main": "./dist/generator.modern.js",
-  "module": "./dist/generator.module.js",
-  "umd:main": "./dist/generator.umd.js",
-  "source": "./src/index.js",
+  "main": "dist/generator.js",
+  "module": "dist/generator.module.js",
+  "umd:main": "dist/generator.umd.js",
+  "source": "src/index.js",
   "scripts": {
     "build": "microbundle",
     "dev": "microbundle watch"
