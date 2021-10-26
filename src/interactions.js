@@ -19,6 +19,7 @@
 import * as fcl from "@onflow/fcl";
 import { resolveArguments } from "./args";
 import { replaceImportAddresses } from "./imports";
+import { config } from "@onflow/config";
 
 export const prepareInteraction = async (props, type) => {
   const { code, cadence, args, addressMap, limit, processed } = props;
@@ -28,7 +29,6 @@ export const prepareInteraction = async (props, type) => {
 
   const ixCode = processed ? codeTemplate : replaceImportAddresses(codeTemplate, addressMap);
 
-  const ixLimit = limit || 100;
 
   const ix = type === "script" ? [fcl.script(ixCode)] : [fcl.transaction(ixCode)];
 
@@ -36,6 +36,11 @@ export const prepareInteraction = async (props, type) => {
     ix.push(fcl.args(resolveArguments(args, code)));
   }
 
+  // Handle execution limit
+  const defaultLimit = await config().get("ix.executionLimit")
+  const fallBackLimit = defaultLimit || 100;
+
+  const ixLimit = limit || fallBackLimit;
   ix.push(fcl.limit(ixLimit));
 
   if (type === "transaction") {

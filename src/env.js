@@ -59,11 +59,16 @@ export const setEnvironment = async (networkName = "emulator", options = {}) => 
     );
   }
 
-  const { port, endpoint } = options;
+  const { port, endpoint, limit } = options;
   const portBased =
     network === "emulator" && port ? `http://localhost:${port}` : ACCESS_NODES[network];
   const accessNode = endpoint || portBased;
 
   await config().put("ix.env", network);
+
+  if(limit){
+    await config().put("ix.executionLimit", limit);
+  }
+
   await config().put("accessNode.api", accessNode);
 };
