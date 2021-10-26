@@ -9,6 +9,62 @@ import {
   extractContractParameters,
 } from "../src";
 
+import { stripComments } from "../src/parser";
+
+describe("strip comments", ()=>{
+  test("line comments", ()=>{
+    const input = `
+      // hidden
+      pub fun main():String{ return "hello, world!" }
+      // hidden
+    `;
+    const output = stripComments(input)
+    expect(output.includes("hidden")).toBe(false)
+  })
+
+  test("inline line comments", ()=>{
+    const input = `
+      pub fun main():String{ return "hello, world!" } // hidden
+    `;
+    const output = stripComments(input)
+    expect(output.includes("pub fun main")).toBe(true)
+    expect(output.includes("hidden")).toBe(false)
+  })
+
+  test("block comments", ()=>{
+    const input = `
+      /* 
+        hidden
+      */
+      pub fun main():String{ return "hello, world!" }
+    `;
+    const output = stripComments(input)
+    expect(output.includes("hidden")).toBe(false)
+  })
+
+  test("inline block comments", ()=>{
+    const input = `
+      pub fun /* hidden */main():String{ return "hello, world!" }
+    `;
+    const output = stripComments(input)
+    console.log(output)
+    expect(output.includes("pub fun main")).toBe(true)
+    expect(output.includes("hidden")).toBe(false)
+  })
+
+  test("combined comments", ()=>{
+    const input = `
+      /* 
+        hidden
+      */
+      pub fun main():String{ return "hello, world!" }
+      // hidden
+    `;
+    const output = stripComments(input)
+    expect(output.includes("hidden")).toBe(false)
+  })
+})
+
 describe("parser", () => {
   test("extract script arguments - no arguments", () => {
     const input = `
@@ -129,6 +185,22 @@ describe("extract contract parameters", () => {
     const contractName = "Hello";
     const input = `
     pub contract interface ${contractName}     {
+      // no init method here either
+    }
+  `;
+    const output = extractContractParameters(input);
+    expect(output.contractName).toBe(contractName);
+    expect(output.args).toBe("");
+  });
+
+  test("no init method in code - with comments", () => {
+    const contractName = "Hello";
+    const input = `
+    ////////////////////
+    // basic contract //
+    ////////////////////
+    
+    pub contract ${contractName}     {
       // no init method here either
     }
   `;
