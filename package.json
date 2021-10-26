@@ -1,6 +1,6 @@
 {
   "name": "flow-cadut",
-  "version": "0.1.11-alpha.9",
+  "version": "0.1.11-alpha.10",
   "description": "Flow Cadence Template Utilities",
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
@@ -20,18 +20,18 @@
   },
   "homepage": "https://github.com/onflow/flow-cadut#readme",
   "private": false,
-  "source": "./src/index.js",
-  "main": "./dist/main.modern.js",
-  "module": "./dist/main.module.js",
-  "umd:main": "./dist/main.umd.js",
-  "unpkg": "./dist/main.min.js",
+  "source": "src/index.js",
+  "main": "dist/main.js",
+  "module": "dist/main.module.js",
+  "umd:main": "dist/main.umd.js",
+  "unpkg": "dist/main.min.js",
   "type": "module",
   "exports": {
     ".": {
       "browser": "./dist/main.module.js",
       "umd": "./dist/main.umd.js",
       "import": "./dist/main.modern.js",
-      "require": "./dist/main.js"
+      "require": "./dist/main.js",
     },
     "./generator": {
       "browser": "./dist/generator/generator.module.js",
@@ -122,5 +122,13 @@
   },
   "mangle": {
     "regex": "^_"
-  }
+  },
+  "files": [
+    "src",
+    "dist",
+    "docs",
+    "generator/src",
+    "generator/dist",
+    "generator/package.json"
+  ]
 }
