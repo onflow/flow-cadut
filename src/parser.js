@@ -30,7 +30,7 @@ export const generateSchema = (argsDefinition) =>
     .filter((item) => item !== "");
 
 export const stripComments = code => {
-  const commentsRegExp = /(\/\*[.\s\S]*\*\/)|(\/\/.*)/g
+  const commentsRegExp = /(\/\*[\s\S]*?\*\/)|(\/\/.*)/g
   return code.replace(commentsRegExp, "");
 }
 
