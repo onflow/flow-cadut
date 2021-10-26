@@ -31,7 +31,7 @@
       "browser": "./dist/main.module.js",
       "umd": "./dist/main.umd.js",
       "import": "./dist/main.modern.js",
-      "require": "./dist/main.js",
+      "require": "./dist/main.js"
     },
     "./generator": {
       "browser": "./dist/generator/generator.module.js",
