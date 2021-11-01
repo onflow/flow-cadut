@@ -1,4 +1,4 @@
-### 0.1.10 - 2021-10-11
+### 0.1.11 - 2021-10-11
 - More fixes to complex argument resolver
 - Bundle esm into main package
 
