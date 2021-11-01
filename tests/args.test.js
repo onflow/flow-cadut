@@ -1,6 +1,6 @@
 import { mapArgument, mapArguments, argType, mapValuesToCode, resolveType, raw } from "../src/args";
 import { toFixedValue, withPrefix } from "../src/fixer";
-import { getTemplateInfo } from "../src/parser";
+import { getTemplateInfo } from "../src";
 
 describe("argument types", () => {
   test("Basic Type", async () => {

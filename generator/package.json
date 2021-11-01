@@ -1,0 +1,22 @@
+{
+  "name": "flow-cadut-generator",
+  "amdName": "flowCadutGenerator",
+  "version": "0.0.1",
+  "private": true,
+  "author": "Maksim Daunarovich",
+  "license": "Apache-2.0",
+  "main": "dist/generator.js",
+  "module": "dist/generator.module.js",
+  "umd:main": "dist/generator.umd.js",
+  "source": "src/index.js",
+  "scripts": {
+    "build": "microbundle",
+    "dev": "microbundle watch"
+  },
+  "peerDependencies": {
+    "flow-cadut": "^0.1.10"
+  },
+  "mangle": {
+    "regex": "^_"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "flow-cadut",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Flow Cadence Template Utilities",
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
@@ -19,24 +19,37 @@
     "url": "https://github.com/onflow/flow-cadut/issues"
   },
   "homepage": "https://github.com/onflow/flow-cadut#readme",
-
+  "private": false,
   "source": "src/index.js",
-  "main": "dist/index.js",
-  "module": "dist/index.module.js",
-  "unpkg": "dist/index.umd.js",
+  "main": "dist/main.js",
+  "module": "dist/main.module.js",
+  "umd:main": "dist/main.umd.js",
+  "type": "module",
   "exports": {
-    "require": "./dist/index.js",
-    "default": "./dist/index.modern.js"
+    ".": {
+      "browser": "./dist/main.module.js",
+      "umd": "./dist/main.umd.js",
+      "import": "./dist/main.modern.js",
+      "require": "./dist/main.js"
+    },
+    "./generator": {
+      "browser": "./dist/generator/generator.module.js",
+      "umd": "./dist/generator/generator.umd.js",
+      "import": "./dist/generator/generator.modern.js",
+      "require": "./dist/generator/generator.js"
+    }
   },
   "scripts": {
-    "build": "microbundle",
+    "build": "npm-run-all --parallel build:*",
+    "build:core": "microbundle build --raw",
+    "build:generator": "microbundle build --cwd generator --external child_process",
     "watch": "microbundle watch",
     "lint": "eslint src",
     "prettify": "prettier --write {src,tests}/**/*.js {src,tests}/*.js",
     "test": "jest",
     "check-headers": "sh ./check-headers.sh",
     "prepublishOnly": "npm test && npm run build",
-    "precompile-handlebars": "node_modules/.bin/handlebars src/templates -f ./src/templates/index.js -e hbs -c handlebars",
+    "precompile-handlebars": "node_modules/.bin/handlebars ./generator/src/templates -f ./generator/src/templates/index.js -e hbs -c handlebars",
     "generate-dev": "flow-generate ./generator-test/cadence ./generator-test/src/generated -d ../../../../src",
     "regenerate-test": "npm run precompile-handlebars && npm run generate-dev"
   },
@@ -45,8 +58,9 @@
   },
   "dependencies": {
     "@onflow/config": "0.0.2",
-    "@onflow/fcl": "^0.0.76",
-    "@onflow/types": "^0.0.4",
+    "@onflow/fcl": "^0.0.77",
+    "@onflow/types": "^0.0.5",
+    "esm": "^3.2.25",
     "handlebars": "^4.7.7",
     "handlebars-loader": "^1.7.1",
     "prettier": "^2.3.0",
@@ -55,16 +69,16 @@
     "yargs": "^15.4.1"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.14.5",
     "@babel/cli": "^7.14.3",
     "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.5",
     "babel-jest": "^26.6.3",
     "eslint": "^7.24.0",
     "eslint-plugin-jest": "^24.3.6",
-    "esm": "^3.2.25",
     "jest": "^26.6.3",
     "jest-esm-transformer": "^1.0.0",
-    "microbundle": "^0.13.0"
+    "microbundle": "^0.13.0",
+    "npm-run-all": "^4.1.5"
   },
   "eslintConfig": {
     "ignorePatterns": [
@@ -104,5 +118,8 @@
     "singleQuote": false,
     "trailingComma": "es5",
     "tabWidth": 2
+  },
+  "mangle": {
+    "regex": "^_"
   }
 }

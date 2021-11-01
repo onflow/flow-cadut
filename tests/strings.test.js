@@ -1,4 +1,4 @@
-import { collapseSpaces, trimAndSplit, underscoreToCamelCase } from "../src/strings";
+import { collapseSpaces, trimAndSplit, underscoreToCamelCase } from "../src";
 
 describe("string unit tests - convert to camelCase", () => {
   test("convert single word", () => {

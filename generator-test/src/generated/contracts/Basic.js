@@ -5,7 +5,7 @@ import {
   replaceImportAddresses,
   reportMissingImports,
   deployContract,
-} from '../../../../src'
+} from '../../../../generator/src'
 
 export const CODE = `
   pub contract Basic{

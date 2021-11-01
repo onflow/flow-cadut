@@ -1,3 +1,3 @@
 #!/usr/bin/env node
-
-require("esm")(module /*, options*/)("../src/generator/cli").run(process.argv);
+import ESModule from "esm"
+ESModule("esm")(module /*, options*/)("../generator/src/cli").run(process.argv);
