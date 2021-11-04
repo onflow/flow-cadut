@@ -28,7 +28,11 @@ export const DEPLOYED_CONTRACTS = {
     FungibleToken: "0x9a0766d93b6608b7",
     LockedTokens: "0x95e019a17d0e23d7",
     StakingProxy: "0x7aad92e5a0715d21",
-    FUSD: "0xe223d8a629e49c68"
+    FUSD: "0xe223d8a629e49c68",
+
+    // Third-party Libraries
+    // TODO: Move this to plugin resolver
+    FIND: "0x6f265aa45d8b4875"
   },
   mainnet: {
     FlowToken: "0x1654653399040a61",
@@ -36,6 +40,8 @@ export const DEPLOYED_CONTRACTS = {
     LockedTokens: "0x8d0e87b65159ae63",
     StakingProxy: "0x62430cf28c26d095",
     FUSD: "0x3c5959b568896393"
+
+    // TODO: Add FIND
   },
 };
 
