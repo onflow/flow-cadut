@@ -104,6 +104,7 @@
     "coveragePathIgnorePatterns": [
       "/node_modules/"
     ],
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.jsx?$",
     "testPathIgnorePatterns": [
       "/dev-test/"
     ],
