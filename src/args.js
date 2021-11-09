@@ -207,10 +207,11 @@ export const assertType = (arg) => {
  * @param {[any]} values - array of passed values
  * @returns [any] - array of mapped fcl.arg values
  */
-export const mapArguments = (schema = [], values) => {
+export const mapArguments = async (schema = [], values) => {
   if (values.length < schema.length) {
     throw new Error("Not enough arguments");
   }
+  // TODO: refactor to use async call to mapArgument
   return values.map((value, i) => {
     const mapped = mapArgument(schema[i], value);
     assertType(mapped);
@@ -224,7 +225,8 @@ export const mapArguments = (schema = [], values) => {
  * @param {[any]} values - array of values
  * @returns [any] - array of mapped fcl.arg
  */
-export const mapValuesToCode = (code, values = []) => {
+
+export const mapValuesToCode = async (code, values = []) => {
   const schema = getTemplateInfo(code).args.map(argType);
   return mapArguments(schema, values);
 };
@@ -244,7 +246,8 @@ const rawArgs = (args) => {
   }, []);
 };
 
-export const resolveArguments = (args, code) => {
+// TODO: resolve into async method
+export const resolveArguments = async (args, code) => {
   if (args.length === 0) {
     return [];
   }
