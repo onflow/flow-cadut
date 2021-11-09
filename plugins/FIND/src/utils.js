@@ -1,4 +1,4 @@
-import { executeScript } from "../interactions";
+import { executeScript } from "../../../src";
 
 export const isFindAddress = (address) => {
   const noSpaces = address.replace(/\s/g, "");
@@ -8,10 +8,7 @@ export const isFindAddress = (address) => {
 };
 
 export const extractName = (address) => {
-  const result = address.replace(/\s/g, "").replace("find:", "").replace(".find", "");
-
-  console.log({ address, result });
-  return result;
+  return address.replace(/\s/g, "").replace("find:", "").replace(".find", "");
 };
 
 export const findAddress = async (address) => {
