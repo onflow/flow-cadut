@@ -1,4 +1,4 @@
-import { extractName, isFindAddress } from "../../src/support/find";
+import { extractName, isFindAddress } from "../../plugins/FIND/src/utils";
 
 describe("FIND library", ()=>{
 
