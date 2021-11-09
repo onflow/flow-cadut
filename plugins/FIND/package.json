@@ -1,0 +1,22 @@
+{
+  "name": "flow-cadut-plugin-find-resolver",
+  "amdName": "flowCadutPluginFIND",
+  "version": "0.0.1",
+  "description": "FIND address resolver",
+  "author": "Maksim Daunarovich",
+  "license": "Apache-2.0",
+  "main": "dist/plugin-find.js",
+  "module": "dist/plugin-find.module.js",
+  "umd:main": "dist/plugin-find.umd.js",
+  "source": "src/index.js",
+  "scripts": {
+    "build": "microbundle",
+    "dev": "microbundle watch"
+  },
+  "peerDependencies": {
+    "flow-cadut": "^0.1.11"
+  },
+  "mangle": {
+    "regex": "^_"
+  }
+}
