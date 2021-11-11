@@ -90,7 +90,7 @@ export const waitForStatus = (statusValue) => {
     }
 
     if (status.includes("seal")) {
-      return "onceExecuted";
+      return "onceSealed";
     }
   }
 
