@@ -74,7 +74,7 @@ export const executeScript = async (props) => {
     const decoded = await fcl.decode(response);
     return [decoded, null];
   } catch (e) {
-    return [null, e.message];
+    return [null, e];
   }
 };
 
@@ -120,7 +120,7 @@ export const sendTransaction = async (props) => {
     }
     return [response.transactionId, null];
   } catch (e) {
-    return [null, e.message];
+    return [null, e];
   }
 };
 
