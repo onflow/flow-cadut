@@ -52,6 +52,20 @@ describe("optional arguments", () => {
     expect(output).toBe(toFixedValue(input[0]));
   });
 
+  it("empty array", async ()=>{
+    const input = [[]];
+    const cadence = `
+      pub fun main(arr:[String]):[String]{
+        return arr
+      }
+    `;
+
+    const args = () => mapValuesToCode(cadence, input);
+    const output = await query({ cadence, args });
+
+    expect(output.length).toBe(0);
+  })
+
   it("optionals - String? - no value", async () => {
     const input = null;
     const cadence = `
