@@ -29,6 +29,7 @@ export {
 export {
   reportArguments,
   reportMissing,
+  resolveArguments,
   mapArguments,
   mapArgument,
   mapValuesToCode,
