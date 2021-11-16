@@ -305,7 +305,9 @@ describe("complex example", () => {
     // Incorrect address
     expect(invoke([42, true, ["Sup"], "1.337"])).rejects.toBe("address.replace is not a function");
     expect(invoke([42, 12, ["Sup"], "1.337"])).rejects.toBe("address.replace is not a function");
-    expect(invoke([42, [1, 2, 3], ["Sup"], "1.337"])).rejects.toBe("address.replace is not a function");
+    expect(invoke([42, [1, 2, 3], ["Sup"], "1.337"])).rejects.toBe(
+      "address.replace is not a function"
+    );
 
     // Incorrect array
     expect(invoke([42, "0x1", 12, "1.337"])).rejects.toBe("t.map is not a function");

@@ -35,7 +35,7 @@ export const DEPLOYED_CONTRACTS = {
     FungibleToken: "0xf233dcee88fe0abe",
     LockedTokens: "0x8d0e87b65159ae63",
     StakingProxy: "0x62430cf28c26d095",
-    FUSD: "0x3c5959b568896393"
+    FUSD: "0x3c5959b568896393",
   },
 };
 
@@ -66,7 +66,7 @@ export const setEnvironment = async (networkName = "emulator", options = {}) => 
 
   await config().put("ix.env", network);
 
-  if(limit){
+  if (limit) {
     await config().put("ix.executionLimit", limit);
   }
 

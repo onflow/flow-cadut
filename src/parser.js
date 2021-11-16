@@ -29,13 +29,13 @@ export const generateSchema = (argsDefinition) =>
     .map((item) => item.replace(/\s*/g, ""))
     .filter((item) => item !== "");
 
-export const stripComments = code => {
-  const commentsRegExp = /(\/\*[\s\S]*?\*\/)|(\/\/.*)/g
+export const stripComments = (code) => {
+  const commentsRegExp = /(\/\*[\s\S]*?\*\/)|(\/\/.*)/g;
   return code.replace(commentsRegExp, "");
-}
+};
 
 export const extract = (code, keyWord) => {
-  const noComments = stripComments(code)
+  const noComments = stripComments(code);
   const target = collapseSpaces(noComments.replace(/[\n\r]/g, ""));
 
   if (target) {
@@ -66,7 +66,7 @@ export const extractTransactionArguments = (code) => {
 
 export const extractContractName = (code) => {
   const contractNameMatcher = /\w+\s+contract\s+(?:interface)*\s*(\w*)/g;
-  const noComments = stripComments(code)
+  const noComments = stripComments(code);
   const singleLine = noComments.replace(/\r\n|\n|\r/g, " ");
   const matches = contractNameMatcher.exec(singleLine);
 
@@ -82,7 +82,7 @@ export const extractContractParameters = (code) => {
   const contractNameMatcher =
     /(?:access\(\w+\)|pub)\s+contract\s+(?:interface)*\s*(\w*)(\s*{[.\s\S]*init\s*\((.*?)\)[.\s\S]*})?/g;
 
-  const noComments = stripComments(code)
+  const noComments = stripComments(code);
   const noComplex = noComments.replace(complexMatcher, "");
   const matches = contractNameMatcher.exec(noComplex);
 
@@ -101,7 +101,7 @@ export const getTemplateInfo = (template) => {
   const transactionMatcher = /transaction\s*(\(\s*\))*\s*/g;
   const scriptMatcher = /pub\s+fun\s+main\s*/g;
 
-  const code = stripComments(template)
+  const code = stripComments(template);
 
   if (transactionMatcher.test(code)) {
     const signers = extractSigners(code);
