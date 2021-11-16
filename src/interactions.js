@@ -29,15 +29,15 @@ export const prepareInteraction = async (props, type) => {
 
   const ixCode = processed ? codeTemplate : replaceImportAddresses(codeTemplate, addressMap);
 
-
   const ix = type === "script" ? [fcl.script(ixCode)] : [fcl.transaction(ixCode)];
 
   if (args) {
-    ix.push(fcl.args(resolveArguments(args, code)));
+    const resolvedArgs = await resolveArguments(args, code);
+    ix.push(fcl.args(resolvedArgs));
   }
 
   // Handle execution limit
-  const defaultLimit = await config().get("ix.executionLimit")
+  const defaultLimit = await config().get("ix.executionLimit");
   const fallBackLimit = defaultLimit || 100;
 
   const ixLimit = limit || fallBackLimit;
