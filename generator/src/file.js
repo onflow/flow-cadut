@@ -20,7 +20,7 @@ import fs from "fs";
 import { resolve, dirname } from "path";
 import prettier from "prettier";
 import parserBabel from "prettier/parser-babel";
-import { underscoreToCamelCase } from "../../src/strings";
+import { underscoreToCamelCase } from "../../src";
 
 /**
  * Syntax sugar for file reading
