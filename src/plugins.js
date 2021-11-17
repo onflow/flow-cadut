@@ -6,7 +6,8 @@ export const PLUGIN_TYPES = {
 
 export const registerPlugin = async (plugin) => {
   const { type } = plugin;
-  const plugins = (await config().get("ix.plugins")) || {};
+  const registeredPlugins = await config().get("ix.plugins");
+  const plugins = registeredPlugins || {};
   const typedPlugins = plugins[type] || [];
 
   await config().put("ix.plugins", {
@@ -16,7 +17,8 @@ export const registerPlugin = async (plugin) => {
 };
 
 export const getPlugins = async (type) => {
-  const plugins = (await config().get("ix.plugins")) || {};
+  const registeredPlugins = await config().get("ix.plugins");
+  const plugins = registeredPlugins || {};
   const byType = plugins[type];
 
   if (byType && byType.length > 0) {
