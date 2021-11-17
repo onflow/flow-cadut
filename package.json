@@ -1,6 +1,6 @@
 {
   "name": "flow-cadut",
-  "version": "0.1.12-alpha.3",
+  "version": "0.1.12-alpha.4",
   "description": "Flow Cadence Template Utilities",
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
@@ -37,12 +37,19 @@
       "umd": "./dist/generator/generator.umd.js",
       "import": "./dist/generator/generator.modern.js",
       "require": "./dist/generator/generator.js"
+    },
+    "./plugins/find": {
+      "browser": "./dist/plugins/plugin-find.module.js",
+      "umd": "./dist/plugins/plugin-find.umd.js",
+      "import": "./dist/plugins/plugin-find.modern.js",
+      "require": "./dist/plugins/plugin-find.js"
     }
   },
   "scripts": {
     "build": "npm-run-all --parallel build:*",
     "build:core": "microbundle build --raw",
     "build:generator": "microbundle build --cwd generator --external child_process",
+    "build:plugin-find": "microbundle build --cwd plugins/FIND",
     "watch": "microbundle watch",
     "lint": "eslint src",
     "prettify": "prettier --write {src,tests}/**/*.js {src,tests}/*.js",
