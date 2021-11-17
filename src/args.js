@@ -33,7 +33,7 @@ import {
 } from "./type-checker";
 
 import { removeSpaces } from "./strings";
-import { getPlugins, applyPlugins } from "./plugins";
+import { getPlugins, applyPlugins, PLUGIN_TYPES } from "./plugins";
 
 const throwTypeError = (msg) => {
   throw new Error("Type Error: " + msg);
@@ -130,7 +130,7 @@ export const resolveType = (type) => {
  * @returns any - mapped fcl.arg value
  */
 export const mapArgument = async (rawType, rawValue) => {
-  const plugins = getPlugins("arguments");
+  const plugins = await getPlugins(PLUGIN_TYPES.ARGUMENT);
 
   let value = rawValue;
   let type = rawType;
@@ -225,7 +225,6 @@ export const assertType = (arg) => {
  */
 export const mapArguments = async (schema = [], values) => {
   if (schema.length > values.length) {
-    console.log("throw it!");
     throw new Error("Not enough arguments");
   }
   return Promise.all(
