@@ -1,6 +1,6 @@
 {
   "name": "flow-cadut",
-  "version": "0.1.12-alpha.5",
+  "version": "0.1.12-alpha.6",
   "description": "Flow Cadence Template Utilities",
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
@@ -39,10 +39,10 @@
       "require": "./dist/generator/generator.js"
     },
     "./plugins/find": {
-      "browser": "./dist/plugins/plugin-find.module.js",
-      "umd": "./dist/plugins/plugin-find.umd.js",
-      "import": "./dist/plugins/plugin-find.modern.js",
-      "require": "./dist/plugins/plugin-find.js"
+      "browser": "./dist/plugins/FIND.module.js",
+      "umd": "./dist/plugins/FIND.umd.js",
+      "import": "./dist/plugins/FIND.modern.js",
+      "require": "./dist/plugins/FIND.js"
     }
   },
   "scripts": {
