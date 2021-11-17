@@ -5,7 +5,7 @@ export const PLUGIN_TYPES = {
 };
 
 export const registerPlugin = async (plugin) => {
-  const { type, id } = plugin;
+  const { type } = plugin;
   const plugins = (await config().get("ix.plugins")) || {};
   const typedPlugins = plugins[type] || [];
 
