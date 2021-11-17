@@ -20,6 +20,7 @@ import * as fcl from "@onflow/fcl";
 import { resolveArguments } from "./args";
 import { replaceImportAddresses } from "./imports";
 import { config } from "@onflow/config";
+import { getEnvironment } from "./env";
 
 export const prepareInteraction = async (props, type) => {
   const { code, cadence, args, addressMap, limit, processed } = props;
@@ -27,7 +28,12 @@ export const prepareInteraction = async (props, type) => {
   // allow to pass code via "cadence" field simillar to fcl.query/mutate
   const codeTemplate = code || cadence;
 
-  const ixCode = processed ? codeTemplate : replaceImportAddresses(codeTemplate, addressMap);
+  const env = await getEnvironment();
+  const ixAddressMap = {
+    ...env,
+    ...addressMap,
+  };
+  const ixCode = processed ? codeTemplate : replaceImportAddresses(codeTemplate, ixAddressMap);
 
   const ix = type === "script" ? [fcl.script(ixCode)] : [fcl.transaction(ixCode)];
 
