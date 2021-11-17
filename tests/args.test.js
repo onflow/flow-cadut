@@ -291,28 +291,32 @@ describe("complex example", () => {
     const code = `pub fun main(a: Int, b: Address, c: [String], d: UFix64) { }`;
 
     const invoke = (args) => async () => {
-      await mapValuesToCode(code, args);
+      try {
+        return mapValuesToCode(code, args);
+      } catch (e) {
+        return e.message;
+      }
     };
 
     // Schema expects more parameters to be provided
-    expect(invoke(["42"])).rejects.toBe("Not enough arguments");
+    expect(invoke(["42"])).rejects.toThrowError("Not enough arguments");
 
     // Incorrect integer value provided
-    expect(invoke(["42", "0x01", ["Hello"], "1.337"])).rejects.toBe(
+    expect(invoke(["42", "0x01", ["Hello"], "1.337"])).rejects.toThrowError(
       "Type Error: Expected Integer for type Int"
     );
 
     // Incorrect address
-    expect(invoke([42, true, ["Sup"], "1.337"])).rejects.toBe("address.replace is not a function");
-    expect(invoke([42, 12, ["Sup"], "1.337"])).rejects.toBe("address.replace is not a function");
-    expect(invoke([42, [1, 2, 3], ["Sup"], "1.337"])).rejects.toBe(
+    expect(invoke([42, true, ["Sup"], "1.337"])).rejects.toThrowError("address.replace is not a function");
+    expect(invoke([42, 12, ["Sup"], "1.337"])).rejects.toThrowError("address.replace is not a function");
+    expect(invoke([42, [1, 2, 3], ["Sup"], "1.337"])).rejects.toThrowError(
       "address.replace is not a function"
     );
 
     // Incorrect array
-    expect(invoke([42, "0x1", 12, "1.337"])).rejects.toBe("t.map is not a function");
+    expect(invoke([42, "0x1", 12, "1.337"])).rejects.toThrowError("t.map is not a function");
 
-    expect(invoke([42, "0x01", ["Hello"], "hello"])).rejects.toBe(
+    expect(invoke([42, "0x01", ["Hello"], "hello"])).rejects.toThrowError(
       "Type Error: Expected proper value for fixed type"
     );
   });
