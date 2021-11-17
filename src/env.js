@@ -45,8 +45,12 @@ export const ACCESS_NODES = {
   emulator: "http://localhost:8080",
 };
 
+export const getEnvironmentName = async () => {
+  return (await config().get("ix.env")) || "emulator";
+};
+
 export const getEnvironment = async () => {
-  const env = (await config().get("ix.env")) || "emulator";
+  const env = await getEnvironmentName();
   return DEPLOYED_CONTRACTS[env] || DEPLOYED_CONTRACTS.emulator;
 };
 
