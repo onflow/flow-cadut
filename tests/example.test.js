@@ -137,17 +137,15 @@ describe("documentation examples", function () {
   });
 
   it("should throw an error if not enough arguments", async function () {
-    const error = "Not enough arguments";
-
-    expect(async () => {
+    await expect(async () => {
       const code = `
       pub fun main(metadata: {String:String}, key: String):String {
         return metadata[key]!
       }
     `;
       const values = [{ language: "Cadence", languageRating: "Cadence is Awesome 🤟" }];
-      const [metadata, key] = await mapValuesToCode(code, values);
-    }).rejects.toBe(error);
+      await mapValuesToCode(code, values);
+    }).rejects.toThrowError("Not enough arguments");
   });
 
   // Parser
