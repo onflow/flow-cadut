@@ -1,4 +1,6 @@
 import { executeScript } from "../../../src";
+import { contractHolder } from "./const";
+import { getEnvironmentName } from "../../../src/env";
 
 export const isFindAddress = (address) => {
   const noSpaces = address.replace(/\s/g, "");
@@ -12,6 +14,7 @@ export const extractName = (address) => {
 };
 
 export const findAddress = async (address) => {
+  // TODO: Implement caching
   const code = `
     import FIND from 0xFIND
 
@@ -19,6 +22,18 @@ export const findAddress = async (address) => {
         return FIND.lookupAddress(name)
     }
   `;
-  const args = [extractName(address)];
-  return executeScript({ code, args });
+  const name = extractName(address);
+  const args = [name];
+
+  const env = await getEnvironmentName();
+  const addressMap = {
+    FIND: contractHolder[env],
+  };
+
+  const [value, err] = await executeScript({ code, args, addressMap });
+  if (err) {
+    return null;
+  } else {
+    return value;
+  }
 };
