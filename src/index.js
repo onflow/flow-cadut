@@ -61,6 +61,8 @@ export {
   capitalizeFirstLetter,
 } from "./strings";
 
+export { PLUGIN_TYPES, registerPlugin, getPlugins } from "./plugins";
+
 export { executeScript, sendTransaction, deployContract, updateContract } from "./interactions";
 
 // Below is a set of aliases to bring it in line with FCL
