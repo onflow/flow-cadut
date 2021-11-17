@@ -1,12 +1,17 @@
-import { extractName, findAddress, isFindAddress } from "./utils";
+import { findAddress, isFindAddress } from "./utils";
 import { isAddress } from "../../../src/type-checker";
+import { PLUGIN_TYPES } from "../../../src";
 
-const plugin = (type, value) => {
-  if (isAddress(type) && isFindAddress(value)) {
-    const name = extractName(value);
-    console.log({ value, name });
-    return findAddress(name);
+const resolver = async (type, value) => {
+  if (!isAddress(type) || !isFindAddress(value)) {
+    return { type, value };
   }
+  const resolved = await findAddress(value);
+  return { type, value: resolved };
 };
 
-export default plugin;
+export default {
+  id: "cadut-find-resolver",
+  type: PLUGIN_TYPES.ARGUMENT,
+  resolver,
+};
