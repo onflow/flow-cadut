@@ -29,6 +29,7 @@ export {
 export {
   reportArguments,
   reportMissing,
+  resolveArguments,
   mapArguments,
   mapArgument,
   mapValuesToCode,
@@ -59,6 +60,8 @@ export {
   getSplitCharacter,
   capitalizeFirstLetter,
 } from "./strings";
+
+export { PLUGIN_TYPES, registerPlugin, getPlugins } from "./plugins";
 
 export { executeScript, sendTransaction, deployContract, updateContract } from "./interactions";
 

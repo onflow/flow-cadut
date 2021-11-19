@@ -102,7 +102,7 @@ describe("mapArgument", () => {
   test("Int", async () => {
     const type = "Int";
     const input = 42;
-    const output = mapArgument(type, input);
+    const output = await mapArgument(type, input);
 
     expect(output.xform.label).toBe(type);
     expect(output.value).toBe(input);
@@ -110,7 +110,7 @@ describe("mapArgument", () => {
   test("UInt", async () => {
     const type = "UInt";
     const input = 42;
-    const output = mapArgument(type, input);
+    const output = await mapArgument(type, input);
 
     expect(output.xform.label).toBe(type);
     expect(output.value).toBe(input);
@@ -118,7 +118,7 @@ describe("mapArgument", () => {
   test("Fix", async () => {
     const type = "Fix64";
     const input = 42.01;
-    const output = mapArgument(type, input);
+    const output = await mapArgument(type, input);
 
     expect(output.xform.label).toBe(type);
     expect(output.value).toBe(toFixedValue(input));
@@ -126,7 +126,7 @@ describe("mapArgument", () => {
   test("UFix", async () => {
     const type = "UFix64";
     const input = 1.337;
-    const output = mapArgument(type, input);
+    const output = await mapArgument(type, input);
 
     expect(output.xform.label).toBe(type);
     expect(output.value).toBe(toFixedValue(input));
@@ -134,7 +134,7 @@ describe("mapArgument", () => {
   test("String", async () => {
     const type = "String";
     const input = "Hello, Cadence";
-    const output = mapArgument(type, input);
+    const output = await mapArgument(type, input);
 
     expect(output.xform.label).toBe(type);
     expect(output.value).toBe(input);
@@ -142,7 +142,7 @@ describe("mapArgument", () => {
   test("Character", async () => {
     const type = "Character";
     const input = "a";
-    const output = mapArgument(type, input);
+    const output = await mapArgument(type, input);
 
     expect(output.xform.label).toBe(type);
     expect(output.value).toBe(input);
@@ -150,7 +150,7 @@ describe("mapArgument", () => {
   test("Bool", async () => {
     const type = "Bool";
     const input = true;
-    const output = mapArgument(type, input);
+    const output = await mapArgument(type, input);
 
     expect(output.xform.label).toBe(type);
     expect(output.value).toBe(input);
@@ -158,7 +158,7 @@ describe("mapArgument", () => {
   test("Address - with prefix", async () => {
     const type = "Address";
     const input = "0x01";
-    const output = mapArgument(type, input);
+    const output = await mapArgument(type, input);
 
     expect(output.xform.label).toBe(type);
     expect(output.value).toBe(input);
@@ -166,7 +166,7 @@ describe("mapArgument", () => {
   test("Address - no prefix", async () => {
     const type = "Address";
     const input = "01";
-    const output = mapArgument(type, input);
+    const output = await mapArgument(type, input);
 
     expect(output.xform.label).toBe(type);
     expect(output.value).toBe(withPrefix(input));
@@ -174,7 +174,7 @@ describe("mapArgument", () => {
   test("Array - of Int", async () => {
     const type = "[Int]";
     const input = [1, 2, 3, 4, 5];
-    const output = mapArgument(type, input);
+    const output = await mapArgument(type, input);
 
     expect(output.xform.label).toBe("Array");
     expect(output.value.length).toBe(5);
@@ -185,7 +185,7 @@ describe("mapArgument", () => {
       name: "James",
       surname: "Hunter",
     };
-    const output = mapArgument(type, input);
+    const output = await mapArgument(type, input);
 
     expect(output.xform.label).toBe("Dictionary");
     expect(output.value.length).toBe(2);
@@ -201,7 +201,7 @@ describe("mapArgument", () => {
     const input = {
       balance: "1.337",
     };
-    const output = mapArgument(type, input);
+    const output = await mapArgument(type, input);
 
     expect(output.xform.label).toBe("Dictionary");
     expect(output.value.length).toBe(1);
@@ -219,7 +219,7 @@ describe("mapArgument", () => {
         name: "James",
       },
     ];
-    const output = mapArgument(type, input);
+    const output = await mapArgument(type, input);
 
     expect(output.xform.label).toBe("Array");
     expect(output.value.length).toBe(input.length);
@@ -243,7 +243,7 @@ describe("mapArgument", () => {
       names: ["Alice", "Bob", "Charlie"],
     };
 
-    const output = mapArgument(type, input);
+    const output = await mapArgument(type, input);
 
     expect(output.xform.label).toBe("Dictionary");
     expect(output.value.length).toBe(1);
@@ -256,7 +256,7 @@ describe("mapArgument", () => {
   test("Nested Array - [[String]]", async () => {
     const type = "[[String]]";
     const input = [["Cadence"]];
-    const output = mapArgument(type, input);
+    const output = await mapArgument(type, input);
 
     expect(output.xform.label).toBe("Array");
     expect(output.value[0].length).toBe(input[0].length);
@@ -270,7 +270,7 @@ describe("complex example", () => {
     const argValues = [42, "0x01", ["Hello, World"], 1.337];
 
     const schema = getTemplateInfo(code).args.map(argType);
-    const output = mapArguments(schema, argValues);
+    const output = await mapArguments(schema, argValues);
 
     expect(output.length).toBe(argValues.length);
 
@@ -290,41 +290,47 @@ describe("complex example", () => {
   test("multiple values from code - shall fail conversion", async () => {
     const code = `pub fun main(a: Int, b: Address, c: [String], d: UFix64) { }`;
 
-    const invoke = (args) => () => {
-      mapValuesToCode(code, args);
+    const invoke = (args) => async () => {
+      try {
+        return mapValuesToCode(code, args);
+      } catch (e) {
+        return e.message;
+      }
     };
 
     // Schema expects more parameters to be provided
-    expect(invoke(["42"])).toThrow("Not enough arguments");
+    expect(invoke(["42"])).rejects.toThrowError("Not enough arguments");
 
     // Incorrect integer value provided
-    expect(invoke(["42", "0x01", ["Hello"], "1.337"])).toThrow(
+    expect(invoke(["42", "0x01", ["Hello"], "1.337"])).rejects.toThrowError(
       "Type Error: Expected Integer for type Int"
     );
 
     // Incorrect address
-    expect(invoke([42, true, ["Sup"], "1.337"])).toThrow("address.replace is not a function");
-    expect(invoke([42, 12, ["Sup"], "1.337"])).toThrow("address.replace is not a function");
-    expect(invoke([42, [1, 2, 3], ["Sup"], "1.337"])).toThrow("address.replace is not a function");
+    expect(invoke([42, true, ["Sup"], "1.337"])).rejects.toThrowError("address.replace is not a function");
+    expect(invoke([42, 12, ["Sup"], "1.337"])).rejects.toThrowError("address.replace is not a function");
+    expect(invoke([42, [1, 2, 3], ["Sup"], "1.337"])).rejects.toThrowError(
+      "address.replace is not a function"
+    );
 
     // Incorrect array
-    expect(invoke([42, "0x1", 12, "1.337"])).toThrow("t.map is not a function");
+    expect(invoke([42, "0x1", 12, "1.337"])).rejects.toThrowError("t.map is not a function");
 
-    expect(invoke([42, "0x01", ["Hello"], "hello"])).toThrow(
+    expect(invoke([42, "0x01", ["Hello"], "hello"])).rejects.toThrowError(
       "Type Error: Expected proper value for fixed type"
     );
   });
 });
 
 describe("mapValuesToCode", () => {
-  test("nested array", () => {
+  test("nested array", async () => {
     const code = `
       pub fun main(list: [[Int]]){
         log(list)
       }
     `;
     const values = [[[1, 3, 3, 7]]];
-    const result = mapValuesToCode(code, values);
+    const result = await mapValuesToCode(code, values);
     const [first] = result;
 
     expect(first.xform.label).toBe("Array");
@@ -368,7 +374,7 @@ describe("optionals", () => {
       surname: "Hunter",
       middlename: null,
     };
-    const output = mapArgument(type, input);
+    const output = await mapArgument(type, input);
 
     expect(output.xform.label).toBe("Dictionary");
     expect(output.value.length).toBe(3);

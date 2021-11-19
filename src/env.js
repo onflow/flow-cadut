@@ -28,14 +28,14 @@ export const DEPLOYED_CONTRACTS = {
     FungibleToken: "0x9a0766d93b6608b7",
     LockedTokens: "0x95e019a17d0e23d7",
     StakingProxy: "0x7aad92e5a0715d21",
-    FUSD: "0xe223d8a629e49c68"
+    FUSD: "0xe223d8a629e49c68",
   },
   mainnet: {
     FlowToken: "0x1654653399040a61",
     FungibleToken: "0xf233dcee88fe0abe",
     LockedTokens: "0x8d0e87b65159ae63",
     StakingProxy: "0x62430cf28c26d095",
-    FUSD: "0x3c5959b568896393"
+    FUSD: "0x3c5959b568896393",
   },
 };
 
@@ -45,8 +45,12 @@ export const ACCESS_NODES = {
   emulator: "http://localhost:8080",
 };
 
+export const getEnvironmentName = async () => {
+  return (await config().get("ix.env")) || "emulator";
+};
+
 export const getEnvironment = async () => {
-  const env = (await config().get("ix.env")) || "emulator";
+  const env = await getEnvironmentName();
   return DEPLOYED_CONTRACTS[env] || DEPLOYED_CONTRACTS.emulator;
 };
 
@@ -66,7 +70,7 @@ export const setEnvironment = async (networkName = "emulator", options = {}) => 
 
   await config().put("ix.env", network);
 
-  if(limit){
+  if (limit) {
     await config().put("ix.executionLimit", limit);
   }
 

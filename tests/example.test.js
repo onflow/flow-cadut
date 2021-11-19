@@ -90,19 +90,19 @@ describe("documentation examples", function () {
   });
 
   // Arguments
-  it("should convert value to sdk argument", function () {
+  it("should convert value to sdk argument", async function () {
     const type = "String";
     const value = "Hello from Cadence";
-    const arg = mapArgument(type, value);
+    const arg = await mapArgument(type, value);
 
     expect(arg.value).toBe(value);
     expect(arg.xform.label).toBe(type);
   });
 
-  it("should convert values to sdk arguments", function () {
+  it("should convert values to sdk arguments", async function () {
     const schema = ["String", "Int"];
     const values = ["Hello from Cadence", 1337];
-    const args = mapArguments(schema, values);
+    const args = await mapArguments(schema, values);
 
     for (let i = 0; i < schema.length; i++) {
       const type = schema[i];
@@ -114,7 +114,7 @@ describe("documentation examples", function () {
     }
   });
 
-  it("should convert values to sdk dictionary arguments", function () {
+  it("should convert values to sdk dictionary arguments", async function () {
     const code = `
       pub fun main(metadata: {String:String}, key: String):String {
         return metadata[key]!
@@ -124,7 +124,7 @@ describe("documentation examples", function () {
       { language: "Cadence", languageRating: "Cadence is Awesome 🤟" },
       "languageRating",
     ];
-    const [metadata, key] = mapValuesToCode(code, values);
+    const [metadata, key] = await mapValuesToCode(code, values);
 
     expect(metadata.xform.label).toBe("Dictionary");
     expect(metadata.value[0].key).toBe("language");
@@ -136,18 +136,16 @@ describe("documentation examples", function () {
     expect(key.value).toBe("languageRating");
   });
 
-  it("should throw an error if not enough arguments", function () {
-    const error = "Not enough arguments";
-
-    expect(() => {
+  it("should throw an error if not enough arguments", async function () {
+    await expect(async () => {
       const code = `
       pub fun main(metadata: {String:String}, key: String):String {
         return metadata[key]!
       }
     `;
       const values = [{ language: "Cadence", languageRating: "Cadence is Awesome 🤟" }];
-      const [metadata, key] = mapValuesToCode(code, values);
-    }).toThrow(error);
+      await mapValuesToCode(code, values);
+    }).rejects.toThrowError("Not enough arguments");
   });
 
   // Parser

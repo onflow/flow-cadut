@@ -33,6 +33,7 @@ import {
 } from "./type-checker";
 
 import { removeSpaces } from "./strings";
+import { getPlugins, applyPlugins, PLUGIN_TYPES } from "./plugins";
 
 const throwTypeError = (msg) => {
   throw new Error("Type Error: " + msg);
@@ -101,7 +102,6 @@ export const resolveBasicType = (type) => {
 };
 
 export const resolveType = (type) => {
-
   if (isComplexType(type)) {
     switch (true) {
       case isArray(type): {
@@ -125,11 +125,22 @@ export const resolveType = (type) => {
 
 /**
  * Map single argument to fcl.arg representation.
- * @param {string} type - Cadence value type
- * @param {any} value - actual value
+ * @param {string} rawType - Cadence value type
+ * @param {any} rawValue - actual value
  * @returns any - mapped fcl.arg value
  */
-export const mapArgument = (type, value) => {
+export const mapArgument = async (rawType, rawValue) => {
+  const plugins = await getPlugins(PLUGIN_TYPES.ARGUMENT);
+
+  let value = rawValue;
+  let type = rawType;
+
+  if (plugins) {
+    let applied = await applyPlugins({ type: rawType, value: rawValue }, plugins);
+    value = applied.value;
+    type = applied.type;
+  }
+
   const resolvedType = resolveType(type);
 
   switch (true) {
@@ -157,7 +168,12 @@ export const mapArgument = (type, value) => {
       const arrayType = getArrayType(type);
 
       if (isComplexType(arrayType)) {
-        const mappedValue = value.map((v) => mapArgument(arrayType, v).value);
+        const mappedValue = await Promise.all(
+          value.map(async (v) => {
+            const { value } = await mapArgument(arrayType, v);
+            return value;
+          })
+        );
         return fcl.arg(mappedValue, resolvedType);
       }
 
@@ -166,7 +182,7 @@ export const mapArgument = (type, value) => {
     }
 
     case isDictionary(type): {
-      const [keyType,valueType] = getDictionaryTypes(type);
+      const [keyType, valueType] = getDictionaryTypes(type);
       const finalValue = [];
       const keys = Object.keys(value);
 
@@ -174,7 +190,7 @@ export const mapArgument = (type, value) => {
         const key = keys[i];
         let resolvedValue;
         if (isComplexType(valueType)) {
-          resolvedValue = mapArgument(valueType, value[key]).value;
+          resolvedValue = await mapArgument(valueType, value[key]).value;
         } else {
           resolvedValue = value[key];
         }
@@ -207,15 +223,17 @@ export const assertType = (arg) => {
  * @param {[any]} values - array of passed values
  * @returns [any] - array of mapped fcl.arg values
  */
-export const mapArguments = (schema = [], values) => {
-  if (values.length < schema.length) {
+export const mapArguments = async (schema = [], values) => {
+  if (schema.length > values.length) {
     throw new Error("Not enough arguments");
   }
-  return values.map((value, i) => {
-    const mapped = mapArgument(schema[i], value);
-    assertType(mapped);
-    return mapped;
-  });
+  return Promise.all(
+    values.map(async (value, i) => {
+      const mapped = await mapArgument(schema[i], value);
+      assertType(mapped);
+      return mapped;
+    })
+  );
 };
 
 /**
@@ -224,7 +242,7 @@ export const mapArguments = (schema = [], values) => {
  * @param {[any]} values - array of values
  * @returns [any] - array of mapped fcl.arg
  */
-export const mapValuesToCode = (code, values = []) => {
+export const mapValuesToCode = async (code, values = []) => {
   const schema = getTemplateInfo(code).args.map(argType);
   return mapArguments(schema, values);
 };
@@ -244,7 +262,7 @@ const rawArgs = (args) => {
   }, []);
 };
 
-export const resolveArguments = (args, code) => {
+export const resolveArguments = async (args, code) => {
   if (args.length === 0) {
     return [];
   }
@@ -252,7 +270,7 @@ export const resolveArguments = (args, code) => {
   // We can check first element in array. If it's last value is instance
   // of @onflow/types then we assume that the rest of them are also unprocessed
   const first = args[0];
-  if (Array.isArray(first)) {
+  if (Array.isArray(first) && first.length > 0) {
     const last = first[first.length - 1];
     if (last.asArgument) {
       return rawArgs(args);

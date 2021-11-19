@@ -11,48 +11,48 @@ import {
 
 import { stripComments } from "../src/parser";
 
-describe("strip comments", ()=>{
-  test("line comments", ()=>{
+describe("strip comments", () => {
+  test("line comments", () => {
     const input = `
       // hidden
       pub fun main():String{ return "hello, world!" }
       // hidden
     `;
-    const output = stripComments(input)
-    expect(output.includes("hidden")).toBe(false)
-  })
+    const output = stripComments(input);
+    expect(output.includes("hidden")).toBe(false);
+  });
 
-  test("inline line comments", ()=>{
+  test("inline line comments", () => {
     const input = `
       pub fun main():String{ return "hello, world!" } // hidden
     `;
-    const output = stripComments(input)
-    expect(output.includes("pub fun main")).toBe(true)
-    expect(output.includes("hidden")).toBe(false)
-  })
+    const output = stripComments(input);
+    expect(output.includes("pub fun main")).toBe(true);
+    expect(output.includes("hidden")).toBe(false);
+  });
 
-  test("block comments", ()=>{
+  test("block comments", () => {
     const input = `
       /* 
         hidden
       */
       pub fun main():String{ return "hello, world!" }
     `;
-    const output = stripComments(input)
-    expect(output.includes("hidden")).toBe(false)
-  })
+    const output = stripComments(input);
+    expect(output.includes("hidden")).toBe(false);
+  });
 
-  test("inline block comments", ()=>{
+  test("inline block comments", () => {
     const input = `
       pub fun /* hidden */main():String{ return "hello, world!" }
     `;
-    const output = stripComments(input)
-    console.log(output)
-    expect(output.includes("pub fun main")).toBe(true)
-    expect(output.includes("hidden")).toBe(false)
-  })
+    const output = stripComments(input);
+    console.log(output);
+    expect(output.includes("pub fun main")).toBe(true);
+    expect(output.includes("hidden")).toBe(false);
+  });
 
-  test("combined comments", ()=>{
+  test("combined comments", () => {
     const input = `
       /* 
         hidden
@@ -60,10 +60,10 @@ describe("strip comments", ()=>{
       pub fun main():String{ return "hello, world!" }
       // hidden
     `;
-    const output = stripComments(input)
-    expect(output.includes("hidden")).toBe(false)
-  })
-})
+    const output = stripComments(input);
+    expect(output.includes("hidden")).toBe(false);
+  });
+});
 
 describe("parser", () => {
   test("extract script arguments - no arguments", () => {
