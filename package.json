@@ -1,6 +1,6 @@
 {
   "name": "flow-cadut",
-  "version": "0.1.13-alpha.1",
+  "version": "0.1.13-alpha.2",
   "description": "Flow Cadence Template Utilities",
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
@@ -56,6 +56,7 @@
     "build:core": "microbundle build --raw",
     "build:generator": "microbundle build --cwd generator --external child_process",
     "build:plugin-find": "microbundle build --cwd plugins/FIND",
+    "build:plugin-flowns": "microbundle build --cwd plugins/FLOWNS",
     "watch": "microbundle watch",
     "lint": "eslint src",
     "prettify": "prettier --write {src,tests}/**/*.js {src,tests}/*.js",
