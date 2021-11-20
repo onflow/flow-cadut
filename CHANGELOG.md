@@ -1,3 +1,7 @@
+### 0.1.12 - 2021-11-19
+- Added Plugin System
+- Added FIND address resolver
+
 ### 0.1.11 - 2021-10-11
 - More fixes to complex argument resolver
 - Bundle esm into main package
