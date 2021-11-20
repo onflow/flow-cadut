@@ -1,5 +1,5 @@
 {
-  "name": "flow-cadut-plugin",
+  "name": "flow-cadut-plugin-find",
   "amdName": "flowCadutPluginFIND",
   "version": "0.0.1",
   "description": "FIND address resolver",

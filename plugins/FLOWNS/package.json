@@ -1,5 +1,5 @@
 {
-  "name": "flow-cadut-plugin",
+  "name": "flow-cadut-plugin-flowns",
   "amdName": "flowCadutPluginFLOWNS",
   "version": "0.0.1",
   "description": "FLOWNS address resolver",
