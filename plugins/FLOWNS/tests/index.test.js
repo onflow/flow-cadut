@@ -1,8 +1,8 @@
 import { setEnvironment, registerPlugin, mapValuesToCode } from "../../../src";
-import { FLOWNS } from "../src/index";
+import { FLOWNS, contractHolder } from "../src";
 
 describe("FLOWNS plugin", () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     await setEnvironment("testnet");
     await registerPlugin(FLOWNS);
   });
@@ -14,7 +14,9 @@ describe("FLOWNS plugin", () => {
       }
     `;
     const args = ["flowns.fn"];
-    return mapValuesToCode(code, args);
+    const [output] = await mapValuesToCode(code, args);
+    const deployed = contractHolder["testnet"];
+    expect(output.value).toBe(deployed);
   });
 
   it("shall resolve flowns.fns properly", async () => {
@@ -24,7 +26,19 @@ describe("FLOWNS plugin", () => {
       }
     `;
     const args = ["flowns.fns"];
-    return mapValuesToCode(code, args);
+    const [output] = await mapValuesToCode(code, args);
+    const deployed = contractHolder["testnet"];
+    expect(output.value).toBe(deployed);
   });
 
+  it("shall return null for incorrect address", async () => {
+    const code = `
+      pub fun main(address: Address?): Address? {
+        return address
+      }
+    `;
+    const args = ["zzz.fnz"];
+    const [output] = await mapValuesToCode(code, args);
+    expect(output.value).toBe(null);
+  });
 });
