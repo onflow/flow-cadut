@@ -1,0 +1,22 @@
+{
+  "name": "flow-cadut-plugin",
+  "amdName": "flowCadutPluginFLOWNS",
+  "version": "0.0.1",
+  "description": "FLOWNS address resolver",
+  "author": "Caos",
+  "license": "Apache-2.0",
+  "main": "dist/FLOWNS.js",
+  "module": "dist/FLOWNS.module.js",
+  "umd:main": "dist/FLOWNS.umd.js",
+  "source": "src/index.js",
+  "scripts": {
+    "build": "microbundle",
+    "dev": "microbundle watch"
+  },
+  "peerDependencies": {
+    "flow-cadut": "^0.1.12-alpha.6"
+  },
+  "mangle": {
+    "regex": "^_"
+  }
+}
