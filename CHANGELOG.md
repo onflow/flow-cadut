@@ -1,6 +1,9 @@
+### 0.1.13 - 2021-11-20
+-  Added Flowns address resolver plugin 
+
 ### 0.1.12 - 2021-11-19
 - Added Plugin System
-- Added FIND address resolver
+- Added FIND address resolver plugin
 
 ### 0.1.11 - 2021-10-11
 - More fixes to complex argument resolver
