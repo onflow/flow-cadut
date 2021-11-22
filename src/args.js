@@ -198,7 +198,7 @@ export const mapArgument = async (rawType, rawValue) => {
         const key = keys[i];
         let resolvedValue;
         if (isComplexType(valueType)) {
-          resolvedValue = await mapArgument(valueType, value[key]).value;
+          resolvedValue = (await mapArgument(valueType, value[key])).value;
         } else {
           resolvedValue = value[key];
         }
