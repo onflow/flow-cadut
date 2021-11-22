@@ -32,6 +32,7 @@ export const isString = (type) => type === "String";
 export const isCharacter = (type) => type === "Character";
 export const isBoolean = (type) => type === "Bool";
 export const isAddress = (type) => type === "Address" || type === "Address?";
+export const isPath = (type) => type === "Path" || type === "Path?";
 
 export const isBasicType = (type) => {
   if (wrongType(type)) return false;
