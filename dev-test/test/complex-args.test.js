@@ -1,5 +1,5 @@
 import path from "path";
-//import { query } from "@onflow/fcl";
+import { query } from "@onflow/fcl";
 import { emulator, init } from "flow-js-testing";
 import { mapValuesToCode } from "../../src";
 
@@ -21,6 +21,20 @@ describe("arguments - scripts", () => {
   // Stop emulator, so it could be restarted
   afterAll(async () => {
     return emulator.stop();
+  });
+
+  test("[UInt32} array", async () => {
+    const cadence = `
+    pub fun main(data: [UInt32]): [UInt32]{
+      return data
+    }
+    `;
+
+    const input = [1,3,3,7]
+    const values = await mapValuesToCode(cadence, [input])
+    const args = () => values;
+    const result = await query({ cadence, args });
+    console.log({result})
   });
 
   test("{UInt32: UInt32} dictionary", async () => {

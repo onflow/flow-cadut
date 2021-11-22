@@ -32,10 +32,9 @@ describe("arguments - scripts", () => {
     `;
     const a = 13;
     const b = 37;
-    const result = await query({
-      cadence,
-      args: () => mapValuesToCode(cadence, [a, b]),
-    });
+    const values = await mapValuesToCode(cadence, [a, b]);
+    const args = () => values;
+    const result = await query({ cadence, args });
     expect(result).toBe(a + b);
   });
 
@@ -47,10 +46,9 @@ describe("arguments - scripts", () => {
     `;
     const a = 13;
     const b = 37;
-    const result = await query({
-      cadence,
-      args: () => mapValuesToCode(cadence, [a, b]),
-    });
+    const values = await mapValuesToCode(cadence, [a, b]);
+    const args = () => values;
+    const result = await query({ cadence, args });
     expect(result).toBe(a + b);
   });
 
@@ -65,10 +63,9 @@ describe("arguments - scripts", () => {
     `;
     const a = 13;
     const b = 37;
-    const result = await query({
-      cadence,
-      args: () => mapValuesToCode(cadence, [a, b]),
-    });
+    const values = await mapValuesToCode(cadence, [a, b]);
+    const args = () => values;
+    const result = await query({ cadence, args });
     expect(result).toBe(a + b);
   });
 
@@ -83,10 +80,9 @@ describe("arguments - scripts", () => {
     `;
     const a = 13;
     const b = 37;
-    const result = await query({
-      cadence,
-      args: () => mapValuesToCode(cadence, [a, b]),
-    });
+    const values = await mapValuesToCode(cadence, [a, b]);
+    const args = () => values;
+    const result = await query({ cadence, args });
     expect(result).toBe(a + b);
   });
 });
