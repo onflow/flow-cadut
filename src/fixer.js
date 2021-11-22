@@ -31,3 +31,20 @@ export const padAddress = (address) => {
 };
 
 export const toFixedValue = (val) => parseFloat(val).toFixed(8);
+
+export const domains = ["public", "private", "storage"];
+
+export const parsePath = (path) => {
+  if (path.startsWith("/")) {
+    const parts = path.slice(1).split("/");
+    if (parts.length !== 2) {
+      throw Error("Incorrect Path - identifier missing");
+    }
+    if (!domains.includes(parts[0])){
+      throw Error("Incorrect Path - wrong domain")
+    }
+    const [domain, identifier] = parts;
+    return { domain, identifier };
+  }
+  throw Error("Incorrect Path - shall start with `/`");
+};

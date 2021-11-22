@@ -23,6 +23,20 @@ describe("arguments - scripts", () => {
     return emulator.stop();
   });
 
+  test("[UInt32} array", async () => {
+    const cadence = `
+    pub fun main(data: [UInt32]): [UInt32]{
+      return data
+    }
+    `;
+
+    const input = [1,3,3,7]
+    const values = await mapValuesToCode(cadence, [input])
+    const args = () => values;
+    const result = await query({ cadence, args });
+    console.log({result})
+  });
+
   test("{UInt32: UInt32} dictionary", async () => {
     const cadence = `
     pub fun main(data: {UInt32: UInt32}, key: UInt32): UInt32?{
@@ -34,7 +48,8 @@ describe("arguments - scripts", () => {
     const key = 1;
     const data = [dict, key];
 
-    const args = () => mapValuesToCode(cadence, data);
+    const values = await mapValuesToCode(cadence, data)
+    const args = () => values;
     const result = await query({ cadence, args });
     expect(result).toBe(dict[key])
   });
@@ -50,7 +65,8 @@ describe("arguments - scripts", () => {
     const key = "test";
     const data = [dict, key];
 
-    const args = () => mapValuesToCode(cadence, data);
+    const values = await mapValuesToCode(cadence, data)
+    const args = () => values;
     const result = await query({ cadence, args });
     expect(result).toBe(dict[key])
   });
@@ -66,7 +82,8 @@ describe("arguments - scripts", () => {
     const key = "cadence";
     const data = [dict, key];
 
-    const args = () => mapValuesToCode(cadence, data);
+    const values = await mapValuesToCode(cadence, data)
+    const args = () => values;
     const result = await query({ cadence, args });
     expect(result).toBe(dict[key])
   });
@@ -89,8 +106,9 @@ describe("arguments - scripts", () => {
       },
     ];
 
-    const args = () => mapValuesToCode(cadence, [meta]);
 
+    const values = await mapValuesToCode(cadence, [meta])
+    const args = () => values;
     const result = await query({ cadence, args });
     expect(result.name).toBe(meta[0].name)
     expect(result.powerLevel).toBe(meta[0].powerLevel)
@@ -108,8 +126,8 @@ describe("arguments - scripts", () => {
       TopShot: [42],
     };
 
-    const args = () => mapValuesToCode(cadence, [data]);
-
+    const values = await mapValuesToCode(cadence, [data])
+    const args = () => values;
     const result = await query({ cadence, args });
     expect(result.Starly.length).toBe(data.Starly.length)
     expect(result.TopShot.length).toBe(data.TopShot.length)
@@ -130,7 +148,8 @@ describe("arguments - scripts", () => {
       [Second]: [42],
     };
 
-    const args = () => mapValuesToCode(cadence, [data]);
+    const values = await mapValuesToCode(cadence, [data])
+    const args = () => values;
 
     const result = await query({ cadence, args });
     expect(result[First].length).toBe(data[First].length)
@@ -155,7 +174,8 @@ describe("arguments - scripts", () => {
       [Second]: [42],
     };
 
-    const args = () => mapValuesToCode(cadence, [recipients, data]);
+    const values = await mapValuesToCode(cadence, [recipients, data])
+    const args = () => values;
 
     const result = await query({ cadence, args });
     expect(result[First].length).toBe(data[First].length)
@@ -177,7 +197,8 @@ describe("arguments - scripts", () => {
       },
     };
 
-    const args = () => mapValuesToCode(cadence, [data]);
+    const values = await mapValuesToCode(cadence, [data])
+    const args = () => values;
 
     const result = await query({ cadence, args });
     expect(result[user].Starly.length).toBe(data[user].Starly.length)

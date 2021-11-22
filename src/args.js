@@ -19,12 +19,13 @@
 import * as t from "@onflow/types";
 import * as fcl from "@onflow/fcl";
 
-import { toFixedValue, withPrefix } from "./fixer";
+import { parsePath, toFixedValue, withPrefix } from "./fixer";
 import { getTemplateInfo } from "./parser";
 import {
   isBasicType,
   isFixedNumType,
   isAddress,
+  isPath,
   isArray,
   isDictionary,
   isComplexType,
@@ -164,6 +165,13 @@ export const mapArgument = async (rawType, rawValue) => {
       return fcl.arg(prefixedAddress, resolvedType);
     }
 
+    case isPath(type): {
+      return fcl.arg(
+        parsePath(value),
+        resolvedType
+      );
+    }
+
     case isArray(type): {
       const arrayType = getArrayType(type);
 
@@ -190,7 +198,7 @@ export const mapArgument = async (rawType, rawValue) => {
         const key = keys[i];
         let resolvedValue;
         if (isComplexType(valueType)) {
-          resolvedValue = await mapArgument(valueType, value[key]).value;
+          resolvedValue = (await mapArgument(valueType, value[key])).value;
         } else {
           resolvedValue = value[key];
         }

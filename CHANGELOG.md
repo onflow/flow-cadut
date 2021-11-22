@@ -1,3 +1,9 @@
+### 0.1.14 - 2021-11-23
+- Bump @onflow/fcl and @onflow/types to latest versions
+- Added Path argument resolver
+- Fixed issue with complex arguments due to new async nature of `mapValuesToCode` method
+- Updated tests
+
 ### 0.1.13 - 2021-11-20
 -  Added Flowns address resolver plugin 
 
