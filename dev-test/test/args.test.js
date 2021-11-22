@@ -32,7 +32,8 @@ describe("optional arguments", () => {
       }
     `;
 
-    const args = () => mapValuesToCode(cadence, input);
+    const values = await mapValuesToCode(cadence, input)
+    const args = () => values;
     const output = await query({ cadence, args });
 
     expect(output).toBe(input[0]);
@@ -46,25 +47,42 @@ describe("optional arguments", () => {
       }
     `;
 
-    const args = () => mapValuesToCode(cadence, input);
+    const values = await mapValuesToCode(cadence, input)
+    const args = () => values;
     const output = await query({ cadence, args });
 
     expect(output).toBe(toFixedValue(input[0]));
   });
 
-  it("empty array", async ()=>{
+  it("empty array", async () => {
     const input = [[]];
     const cadence = `
       pub fun main(arr:[String]):[String]{
         return arr
       }
     `;
-
-    const args = () => mapValuesToCode(cadence, input);
+    const values = await mapValuesToCode(cadence, input)
+    const args = () => values;
     const output = await query({ cadence, args });
 
     expect(output.length).toBe(0);
-  })
+  });
+
+  it("Path", async () => {
+    const input = ["/public/collection"];
+    const cadence = `
+      pub fun main(path: Path):Path{
+        return path
+      }
+    `;
+
+    const values = await mapValuesToCode(cadence, input)
+    const args = () => values;
+    const output = await query({ cadence, args });
+
+    expect(output.domain).toBe("public");
+    expect(output.identifier).toBe("collection");
+  });
 
   it("optionals - String? - no value", async () => {
     const input = null;
@@ -74,7 +92,8 @@ describe("optional arguments", () => {
       }
     `;
 
-    const args = () => mapValuesToCode(cadence, [input]);
+    const values = await mapValuesToCode(cadence, [input])
+    const args = () => values;
     const output = await query({ cadence, args });
 
     expect(output).toBe(input);
@@ -87,7 +106,8 @@ describe("optional arguments", () => {
       }
     `;
 
-    const args = () => mapValuesToCode(cadence, [input]);
+    const values = await mapValuesToCode(cadence, [input])
+    const args = () => values;
     const output = await query({ cadence, args });
 
     expect(output).toBe(input);
@@ -104,7 +124,8 @@ describe("optional arguments", () => {
       }
     `;
 
-    const args = () => mapValuesToCode(cadence, [input]);
+    const values = await mapValuesToCode(cadence, [input])
+    const args = () => values;
     const output = await query({ cadence, args });
 
     expect(output).toBe(expected);
@@ -121,7 +142,8 @@ describe("optional arguments", () => {
       }
     `;
 
-    const args = () => mapValuesToCode(cadence, [input]);
+    const values = await mapValuesToCode(cadence, [input])
+    const args = () => values;
     const output = await query({ cadence, args });
 
     expect(output).toBe(expected);
@@ -135,7 +157,8 @@ describe("optional arguments", () => {
       }
     `;
 
-    const args = () => mapValuesToCode(cadence, [input]);
+    const values = await mapValuesToCode(cadence, [input])
+    const args = () => values;
     const output = await query({ cadence, args });
 
     expect(output).toBe(expected);
@@ -149,7 +172,8 @@ describe("optional arguments", () => {
       }
     `;
 
-    const args = () => mapValuesToCode(cadence, [input]);
+    const values = await mapValuesToCode(cadence, [input])
+    const args = () => values;
     const output = await query({ cadence, args });
 
     expect(output).toBe(expected);
@@ -168,7 +192,8 @@ describe("optional arguments", () => {
       }
     `;
 
-    const args = () => mapValuesToCode(cadence, [input]);
+    const values = await mapValuesToCode(cadence, [input])
+    const args = () => values;
     const output = await query({ cadence, args });
 
     expect(output).toBe(expected);
@@ -182,7 +207,8 @@ describe("optional arguments", () => {
       }
     `;
 
-    const args = () => mapValuesToCode(cadence, [input]);
+    const values = await mapValuesToCode(cadence, [input])
+    const args = () => values;
     const output = await query({ cadence, args });
 
     expect(output).toBe(expected);
@@ -262,7 +288,7 @@ describe("optional arguments", () => {
     for (const i in tests) {
       const { input, expected, cadence, rawArgs } = tests[i];
 
-      const mapped = mapValuesToCode(cadence, rawArgs || [input]);
+      const mapped = await mapValuesToCode(cadence, rawArgs || [input]);
       const args = () => mapped;
       const output = await query({ cadence, args });
       await expect(output).toBe(expected === undefined ? input : expected);
