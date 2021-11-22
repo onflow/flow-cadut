@@ -2,7 +2,7 @@ import { ec as EC } from "elliptic";
 import * as fcl from "@onflow/fcl";
 import { config, sansPrefix, send, tx, withPrefix } from "@onflow/fcl";
 import { SHA3 } from "sha3";
-import { mapValuesToCode } from "../generator/src";
+import { mapValuesToCode } from "../src";
 const ec = new EC("p256");
 
 const hashMsgHex = (msgHex) => {
@@ -45,9 +45,10 @@ export const authorization =
 
 export const mutate = async (props) => {
   const { cadence, payer = authorization(), args, limit = 100 } = props;
+  const values = await mapValuesToCode(cadence, args)
   const response = await send([
     fcl.transaction(cadence),
-    fcl.args(mapValuesToCode(cadence, args)),
+    fcl.args(values),
     fcl.proposer(payer),
     fcl.payer(payer),
     fcl.authorizations([payer]),
