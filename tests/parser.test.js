@@ -174,7 +174,7 @@ describe("extract contract name", () => {
           post{}
       }
     `;
-    expect(()=> extractContractName(input)).toThrow("can't find name of the contract");
+    expect(()=> extractContractName(input)).toThrow("Contract Error: can't find name of the contract");
   });
 });
 
