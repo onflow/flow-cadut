@@ -47,7 +47,6 @@ describe("strip comments", () => {
       pub fun /* hidden */main():String{ return "hello, world!" }
     `;
     const output = stripComments(input);
-    console.log(output);
     expect(output.includes("pub fun main")).toBe(true);
     expect(output.includes("hidden")).toBe(false);
   });
