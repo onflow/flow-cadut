@@ -65,16 +65,7 @@ export const extractTransactionArguments = (code) => {
 };
 
 export const extractContractName = (code) => {
-  const contractNameMatcher = /\w+\s+contract\s+(?:interface)*\s*(\w*)/g;
-  const noComments = stripComments(code);
-  const singleLine = noComments.replace(/\r\n|\n|\r/g, " ");
-  const matches = contractNameMatcher.exec(singleLine);
-
-  if (matches.length < 2) {
-    throw new Error("Contract Error: can't find name of the contract");
-  }
-
-  return matches[1];
+  return extractContractParameters(code).contractName
 };
 
 export const extractContractParameters = (code) => {
@@ -86,7 +77,7 @@ export const extractContractParameters = (code) => {
   const noComplex = noComments.replace(complexMatcher, "");
   const matches = contractNameMatcher.exec(noComplex);
 
-  if (matches.length < 2) {
+  if (!matches || matches.length < 2) {
     throw new Error("Contract Error: can't find name of the contract");
   }
 
