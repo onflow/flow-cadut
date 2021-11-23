@@ -165,6 +165,17 @@ describe("extract contract name", () => {
     const output = extractContractName(input);
     expect(output).toEqual(contractName);
   });
+
+  test("extract contract name - transaction", () => {
+    const input = `
+      transaction {
+          pre {}
+          execute{}
+          post{}
+      }
+    `;
+    expect(()=> extractContractName(input)).toThrow("can't find name of the contract");
+  });
 });
 
 describe("extract contract parameters", () => {
