@@ -47,7 +47,6 @@ describe("strip comments", () => {
       pub fun /* hidden */main():String{ return "hello, world!" }
     `;
     const output = stripComments(input);
-    console.log(output);
     expect(output.includes("pub fun main")).toBe(true);
     expect(output.includes("hidden")).toBe(false);
   });
@@ -165,6 +164,17 @@ describe("extract contract name", () => {
     `;
     const output = extractContractName(input);
     expect(output).toEqual(contractName);
+  });
+
+  test("extract contract name - transaction", () => {
+    const input = `
+      transaction {
+          pre {}
+          execute{}
+          post{}
+      }
+    `;
+    expect(()=> extractContractName(input)).toThrow("Contract Error: can't find name of the contract");
   });
 });
 
