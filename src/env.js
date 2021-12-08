@@ -20,8 +20,8 @@ import { config } from "@onflow/config";
 
 export const DEPLOYED_CONTRACTS = {
   emulator: {
-    FlowToken: "0xee82856bf20e2aa6",
-    FungibleToken: "0x0ae53cb6e3f42a79",
+    FlowToken: "0x0ae53cb6e3f42a79",
+    FungibleToken: "0xee82856bf20e2aa6",
   },
   testnet: {
     FlowToken: "0x7e60df042a9c0868",
