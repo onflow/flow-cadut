@@ -13,7 +13,7 @@ describe("FIND plugin", () => {
         return address
       }
     `;
-    const args = ["find:bjarte"];
+    const args = ["find:shiny"];
     return mapValuesToCode(code, args);
   });
 
@@ -23,7 +23,7 @@ describe("FIND plugin", () => {
         return address
       }
     `;
-    const args = ["bjarte.find"];
+    const args = ["shiny.find"];
     return mapValuesToCode(code, args);
   });
 });
