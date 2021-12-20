@@ -20,23 +20,39 @@ import { config } from "@onflow/config";
 
 export const DEPLOYED_CONTRACTS = {
   emulator: {
-    FlowToken: "0x0ae53cb6e3f42a79",
     FungibleToken: "0xee82856bf20e2aa6",
+
+    FlowFees: "0xe5a8b7f23e8b548f",
+    FlowStorageFees: "0xf8d6e0586b0a20c7",
+    FlowToken: "0x0ae53cb6e3f42a79",
   },
   testnet: {
-    FlowToken: "0x7e60df042a9c0868",
     FungibleToken: "0x9a0766d93b6608b7",
     NonFungibleToken: "0x631e88ae7f1d7c20",
+
+    FlowClusterQC: "0x9eca2b38b18b5dfe",
+    FlowDKG: "0x9eca2b38b18b5dfe",
+    FlowEpoch: "0x9eca2b38b18b5dfe",
+    FlowIDTableStaking: "0x9eca2b38b18b5dfe",
+    FlowToken: "0x7e60df042a9c0868",
     LockedTokens: "0x95e019a17d0e23d7",
     StakingProxy: "0x7aad92e5a0715d21",
+
     FUSD: "0xe223d8a629e49c68",
   },
   mainnet: {
-    FlowToken: "0x1654653399040a61",
     FungibleToken: "0xf233dcee88fe0abe",
     NonFungibleToken: "0x1d7e57aa55817448",
+
+    FlowClusterQC: "0x8624b52f9ddcd04a",
+    FlowDKG: "0x8624b52f9ddcd04a",
+    FlowEpoch: "0x8624b52f9ddcd04a",
+    FlowIDTableStaking: "0x8624b52f9ddcd04a",
+    FlowFees: "0xf919ee77447b7497",
+    FlowToken: "0x1654653399040a61",
     LockedTokens: "0x8d0e87b65159ae63",
     StakingProxy: "0x62430cf28c26d095",
+
     FUSD: "0x3c5959b568896393",
   },
 };
