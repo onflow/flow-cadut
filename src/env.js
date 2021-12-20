@@ -41,6 +41,24 @@ export const DEPLOYED_CONTRACTS = {
   },
 };
 
+export const EXT_ENVIRONMENT = {
+  emulator: {},
+  testnet: {},
+  mainnet: {},
+};
+
+export const extendEnvironment = (branch) => {
+  for (const key of Object.keys(EXT_ENVIRONMENT)){
+    const value = branch[key];
+    const { name } = branch;
+    const branchValue = typeof branch[key] === "object" ? value : { [name]: value };
+    EXT_ENVIRONMENT[key] = {
+      ...EXT_ENVIRONMENT[key],
+      ...branchValue,
+    };
+  }
+};
+
 export const ACCESS_NODES = {
   mainnet: "https://access-mainnet-beta.onflow.org",
   testnet: "https://access-testnet.onflow.org",
@@ -53,7 +71,13 @@ export const getEnvironmentName = async () => {
 
 export const getEnvironment = async () => {
   const env = await getEnvironmentName();
-  return DEPLOYED_CONTRACTS[env] || DEPLOYED_CONTRACTS.emulator;
+  const core = DEPLOYED_CONTRACTS[env] || DEPLOYED_CONTRACTS.emulator;
+  const extended = EXT_ENVIRONMENT[env] || EXT_ENVIRONMENT.emulator;
+
+  return {
+    ...core,
+    ...extended,
+  };
 };
 
 export const setEnvironment = async (networkName = "emulator", options = {}) => {
