@@ -3,6 +3,7 @@ import { getView } from "../../views/src";
 import Flovatars from "../../views/src/Flovatars";
 import VersusArt from "../../views/src/Versus";
 import MotoGP from "../../views/src/MotoGP";
+import Alchemy from "../../views/src/Alchemy";
 
 describe("views", () => {
   it("fetch flowvatars", async () => {
@@ -24,6 +25,13 @@ describe("views", () => {
     await setEnvironment("mainnet");
     const [cards, err] = await getView(MotoGP, "0x53f389d96fb4ce5e");
     console.log({ cards });
+    console.error(err);
+  });
+
+  it("fetch Alchemy", async () => {
+    await setEnvironment("mainnet");
+    const [data, err] = await getView(Alchemy, "0x53f389d96fb4ce5e");
+    console.log({ data });
     console.error(err);
   });
 });
