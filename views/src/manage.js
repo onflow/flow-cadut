@@ -1,8 +1,8 @@
-export const prepareView = async (strategy, address) => {
-  const { mapData, getData } = strategy(address);
+export const prepareView = async (view, address) => {
+  const { mapData, getData } = view(address);
 
   return {
-    resolve: async () => {
+    blink: async () => {
       const [data, err] = await getData();
       if (err) {
         return [null, err];
@@ -12,7 +12,7 @@ export const prepareView = async (strategy, address) => {
   };
 };
 
-export const getView = async (strategy, address) => {
-  const view = await prepareView(strategy, address);
-  return view.resolve();
+export const getView = async (view, address) => {
+  const eyes = await prepareView(view, address);
+  return eyes.blink();
 };
