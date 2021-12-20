@@ -37,6 +37,7 @@ export const DEPLOYED_CONTRACTS = {
     FlowToken: "0x7e60df042a9c0868",
     LockedTokens: "0x95e019a17d0e23d7",
     StakingProxy: "0x7aad92e5a0715d21",
+    FlowStakingCollection: "0x95e019a17d0e23d7",
 
     FUSD: "0xe223d8a629e49c68",
   },
@@ -52,6 +53,7 @@ export const DEPLOYED_CONTRACTS = {
     FlowToken: "0x1654653399040a61",
     LockedTokens: "0x8d0e87b65159ae63",
     StakingProxy: "0x62430cf28c26d095",
+    FlowStakingCollection: "0x8d0e87b65159ae63",
 
     FUSD: "0x3c5959b568896393",
   },
