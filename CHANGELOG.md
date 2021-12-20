@@ -1,3 +1,6 @@
+### 0.1.15 - 2021-12-20
+- Added views for Flovatar and Versus
+
 ### 0.1.14 - 2021-11-23
 - Bump @onflow/fcl and @onflow/types to latest versions
 - Added Path argument resolver
