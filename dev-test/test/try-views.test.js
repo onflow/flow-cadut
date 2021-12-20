@@ -1,7 +1,7 @@
 import { setEnvironment } from "../../src";
 import { getView } from "../../views";
-import Flovatars from "../../views/Flovatars";
-import VersusArt from "../../views/Versus";
+import Flovatars from "../../views/src/Flovatars";
+import VersusArt from "../../views/src/Versus";
 
 describe("views", () => {
   it("fetch flowvatars", async () => {

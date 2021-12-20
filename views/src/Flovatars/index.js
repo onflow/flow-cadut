@@ -1,5 +1,5 @@
-import { query } from "../../src";
-import { extendEnvironment } from "../../src/env";
+import { query } from "../../../src";
+import { extendEnvironment } from "../../../src/env";
 
 export const fetchFlovatarsScript = `
     import Flovatar from 0xFlovatar
