@@ -1,0 +1,22 @@
+{
+  "name": "flow-cadut-views",
+  "amdName": "flowCadutViews",
+  "version": "0.0.1",
+  "private": true,
+  "author": "Maksim Daunarovich",
+  "license": "Apache-2.0",
+  "main": "dist/views.js",
+  "module": "dist/views.module.js",
+  "umd:main": "dist/views.umd.js",
+  "source": "src/index.js",
+  "scripts": {
+    "build": "microbundle",
+    "dev": "microbundle watch"
+  },
+  "peerDependencies": {
+    "flow-cadut": "^0.1.15-alpha.3"
+  },
+  "mangle": {
+    "regex": "^_"
+  }
+}
