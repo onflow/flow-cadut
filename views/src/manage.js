@@ -20,7 +20,7 @@ export const getView = async (view, address) => {
 
 export const resolveView = async (preparedView, onChange) => {
   const { name, blink } = preparedView;
-  const [data] = blink();
+  const [data] = await blink();
   onChange(name, data);
 };
 
@@ -32,24 +32,18 @@ export const getDisplay = async (views, address, onChange = null) => {
     panels.push(panel);
   }
 
-  if (onChange) {
-    // TODO: use Promise.all to know when all of them resolved
-    for (let i = 0; i < panels.length; i++) {
-      const panel = panels[i];
-      // We add .then here to suppress warning message
-      resolveView(panel, onChange).then(() => {});
-    }
-  } else {
-    const promised = await Promise.all(
-      panels.map(async ({ blink }) => {
-        const [data] = await blink();
-        return data;
-      })
-    );
+  const promised = await Promise.all(
+    panels.map(async ({ name, blink }) => {
+      const [data] = await blink();
+      if (onChange) {
+        onChange(name, data);
+      }
+      return data;
+    })
+  );
 
-    return promised.reduce((acc, item, i) => {
-      acc[panels[i].name] = item;
-      return acc;
-    }, {});
-  }
+  return promised.reduce((acc, item, i) => {
+    acc[panels[i].name] = item;
+    return acc;
+  }, {});
 };

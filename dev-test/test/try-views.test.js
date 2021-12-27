@@ -46,11 +46,21 @@ describe("displays", () => {
 
   it("shall fire changes asynchronously", async () => {
     await setEnvironment("mainnet");
-    const views = [Flovatars, VersusArt];
+
+    const resolved = {};
+
+    const views = [Flovatars, VersusArt, Ballerz];
     const owner = "0x886f3aeaf848c535";
-    const onChange = (name, data) => {
-      console.log(`Resolved ${name} view`);
+    const onChange = (name) => {
+      resolved[name] = true;
     };
-    await getDisplay(views, owner, onChange);
+    const display = await getDisplay(views, owner, onChange);
+    expect(display.Flovatar).not.toBe(null);
+    expect(display.VersusArt).not.toBe(null);
+    expect(display.Ballerz).not.toBe(null);
+
+    expect(resolved.Flovatar).toBe(true);
+    expect(resolved.VersusArt).toBe(true);
+    expect(resolved.Ballerz).toBe(true);
   });
 });
