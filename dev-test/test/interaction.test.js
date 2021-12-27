@@ -82,3 +82,42 @@ describe("arguments - scripts", () => {
     console.log({result, err})
   })
 });
+
+describe("multiple interactions", ()=>{
+  beforeAll(async () => {
+    const basePath = path.resolve(__dirname, "../cadence");
+    // You can specify different port to parallelize execution of describe blocks
+    const port = 8080;
+    // Setting logging flag to true will pipe emulator output to console
+    const logging = true;
+
+    await init(basePath, { port, logging });
+    return emulator.start(port);
+  });
+
+  // Stop emulator, so it could be restarted
+  afterAll(async () => {
+    return emulator.stop();
+  });
+
+  it("shall properly handle multiple queries",async ()=>{
+    const a = 42
+    const [first, firstErr] = await query({
+      cadence: `
+        pub fun main(a: Int): Int { return a }
+      `,
+      args: [42]
+    })
+    // expect(first).toBe(a)
+    console.log({first, firstErr})
+
+    const [second, secondErr] = await query({
+      cadence: `
+        pub fun main(): UInt { return 42 }
+      `
+    })
+    expect(second).toBe(42)
+
+    console.log({second, secondErr})
+  })
+})

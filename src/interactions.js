@@ -25,7 +25,7 @@ import { getEnvironment } from "./env";
 export const prepareInteraction = async (props, type) => {
   const { code, cadence, args, addressMap, limit, processed } = props;
 
-  // allow to pass code via "cadence" field simillar to fcl.query/mutate
+  // allow to pass code via "cadence" field similar to fcl.query/mutate
   const codeTemplate = code || cadence;
 
   const env = await getEnvironment();
@@ -38,7 +38,7 @@ export const prepareInteraction = async (props, type) => {
   const ix = type === "script" ? [fcl.script(ixCode)] : [fcl.transaction(ixCode)];
 
   if (args) {
-    const resolvedArgs = await resolveArguments(args, code);
+    const resolvedArgs = await resolveArguments(args, codeTemplate);
     ix.push(fcl.args(resolvedArgs));
   }
 
