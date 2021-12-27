@@ -43,7 +43,7 @@ export default (address) => {
     mapData: (baller) => {
       const { id, img, ...metadata } = baller;
       const ipfsUrl = img.slice(7).replace(/\//g, "%2F");
-      const image = `https://ongaia.com/_next/image?url=https%3A%2F%2Fimages.ongaia.com%2Fipfs%2F${ipfsUrl}&w=512&q=75`;
+      const image = `https://ongaia.com/_next/image?url=https%3A%2F%2Fimages.ongaia.com%2Fipfs%2F${ipfsUrl}&w=3840&q=75`;
       return {
         id,
         metadata,
