@@ -1,4 +1,4 @@
-export { getView, prepareView } from "./manage";
+export { getView, prepareView, getDisplay } from "./manage";
 export { makeViewHook } from "./hooks";
 
 export { default as VersusArt } from "./Versus";
