@@ -1,10 +1,9 @@
 import { setEnvironment } from "../../src";
-import { getView } from "../../views/src";
+import { getView, getDisplay } from "../../views/src";
 import Flovatars from "../../views/src/Flovatars";
 import VersusArt from "../../views/src/Versus";
 import MotoGP from "../../views/src/MotoGP";
 import Ballerz from "../../views/src/Ballerz";
-
 
 describe("views", () => {
   it("fetch flowvatars", async () => {
@@ -33,5 +32,35 @@ describe("views", () => {
     const [ballerz, err] = await getView(Ballerz, "0x4c342b6dafb5bcb1");
     console.log({ ballerz });
     err && console.error(err);
+  });
+});
+
+describe("displays", () => {
+  it("shall fetch multiple panels at once", async () => {
+    await setEnvironment("mainnet");
+    const display = await getDisplay([Flovatars, VersusArt], "0x886f3aeaf848c535");
+    console.log(display);
+    expect(display.Flovatar).not.toBe(null);
+    expect(display.VersusArt).not.toBe(null);
+  });
+
+  it("shall fire changes asynchronously", async () => {
+    await setEnvironment("mainnet");
+
+    const resolved = {};
+
+    const views = [Flovatars, VersusArt, Ballerz];
+    const owner = "0x886f3aeaf848c535";
+    const onChange = (name) => {
+      resolved[name] = true;
+    };
+    const display = await getDisplay(views, owner, onChange);
+    expect(display.Flovatar).not.toBe(null);
+    expect(display.VersusArt).not.toBe(null);
+    expect(display.Ballerz).not.toBe(null);
+
+    expect(resolved.Flovatar).toBe(true);
+    expect(resolved.VersusArt).toBe(true);
+    expect(resolved.Ballerz).toBe(true);
   });
 });
