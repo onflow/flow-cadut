@@ -1,6 +1,6 @@
 {
   "name": "flow-cadut",
-  "version": "0.1.15-alpha.12",
+  "version": "0.1.15-alpha.13",
   "description": "Flow Cadence Template Utilities",
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
@@ -81,11 +81,14 @@
     "@onflow/config": "0.0.2",
     "@onflow/fcl": "^0.0.77",
     "@onflow/types": "^0.0.6",
+    "elliptic": "^6.5.4",
     "esm": "^3.2.25",
     "handlebars": "^4.7.7",
     "handlebars-loader": "^1.7.1",
     "prettier": "^2.3.0",
     "rimraf": "^3.0.2",
+    "rlp": "^3.0.0",
+    "sha3": "^2.1.4",
     "simple-git": "^2.40.0",
     "yargs": "^15.4.1"
   },
