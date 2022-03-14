@@ -4,6 +4,7 @@ import Flovatars from "../../views/src/Flovatars";
 import VersusArt from "../../views/src/Versus";
 import MotoGP from "../../views/src/MotoGP";
 import Ballerz from "../../views/src/Ballerz";
+import { GoatedGoats, GoatedTraits } from "../../views/src/GoatedGoats";
 
 describe("views", () => {
   it("fetch flowvatars", async () => {
@@ -31,6 +32,20 @@ describe("views", () => {
     await setEnvironment("mainnet");
     const [ballerz, err] = await getView(Ballerz, "0x4c342b6dafb5bcb1");
     console.log({ ballerz });
+    err && console.error(err);
+  });
+
+  it("fetch goats", async () => {
+    await setEnvironment("mainnet");
+    const [goats, err] = await getView(GoatedGoats, "0x309c72eaa414cdc5");
+    console.log({ goats });
+    err && console.error(err);
+  });
+
+  it("fetch goated traits", async () => {
+    await setEnvironment("mainnet");
+    const [traits, err] = await getView(GoatedTraits, "0x309c72eaa414cdc5");
+    console.log({ traits });
     err && console.error(err);
   });
 });
