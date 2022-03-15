@@ -83,15 +83,15 @@ export default (address) => {
 
       let traitsScore = 0;
       const equippedTraits = goat.equippedTraits.map((trait) => {
-        const { traitID, traitEditionMetadata } = trait;
-        const { rarity } = traitEditionMetadata;
+        const { traitID: id, traitEditionMetadata: metadata } = trait;
+        const { rarity, thumbnailCID } = metadata;
         const score = getRarityScore(rarity);
         traitsScore += score;
         return {
-          id: traitID,
-          image: pinataLink(traitID),
+          id,
+          image: pinataLink(thumbnailCID),
           traitScore: score,
-          metadata: traitEditionMetadata,
+          metadata,
         };
       });
 
