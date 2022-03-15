@@ -1,5 +1,6 @@
 import { query, extendEnvironment } from "../../../src";
-import {GoatedGoatsEnvironment} from "./env";
+import { GoatedGoatsEnvironment } from "./env";
+import { getGoatBaseScore, getRarityScore, pinataLink } from "./utils";
 
 export const fetchGoats = `
   import GoatedGoats from 0x01
@@ -9,17 +10,19 @@ export const fetchGoats = `
     pub let metadata: {String: String}
     pub let traitSlots: UInt8?
     pub let creationDate: UFix64
-    
+    pub let equippedTraits: [{String: AnyStruct}]
     init(
       id: UInt64, 
       metadata: {String: String}, 
       traitSlots: UInt8?, 
-      creationDate: UFix64
+      creationDate: UFix64,
+      equippedTraits: [{String: AnyStruct}]
     ){
       self.id = id
       self.metadata = metadata
       self.traitSlots = traitSlots
       self.creationDate = creationDate
+      self.equippedTraits = equippedTraits
     }
   }
   
@@ -30,14 +33,21 @@ export const fetchGoats = `
     if let collection = account.getCapability(GoatedGoats.CollectionPublicPath).borrow<&{GoatedGoats.GoatCollectionPublic}>()  {
       for id in collection.getIDs() {
         if let goat = collection.borrowGoat(id: id){
+        
+          // Gather data from NFT
           let metadata = goat.getMetadata()
           let traitSlots = goat.getTraitSlots()
+          let creationDate = goat.goatCreationDate
+          let equippedTraits = goat.getEquippedTraits()
+        
+          // Store it for later return
           goatsData.append(
             GoatData(
               id: goat.goatID,
               metadata: metadata,
               traitSlots: traitSlots,
-              creationDate: goat.goatCreationDate
+              creationDate: creationDate,
+              equippedTraits: equippedTraits
             )
           )
         }
@@ -65,16 +75,31 @@ export default (address) => {
       });
     },
     mapData: (goat) => {
-      const { id, metadata, creationDate: timestamp } = goat
-      const { thumbnailCID } = metadata;
-      const pinataCloud = 'https://goatedgoats.mypinata.cloud/ipfs'
-      const image = `${pinataCloud}/${thumbnailCID}`;
-      const creationDate = parseInt(timestamp)*1000
+      const { id, metadata, creationDate: timestamp } = goat;
+      const { thumbnailCID, skinRarity } = metadata;
+      const image = pinataLink(thumbnailCID);
+      const creationDate = parseInt(timestamp) * 1000;
+      const skinScore = getGoatBaseScore(skinRarity, 5);
+
+      let traitsScore = 0;
+      const equippedTraits = goat.equippedTraits.map((trait) => {
+        const { rarity } = trait.traitEditionMetadata;
+        const score = getRarityScore(rarity);
+        traitsScore += score;
+        return {
+          ...trait,
+          traitScore: score,
+        };
+      });
+
       return {
         id,
         metadata,
         image,
-        creationDate
+        creationDate,
+        equippedTraits,
+        skinScore,
+        traitsScore
       };
     },
   };

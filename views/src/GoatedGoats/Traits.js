@@ -1,6 +1,6 @@
 import { query, extendEnvironment } from "../../../src";
 import { GoatedGoatsEnvironment } from "./env";
-import { pinataLink } from "./pinata";
+import { getRarityScore, pinataLink } from "./utils";
 
 export const fetchTraits = `
   import GoatedGoatsTrait from 0x01
@@ -51,12 +51,14 @@ export default (address) => {
     },
     mapData: (goat) => {
       const { id, metadata } = goat;
-      const { thumbnailCID } = metadata
-      const image = pinataLink(thumbnailCID)
+      const { thumbnailCID } = metadata;
+      const image = pinataLink(thumbnailCID);
+      const rarityScore = getRarityScore(metadata.rarity)
       return {
         id,
         metadata,
-        image
+        image,
+        rarityScore
       };
     },
   };
