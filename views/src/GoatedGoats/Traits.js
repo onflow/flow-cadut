@@ -36,7 +36,6 @@ export default (address) => {
   // Register addresses for contracts
   extendEnvironment(GoatedGoatsEnvironment);
 
-  // const resolvedAddress = address;
   const code = fetchTraits;
   const args = [address];
 

@@ -75,7 +75,7 @@ export default (address) => {
       });
     },
     mapData: (goat) => {
-      const { id, metadata, creationDate: timestamp } = goat;
+      const { id, metadata, creationDate: timestamp, traitSlots } = goat;
       const { thumbnailCID, skinRarity } = metadata;
       const image = pinataLink(thumbnailCID);
       const creationDate = parseInt(timestamp) * 1000;
@@ -99,7 +99,8 @@ export default (address) => {
         creationDate,
         equippedTraits,
         skinScore,
-        traitsScore
+        traitsScore,
+        traitSlots
       };
     },
   };
