@@ -79,7 +79,7 @@ export default (address) => {
       const { thumbnailCID, skinRarity } = metadata;
       const image = pinataLink(thumbnailCID);
       const creationDate = parseInt(timestamp) * 1000;
-      const skinScore = getGoatBaseScore(skinRarity, 5);
+      const skinScore = getGoatBaseScore(skinRarity, traitSlots);
 
       let traitsScore = 0;
       const equippedTraits = goat.equippedTraits.map((trait) => {

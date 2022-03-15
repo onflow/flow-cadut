@@ -1,18 +1,15 @@
 export const pinataLink = id => `https://goatedgoats.mypinata.cloud/ipfs/${id}`
 
+const RARITY_SCORES = {
+  base: 10,
+  common: 10,
+  rare: 20,
+  epic: 30,
+  legendary: 45,
+};
+
 export const getRarityScore = (rarity) => {
-  switch (rarity){
-    case "legendary":
-      return 45
-    case "epic":
-      return 30
-    case "rare":
-      return 20
-    case "common":
-    case "base":
-    default:
-      return 10
-  }
+  return RARITY_SCORES[rarity] || 10
 }
 
 const SCORE_PER_SLOT = 5

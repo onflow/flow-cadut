@@ -1,6 +1,13 @@
 import { getGoatBaseScore } from "../utils";
 
 describe("test rarity score", () => {
+  it("shall properly calculate rare score",()=>{
+    const rarity ="rare"
+    const traitSlots = 7
+    const correctScore = 55
+    const calculatedScore = getGoatBaseScore(rarity, traitSlots);
+    expect(calculatedScore).toBe(correctScore);
+  })
   it("shall properly calculate scores", () => {
     const cases = [
       {
@@ -17,6 +24,11 @@ describe("test rarity score", () => {
         rarity: "rare",
         traitSlots: 5,
         correctScore: 45,
+      },
+      {
+        rarity: "rare",
+        traitSlots: 7,
+        correctScore: 55,
       },
       {
         rarity: "epic",
