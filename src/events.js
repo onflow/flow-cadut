@@ -1,17 +1,7 @@
-import { send, getBlock, getEventsAtBlockHeightRange, decode } from "@onflow/fcl";
+import { send, getEventsAtBlockHeightRange, decode } from "@onflow/fcl";
 import { sansPrefix } from "./address";
 import { CURRENT_SPORK_ROOT } from "./const";
-
-export const getLatestBlock = async () => {
-  return send([
-    getBlock(true), // isSealed = true
-  ]).then(decode);
-};
-
-export const getChainHeight = async () => {
-  const topBlock = await getLatestBlock();
-  return topBlock.height;
-};
+import { getChainHeight } from "./chain";
 
 export const getEventName = (event) => {
   const { address, contractName, eventName } = event;
