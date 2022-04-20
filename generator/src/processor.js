@@ -26,6 +26,8 @@ import { getSplitCharacter, trimAndSplit, underscoreToCamelCase } from "../../sr
 import { generateExports, getFilesList, readFile, writeFile } from "./file";
 import { getTemplateInfo, CONTRACT, SCRIPT, TRANSACTION, extractSigners } from "../../src";
 
+import "./templates";
+
 const getFetchUrl = (input) => {
   // eslint-disable-next-line no-useless-escape
   const groups = /(\w+:\/\/)(.+@)*([\w\d\.]+)(:[\d]+)?\/*(.*)/g.exec(input);
