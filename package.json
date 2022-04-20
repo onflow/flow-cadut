@@ -1,6 +1,6 @@
 {
   "name": "flow-cadut",
-  "version": "0.1.15-alpha.23",
+  "version": "0.1.15-alpha.24",
   "description": "Flow Cadence Template Utilities",
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
@@ -33,28 +33,28 @@
       "require": "./dist/main.js"
     },
     "./generator": {
-      "browser": "./dist/generator/generator.module.js",
-      "umd": "./dist/generator/generator.umd.js",
-      "import": "./dist/generator/generator.modern.js",
-      "require": "./dist/generator/generator.js"
+      "browser": "./generator/dist/generator.module.js",
+      "umd": "./generator/dist/generator.umd.js",
+      "import": "./generator/dist/generator.modern.js",
+      "require": "./generator/dist/generator.js"
     },
     "./views": {
-      "browser": "./dist/views/views.module.js",
-      "umd": "./dist/views/views.umd.js",
-      "import": "./dist/views/views.modern.js",
-      "require": "./dist/views/views.js"
+      "browser": "./views/dist/views.module.js",
+      "umd": "./views/dist/views.umd.js",
+      "import": "./views/dist/views.modern.js",
+      "require": "./views/dist/views.js"
     },
     "./plugins/find": {
-      "browser": "./dist/plugins/FIND.module.js",
-      "umd": "./dist/plugins/FIND.umd.js",
-      "import": "./dist/plugins/FIND.modern.js",
-      "require": "./dist/plugins/FIND.js"
+      "browser": "./plugins/FIND/dist/FIND.module.js",
+      "umd": "./plugins/FIND/dist/FIND.umd.js",
+      "import": "./plugins/FIND/dist/FIND.modern.js",
+      "require": "./plugins/FIND/dist/FIND.js"
     },
     "./plugins/flowns": {
-      "browser": "./dist/plugins/FLOWNS.module.js",
-      "umd": "./dist/plugins/FLOWNS.umd.js",
-      "import": "./dist/plugins/FLOWNS.modern.js",
-      "require": "./dist/plugins/FLOWNS.js"
+      "browser": "./plugins/FLOWNS/dist/FLOWNS.module.js",
+      "umd": "./plugins/FLOWNS/dist/FLOWNS.umd.js",
+      "import": "./plugins/FLOWNS/dist/FLOWNS.modern.js",
+      "require": "./plugins/FLOWNS/dist/FLOWNS.js"
     }
   },
   "scripts": {
