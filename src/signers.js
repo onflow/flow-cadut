@@ -44,10 +44,6 @@ export const REQUIRE_ADDRESS = "address is required"
 export const WARNING_KEY_INDEX = (index) => `key index have incorrect format. found '${typeof index}', required 'num'`
 
 export const processSigner = signer => {
-  if (typeof signer === "string"){
-    return signer
-  }
-
   if (typeof signer === "object"){
     if(signer.privateKey === undefined){
       throw Error(REQUIRE_PRIVATE_KEY)
@@ -63,5 +59,5 @@ export const processSigner = signer => {
     return authorization(address, privateKey, keyId)
   }
 
-  throw Error("Incorrect format for signer")
+  return signer
 }
