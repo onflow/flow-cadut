@@ -38,11 +38,10 @@ export const extractImports = (code) => {
   if (!code || code.length === 0) {
     return {};
   }
-  return code
-    .split("\n")
-    .filter((line) => line.includes("import"))
-    .map(getPairs)
-    .reduce(collect, {});
+  const split = code.split("\n")
+  const filtered = split.filter((line) => line.includes("import "))
+  const mapped = filtered.map(getPairs)
+  return mapped.reduce(collect, {});
 };
 
 /**
