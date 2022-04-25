@@ -1,3 +1,4 @@
+import { cdc } from "@onflow/fcl";
 import {
   extractContractName,
   getTemplateInfo,
@@ -7,9 +8,9 @@ import {
   extractTransactionArguments,
   extractScriptArguments,
   extractContractParameters,
+  getPragmaNotes,
+  stripComments
 } from "../src";
-
-import { stripComments } from "../src/parser";
 
 describe("strip comments", () => {
   test("line comments", () => {
@@ -174,7 +175,9 @@ describe("extract contract name", () => {
           post{}
       }
     `;
-    expect(()=> extractContractName(input)).toThrow("Contract Error: can't find name of the contract");
+    expect(() => extractContractName(input)).toThrow(
+      "Contract Error: can't find name of the contract"
+    );
   });
 });
 
@@ -439,5 +442,44 @@ describe("interaction signatures", () => {
     expect(args.length).toBe(2);
     expect(args[0]).toBe("a:Int");
     expect(args[1]).toBe("b:String");
+  });
+});
+
+describe("pragma extractor", () => {
+  test("shall extract single param", () => {
+    const param = "title";
+    const value = "Flovatar Total Supply";
+    const input = cdc`
+      /// pragma ${param} ${value}
+    `();
+    const result = getPragmaNotes(input);
+    expect(result[param]).toBe(value);
+  });
+
+  test("shall extract single param - with tabs", () => {
+    const param = "title";
+    const value = "Flovatar Total Supply";
+    const input = cdc`
+      /// pragma     ${param}    ${value}
+    `();
+    const result = getPragmaNotes(input);
+    console.log(result);
+    expect(result[param]).toBe(value);
+  });
+
+  test("shall extract multiple params", () => {
+    const input = cdc`
+      /// pragma name Max
+      /// pragma title Flow Cadut
+      /// pragma description Simple Script to ping network
+      
+      pub fun main(){
+        // this shall still work just fine
+      }
+    `();
+    const result = getPragmaNotes(input);
+    expect(result.name).toBe("Max");
+    expect(result.title).toBe("Flow Cadut");
+    expect(result.description).toBe("Simple Script to ping network");
   });
 });

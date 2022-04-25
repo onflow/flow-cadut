@@ -65,7 +65,7 @@ export const extractTransactionArguments = (code) => {
 };
 
 export const extractContractName = (code) => {
-  return extractContractParameters(code).contractName
+  return extractContractParameters(code).contractName;
 };
 
 export const extractContractParameters = (code) => {
@@ -125,4 +125,16 @@ export const getTemplateInfo = (template) => {
   return {
     type: UNKNOWN,
   };
+};
+
+export const getPragmaNotes = (template) => {
+  const regexp = /\/{3}\s*pragma\s*(.*)/g;
+  const matches = template.match(regexp);
+
+  return matches.reduce((acc, line) => {
+    const match = line.match(/\/{3}\s*pragma\s+(\w*)\s+(.*)/);
+    const [, name, value] = match;
+    acc[name] = value;
+    return acc;
+  }, {});
 };

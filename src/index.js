@@ -48,6 +48,8 @@ export {
   extractContractParameters,
   getTemplateInfo,
   generateSchema,
+  getPragmaNotes,
+  stripComments,
   CONTRACT,
   TRANSACTION,
   SCRIPT,
