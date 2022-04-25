@@ -9,8 +9,11 @@ import {
   extractScriptArguments,
   extractContractParameters,
   getPragmaNotes,
-  stripComments
+  stripComments,
+  extractImports
 } from "../src";
+
+import flovatarContract from "./stubs/flovatar"
 
 describe("strip comments", () => {
   test("line comments", () => {
@@ -146,6 +149,12 @@ describe("parser", () => {
     const output = extractTransactionArguments(input);
     expect(output.length).toBe(1);
   });
+
+  test("shall not include incorrect imports",()=>{
+    const code = flovatarContract
+    const result = extractImports(code)
+    expect(Object.keys(result).length).toBe(6)
+  })
 });
 
 describe("extract contract name", () => {
