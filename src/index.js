@@ -48,6 +48,8 @@ export {
   extractContractParameters,
   getTemplateInfo,
   generateSchema,
+  getPragmaNotes,
+  stripComments,
   CONTRACT,
   TRANSACTION,
   SCRIPT,
@@ -62,6 +64,11 @@ export {
 } from "./strings";
 
 export { PLUGIN_TYPES, registerPlugin, getPlugins } from "./plugins";
+
+export { CURRENT_SPORK_ROOT, CURRENT_SPORK_NUMBER } from "./const";
+export { getEventName, getEventsInRange, findLatestEvents } from "./events";
+
+export { getChainHeight, getLatestBlock } from "./chain";
 
 export { executeScript, sendTransaction, deployContract, updateContract } from "./interactions";
 

@@ -21,6 +21,7 @@ import { resolveArguments } from "./args";
 import { replaceImportAddresses } from "./imports";
 import { config } from "@onflow/config";
 import { getEnvironment } from "./env";
+import { processSigner } from "./signers";
 
 export const prepareInteraction = async (props, type) => {
   const { code, cadence, args, addressMap, limit, processed } = props;
@@ -54,9 +55,9 @@ export const prepareInteraction = async (props, type) => {
     const ixSigners = signers.length === 0 ? [payer] : signers;
     const ixProposer = proposer || payer;
 
-    ix.push(fcl.payer(payer));
-    ix.push(fcl.proposer(ixProposer));
-    ix.push(fcl.authorizations(ixSigners));
+    ix.push(fcl.payer(processSigner(payer)));
+    ix.push(fcl.proposer(processSigner(ixProposer)));
+    ix.push(fcl.authorizations(ixSigners.map(processSigner)));
   }
 
   return fcl.send(ix);
