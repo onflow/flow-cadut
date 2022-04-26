@@ -14,6 +14,8 @@ import {
 } from "../src";
 
 import flovatarContract from "./stubs/flovatar"
+import versusContract from "./stubs/versus"
+import nftContract from "./stubs/non-fungible"
 
 describe("strip comments", () => {
   test("line comments", () => {
@@ -154,6 +156,18 @@ describe("parser", () => {
     const code = flovatarContract
     const result = extractImports(code)
     expect(Object.keys(result).length).toBe(6)
+  })
+
+  test("shall not include incorrect imports - versus",()=>{
+    const code = versusContract
+    const result = extractImports(code)
+    expect(Object.keys(result).length).toBe(6)
+  })
+
+  test("shall not include incorrect imports - nft",()=>{
+    const code = nftContract
+    const result = extractImports(code)
+    expect(Object.keys(result).length).toBe(0)
   })
 });
 
@@ -472,7 +486,6 @@ describe("pragma extractor", () => {
       /// pragma     ${param}    ${value}
     `();
     const result = getPragmaNotes(input);
-    console.log(result);
     expect(result[param]).toBe(value);
   });
 

@@ -39,7 +39,7 @@ export const extractImports = (code) => {
     return {};
   }
   const split = code.split("\n")
-  const filtered = split.filter((line) => line.includes("import "))
+  const filtered = split.filter((line) => /^\s*import\s+/.test(line))
   const mapped = filtered.map(getPairs)
   return mapped.reduce(collect, {});
 };
