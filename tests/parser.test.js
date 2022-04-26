@@ -169,6 +169,19 @@ describe("parser", () => {
     const result = extractImports(code)
     expect(Object.keys(result).length).toBe(0)
   })
+
+  test("shall not include Crypto library", ()=>{
+    const code = `
+      import FungibleToken from 0x9a0766d93b6608b7
+      import NonFungibleToken from 0x631e88ae7f1d7c20
+      import FlowToken from 0x7e60df042a9c0868
+      import FlovatarComponentTemplate from 0x0cf264811b95d465
+      import FlovatarComponent from 0x0cf264811b95d465
+      import Crypto
+    `
+    const result = extractImports(code)
+    expect(Object.keys(result).length).toBe(5)
+  })
 });
 
 describe("extract contract name", () => {
