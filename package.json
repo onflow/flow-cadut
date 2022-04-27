@@ -33,9 +33,6 @@
       "require": "./dist/main.js"
     },
     "./generator": {
-      "browser": "./generator/dist/generator.module.js",
-      "umd": "./generator/dist/generator.umd.js",
-      "import": "./generator/dist/generator.modern.js",
       "require": "./generator/dist/generator.js"
     },
     "./views": {
@@ -64,6 +61,7 @@
     "build:views": "microbundle build --cwd views",
     "build:plugin-find": "microbundle build --cwd plugins/FIND",
     "build:plugin-flowns": "microbundle build --cwd plugins/FLOWNS",
+    "try-es-build": "./node_modules/.bin/esbuild ./generator/src/index.js --bundle --minify --sourcemap --platform=node --outfile=./generator/dist/generator.js ",
     "watch": "microbundle watch",
     "lint": "eslint src",
     "prettify": "prettier --write {src,tests}/**/*.js {src,tests}/*.js",
@@ -82,6 +80,7 @@
     "@onflow/fcl": "^0.0.78",
     "@onflow/types": "^0.0.6",
     "elliptic": "^6.5.4",
+    "esbuild": "^0.14.38",
     "esm": "^3.2.25",
     "handlebars": "^4.7.7",
     "handlebars-loader": "^1.7.1",
