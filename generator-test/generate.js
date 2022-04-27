@@ -1,5 +1,5 @@
 const path = require("path");
-const { processFolder, getFilesList } = require("../generator/src");
+const { processFolder, getFilesList } = require("../generator/src/processor");
 
 (async () => {
   const input = path.resolve("./cadence");

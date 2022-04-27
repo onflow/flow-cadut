@@ -1,3 +1,4 @@
+
 /** pragma type contract **/
 
 import {
@@ -5,17 +6,23 @@ import {
   replaceImportAddresses,
   reportMissingImports,
   deployContract,
-} from '{{ ixDependency }}'
+} from 'flow-cadut'
 
 export const CODE = `
-{{{ code }}}
+pub contract Basic{
+    pub let message: String
+    init(){
+        log("Basic deployed")
+        self.message = "Hello, Cadence!"
+    }
+}
 `;
 
 /**
-* Method to generate cadence code for {{ assetName }} contract
+* Method to generate cadence code for Basic} contract
 * @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
 */
-export const {{ assetName }}Template = async (addressMap = {}) => {
+export const BasicTemplate = async (addressMap = {}) => {
   const envMap = await getEnvironment();
   const fullMap = {
   ...envMap,
@@ -23,22 +30,23 @@ export const {{ assetName }}Template = async (addressMap = {}) => {
   };
 
   // If there are any missing imports in fullMap it will be reported via console
-  reportMissingImports(CODE, fullMap, `{{ name }} =>`)
+  reportMissingImports(CODE, fullMap, `Basic =>`)
 
   return replaceImportAddresses(CODE, fullMap);
 };
 
 
 /**
-* Deploys {{ assetName }} transaction to the network
+* Deploys Basic transaction to the network
 * @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
 * @param Array<*> args - list of arguments
 * param Array<string> - list of signers
 */
-export const  deploy{{ assetName }} = async (props) => {
+export const  deployBasic = async (props) => {
   const { addressMap = {} } = props;
-  const code = await {{ assetName }}Template(addressMap);
-  const name = "{{ contractName }}"
+  const code = await BasicTemplate(addressMap);
+  const name = "Basic"
 
   return deployContract({ code, name, processed: true, ...props })
-}
+}  
+  
