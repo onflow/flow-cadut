@@ -24,7 +24,7 @@ import simpleGit from "simple-git";
 import { getSplitCharacter, trimAndSplit, underscoreToCamelCase } from "../../src";
 import { generateExports, getFilesList, readFile, writeFile } from "./file";
 import { getTemplateInfo, CONTRACT, SCRIPT, TRANSACTION, extractSigners } from "../../src";
-import {script, transaction, contract, pack} from "./string-templates";
+import {script, transaction, contract, pack} from "./templates";
 
 const getFetchUrl = (input) => {
   // eslint-disable-next-line no-useless-escape
@@ -127,7 +127,6 @@ export const processFolder = async (input, output, options = {}) => {
   const splitCharacter = getSplitCharacter(input);
   const fullBasePath = `${resolve(input)}${splitCharacter}`;
   const fileList = await getFilesList(input);
-  console.log({fileList})
 
   for (let i = 0; i < fileList.length; i++) {
     const path = fileList[i];
@@ -196,6 +195,7 @@ export const processFolder = async (input, output, options = {}) => {
     const filePath = `${output}/${templateFolder}/${name}.js`;
 
     writeFile(filePath, data);
+    console.log(`Saved file to: ${filePath}`)
   }
 
   // Generate index.js exports in each folder
