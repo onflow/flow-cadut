@@ -19,14 +19,12 @@
 import fs from "fs";
 import path from "path";
 import { resolve } from "path";
-import Handlebars from "handlebars";
 import simpleGit from "simple-git";
 
 import { getSplitCharacter, trimAndSplit, underscoreToCamelCase } from "../../src";
 import { generateExports, getFilesList, readFile, writeFile } from "./file";
 import { getTemplateInfo, CONTRACT, SCRIPT, TRANSACTION, extractSigners } from "../../src";
-
-import "./templates";
+import {script, transaction, contract, pack} from "./string-templates";
 
 const getFetchUrl = (input) => {
   // eslint-disable-next-line no-useless-escape
@@ -129,6 +127,7 @@ export const processFolder = async (input, output, options = {}) => {
   const splitCharacter = getSplitCharacter(input);
   const fullBasePath = `${resolve(input)}${splitCharacter}`;
   const fileList = await getFilesList(input);
+  console.log({fileList})
 
   for (let i = 0; i < fileList.length; i++) {
     const path = fileList[i];
@@ -157,7 +156,7 @@ export const processFolder = async (input, output, options = {}) => {
     let data;
     switch (templateInfo.type) {
       case SCRIPT:
-        data = Handlebars.templates.script({
+        data = script({
           code,
           name,
           ixDependency,
@@ -167,7 +166,7 @@ export const processFolder = async (input, output, options = {}) => {
         break;
       case TRANSACTION: {
         const signers = extractSigners(code);
-        data = Handlebars.templates.transaction({
+        data = transaction({
           code,
           name,
           ixDependency,
@@ -179,7 +178,7 @@ export const processFolder = async (input, output, options = {}) => {
       }
       case CONTRACT: {
         const contractName = templateInfo.contractName;
-        data = Handlebars.templates.contract({
+        data = contract({
           code,
           name,
           ixDependency,
@@ -200,5 +199,5 @@ export const processFolder = async (input, output, options = {}) => {
   }
 
   // Generate index.js exports in each folder
-  await generateExports(output, Handlebars.templates.package);
+  await generateExports(output, pack);
 };

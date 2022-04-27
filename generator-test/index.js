@@ -1,2 +1,2 @@
 require = require("esm")(module/*, options*/)
-module.exports = require("./src/run.js")
+module.exports = require("./generate.js")

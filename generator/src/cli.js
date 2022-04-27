@@ -17,9 +17,8 @@
  */
 
 import fs from "fs";
-
 import { processFolder, processGitRepo } from "./processor";
-import "./templates";
+
 
 // Initially we will support only GitHub repos
 // TODO: support other urls. List can be found here:
