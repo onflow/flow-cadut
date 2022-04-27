@@ -1,3 +1,6 @@
+export default (props) => {
+  const { ixDependency, assetName, name, code, argsAmount, signersAmount } = props;
+  return `
 /** pragma type transaction **/
 
 import {
@@ -6,21 +9,17 @@ import {
   reportMissingImports,
   reportMissing,
   sendTransaction
-} from '../../../../generator/src'
+} from '${ixDependency}'
 
-export const CODE = `
-  transaction{
-    prepare(signer: AuthAccount){
-        log(signer.address)
-    }
-}
-`;
+export const CODE = \`
+${code}
+\`;
 
 /**
-* Method to generate cadence code for log transaction
+* Method to generate cadence code for ${assetName} transaction
 * @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
 */
-export const logTemplate = async (addressMap = {}) => {
+export const ${assetName}Template = async (addressMap = {}) => {
   const envMap = await getEnvironment();
   const fullMap = {
   ...envMap,
@@ -28,24 +27,26 @@ export const logTemplate = async (addressMap = {}) => {
   };
 
   // If there are any missing imports in fullMap it will be reported via console
-  reportMissingImports(CODE, fullMap, `log =>`)
+  reportMissingImports(CODE, fullMap, \`${name} =>\`)
 
   return replaceImportAddresses(CODE, fullMap);
 };
 
 
 /**
-* Sends log transaction to the network
+* Sends ${assetName} transaction to the network
 * @param {Object.<string, string>} props.addressMap - contract name as a key and address where it's deployed as value
 * @param Array<*> props.args - list of arguments
 * @param Array<*> props.signers - list of signers
 */
-export const log = async (props) => {
+export const ${assetName} = async (props = {}) => {
   const { addressMap, args = [], signers = [] } = props;
-  const code = await logTemplate(addressMap);
+  const code = await ${assetName}Template(addressMap);
 
-  reportMissing("arguments", args.length, 0, `log =>`);
-  reportMissing("signers", signers.length, 1, `log =>`);
+  reportMissing("arguments", args.length, ${argsAmount}, \`${assetName} =>\`);
+  reportMissing("signers", signers.length, ${signersAmount}, \`${assetName} =>\`);
 
-  return sendTransaction({code, ...props})
-}
+  return sendTransaction({code, processed: true, ...props})
+}  
+  `;
+};

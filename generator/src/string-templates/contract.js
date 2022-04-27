@@ -1,3 +1,6 @@
+export default (props) => {
+  const { ixDependency, assetName, name, contractName, code } = props;
+  return `
 /** pragma type contract **/
 
 import {
@@ -5,23 +8,17 @@ import {
   replaceImportAddresses,
   reportMissingImports,
   deployContract,
-} from '../../../../generator/src'
+} from '${ixDependency}'
 
-export const CODE = `
-  pub contract Basic{
-    pub let message: String
-    init(){
-        log("Basic deployed")
-        self.message = "Hello, Cadence!"
-    }
-}
-`;
+export const CODE = \`
+${code}
+\`;
 
 /**
-* Method to generate cadence code for Basic transaction
+* Method to generate cadence code for ${assetName}} contract
 * @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
 */
-export const BasicTemplate = async (addressMap = {}) => {
+export const ${assetName}Template = async (addressMap = {}) => {
   const envMap = await getEnvironment();
   const fullMap = {
   ...envMap,
@@ -29,22 +26,24 @@ export const BasicTemplate = async (addressMap = {}) => {
   };
 
   // If there are any missing imports in fullMap it will be reported via console
-  reportMissingImports(CODE, fullMap, `Basic =>`)
+  reportMissingImports(CODE, fullMap, \`${name} =>\`)
 
   return replaceImportAddresses(CODE, fullMap);
 };
 
 
 /**
-* Deploys Basic transaction to the network
+* Deploys ${assetName} transaction to the network
 * @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
 * @param Array<*> args - list of arguments
 * param Array<string> - list of signers
 */
-export const  deployBasic = async (props) => {
+export const  deploy${assetName} = async (props) => {
   const { addressMap = {} } = props;
-  const code = await BasicTemplate(addressMap);
-  const name = "Basic"
+  const code = await ${assetName}Template(addressMap);
+  const name = "${contractName}"
 
-  return deployContract({ code, name, ...props })
-}
+  return deployContract({ code, name, processed: true, ...props })
+}  
+  `;
+};
