@@ -6,12 +6,15 @@
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
   "main": "dist/FIND.js",
-  "module": "dist/FIND.module.js",
-  "umd:main": "dist/FIND.umd.js",
-  "source": "src/index.js",
   "scripts": {
     "build": "microbundle",
     "dev": "microbundle watch"
+  },
+  "exports": {
+    "module": "./dist/FIND.module.js",
+    "umd": "./dist/FIND.umd.js",
+    "import": "./dist/FIND.modern.mjs",
+    "require": "./dist/FIND.js"
   },
   "peerDependencies": {
     "flow-cadut": "^0.1.12-alpha.6"

@@ -21,41 +21,19 @@
   "homepage": "https://github.com/onflow/flow-cadut#readme",
   "private": false,
   "source": "src/index.js",
-  "main": "./dist/flow-cadut.js",
-  "module": "./dist/flow-cadut.modern.js",
-  "umd:main": "dist/flow-cadut.umd.js",
+  "main": "dist/flow-cadut.js",
   "type": "commonjs",
   "exports": {
     ".": {
-      "browser": "./dist/flow-cadut.modern.js",
+      "module": "./dist/flow-cadut.esm.mjs",
       "umd": "./dist/flow-cadut.umd.js",
-      "import": "./dist/flow-cadut.esm.mjs",
+      "import": "./dist/flow-cadut.modern.js",
       "require": "./dist/flow-cadut.js"
     },
-    "./generator": {
-      "browser": "./generator/dist/generator.module.js",
-      "umd": "./generator/dist/generator.umd.js",
-      "import": "./generator/dist/generator.modern.mjs",
-      "require": "./generator/dist/generator.js"
-    },
-    "./views": {
-      "browser": "./views/dist/views.module.js",
-      "umd": "./views/dist/views.umd.js",
-      "import": "./views/dist/views.modern.mjs",
-      "require": "./views/dist/views.js"
-    },
-    "./plugins/find": {
-      "browser": "./plugins/FIND/dist/FIND.module.js",
-      "umd": "./plugins/FIND/dist/FIND.umd.js",
-      "import": "./plugins/FIND/dist/FIND.modern.mjs",
-      "require": "./plugins/FIND/dist/FIND.js"
-    },
-    "./plugins/flowns": {
-      "browser": "./plugins/FLOWNS/dist/FLOWNS.module.js",
-      "umd": "./plugins/FLOWNS/dist/FLOWNS.umd.js",
-      "import": "./plugins/FLOWNS/dist/FLOWNS.modern.mjs",
-      "require": "./plugins/FLOWNS/dist/FLOWNS.js"
-    }
+    "./generator": "./generator/package.json",
+    "./views": "./views/package.json",
+    "./plugins/find": "./plugins/FIND/package.json",
+    "./plugins/flowns": "./plugins/FLOWNS/package.json"
   },
   "scripts": {
     "build": "npm-run-all --parallel build:*",
@@ -77,10 +55,11 @@
   "bin": {
     "flow-generate": "./bin/generate.js"
   },
-  "dependencies": {
-    "@onflow/config": "0.0.2",
-    "@onflow/fcl": "^0.0.78",
-    "@onflow/types": "^0.0.6",
+  "peerDependencies": {
+    "@onflow/fcl": ">=0.0.78"
+  },
+  "Dependencies": {
+    "@onflow/config": ">=0.0.2",
     "elliptic": "^6.5.4",
     "esm": "^3.2.25",
     "handlebars": "^4.7.7",

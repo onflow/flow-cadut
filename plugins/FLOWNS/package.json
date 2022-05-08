@@ -6,12 +6,15 @@
   "author": "Caos",
   "license": "Apache-2.0",
   "main": "dist/FLOWNS.js",
-  "module": "dist/FLOWNS.module.js",
-  "umd:main": "dist/FLOWNS.umd.js",
-  "source": "src/index.js",
   "scripts": {
     "build": "microbundle",
     "dev": "microbundle watch"
+  },
+  "exports": {
+    "module": "./dist/FLOWNS.module.js",
+    "umd": "./dist/FLOWNS.umd.js",
+    "import": "./dist/FLOWNS.modern.mjs",
+    "require": "./dist/FLOWNS.js"
   },
   "peerDependencies": {
     "flow-cadut": "^0.1.12-alpha.6"
