@@ -21,45 +21,45 @@
   "homepage": "https://github.com/onflow/flow-cadut#readme",
   "private": false,
   "source": "src/index.js",
-  "main": "dist/main.js",
-  "module": "dist/main.module.js",
-  "umd:main": "dist/main.umd.js",
+  "main": "./dist/flow-cadut.js",
+  "module": "./dist/flow-cadut.modern.js",
+  "umd:main": "dist/flow-cadut.umd.js",
   "type": "commonjs",
   "exports": {
     ".": {
-      "browser": "./dist/main.module.js",
-      "umd": "./dist/main.umd.js",
-      "import": "./dist/main.modern.js",
-      "require": "./dist/main.js"
+      "browser": "./dist/flow-cadut.modern.js",
+      "umd": "./dist/flow-cadut.umd.js",
+      "import": "./dist/flow-cadut.esm.mjs",
+      "require": "./dist/flow-cadut.js"
     },
     "./generator": {
       "browser": "./generator/dist/generator.module.js",
       "umd": "./generator/dist/generator.umd.js",
-      "import": "./generator/dist/generator.modern.js",
+      "import": "./generator/dist/generator.modern.mjs",
       "require": "./generator/dist/generator.js"
     },
     "./views": {
       "browser": "./views/dist/views.module.js",
       "umd": "./views/dist/views.umd.js",
-      "import": "./views/dist/views.modern.js",
+      "import": "./views/dist/views.modern.mjs",
       "require": "./views/dist/views.js"
     },
     "./plugins/find": {
       "browser": "./plugins/FIND/dist/FIND.module.js",
       "umd": "./plugins/FIND/dist/FIND.umd.js",
-      "import": "./plugins/FIND/dist/FIND.modern.js",
+      "import": "./plugins/FIND/dist/FIND.modern.mjs",
       "require": "./plugins/FIND/dist/FIND.js"
     },
     "./plugins/flowns": {
       "browser": "./plugins/FLOWNS/dist/FLOWNS.module.js",
       "umd": "./plugins/FLOWNS/dist/FLOWNS.umd.js",
-      "import": "./plugins/FLOWNS/dist/FLOWNS.modern.js",
+      "import": "./plugins/FLOWNS/dist/FLOWNS.modern.mjs",
       "require": "./plugins/FLOWNS/dist/FLOWNS.js"
     }
   },
   "scripts": {
     "build": "npm-run-all --parallel build:*",
-    "build:core": "microbundle build --raw",
+    "build:core": "microbundle build",
     "build:generator": "microbundle build --cwd generator --external child_process",
     "build:views": "microbundle build --cwd views",
     "build:plugin-find": "microbundle build --cwd plugins/FIND",
@@ -101,7 +101,7 @@
     "eslint-plugin-jest": "^24.3.6",
     "jest": "^26.6.3",
     "jest-esm-transformer": "^1.0.0",
-    "microbundle": "^0.13.0",
+    "microbundle": "0.15.0",
     "npm-run-all": "^4.1.5"
   },
   "eslintConfig": {
