@@ -262,6 +262,39 @@ describe("mapArgument", () => {
     expect(output.value[0].length).toBe(input[0].length);
     expect(output.value[0][0]).toBe(input[0][0]);
   });
+  test("Path", async () => {
+    const type = "Path";
+    const input = "/public/FlowTokens";
+    const output = await mapArgument(type, input);
+    console.log(output);
+    expect(output.value["domain"]).toBe("public");
+    expect(output.value["identifier"]).toBe("FlowTokens");
+    expect(output.xform.label).toBe("Path");
+  });
+  test("Public Path", async () => {
+    const type = "PublicPath";
+    const input = "/public/FlowTokens";
+    const output = await mapArgument(type, input);
+    expect(output.value["domain"]).toBe("public");
+    expect(output.value["identifier"]).toBe("FlowTokens");
+    expect(output.xform.label).toBe("Path");
+  });
+  test("Private Path", async () => {
+    const type = "PrivatePath";
+    const input = "/private/FlowTokens";
+    const output = await mapArgument(type, input);
+    expect(output.value["domain"]).toBe("private");
+    expect(output.value["identifier"]).toBe("FlowTokens");
+    expect(output.xform.label).toBe("Path");
+  });
+  test("Storage Path", async () => {
+    const type = "StoragePath";
+    const input = "/storage/FlowTokens";
+    const output = await mapArgument(type, input);
+    expect(output.value["domain"]).toBe("storage");
+    expect(output.value["identifier"]).toBe("FlowTokens");
+    expect(output.xform.label).toBe("Path");
+  });
 });
 
 describe("complex example", () => {
@@ -307,8 +340,12 @@ describe("complex example", () => {
     );
 
     // Incorrect address
-    expect(invoke([42, true, ["Sup"], "1.337"])).rejects.toThrowError("address.replace is not a function");
-    expect(invoke([42, 12, ["Sup"], "1.337"])).rejects.toThrowError("address.replace is not a function");
+    expect(invoke([42, true, ["Sup"], "1.337"])).rejects.toThrowError(
+      "address.replace is not a function"
+    );
+    expect(invoke([42, 12, ["Sup"], "1.337"])).rejects.toThrowError(
+      "address.replace is not a function"
+    );
     expect(invoke([42, [1, 2, 3], ["Sup"], "1.337"])).rejects.toThrowError(
       "address.replace is not a function"
     );
