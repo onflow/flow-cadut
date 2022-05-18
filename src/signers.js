@@ -6,7 +6,7 @@ const ec = new EC("p256");
 
 const hashMsgHex = (msgHex) => {
   const sha = new SHA3(256);
-  sha.update(Buffer.from(msgHex, "hex"));
+  sha.update(msgHex, "hex");
   return sha.digest();
 };
 
@@ -21,43 +21,44 @@ export const signWithKey = (privateKey, msgHex) => {
 
 export const authorization =
   (addr, pkey, keyId = 0) =>
-    async (account = {}) => {
-      addr = sansPrefix(addr);
+  async (account = {}) => {
+    addr = sansPrefix(addr);
 
-      const signingFunction = async (data) => ({
-        keyId,
-        addr: withPrefix(addr),
-        signature: signWithKey(pkey, data.message),
-      });
+    const signingFunction = async (data) => ({
+      keyId,
+      addr: withPrefix(addr),
+      signature: signWithKey(pkey, data.message),
+    });
 
-      return {
-        ...account,
-        tempId: `${addr}-${keyId}`,
-        addr: fcl.sansPrefix(addr),
-        keyId,
-        signingFunction,
-      };
+    return {
+      ...account,
+      tempId: `${addr}-${keyId}`,
+      addr: fcl.sansPrefix(addr),
+      keyId,
+      signingFunction,
     };
+  };
 
-export const REQUIRE_PRIVATE_KEY = "privateKey is required"
-export const REQUIRE_ADDRESS = "address is required"
-export const WARNING_KEY_INDEX = (index) => `key index have incorrect format. found '${typeof index}', required 'num'`
+export const REQUIRE_PRIVATE_KEY = "privateKey is required";
+export const REQUIRE_ADDRESS = "address is required";
+export const WARNING_KEY_INDEX = (index) =>
+  `key index have incorrect format. found '${typeof index}', required 'num'`;
 
-export const processSigner = signer => {
-  if (typeof signer === "object"){
-    if(signer.privateKey === undefined){
-      throw Error(REQUIRE_PRIVATE_KEY)
+export const processSigner = (signer) => {
+  if (typeof signer === "object") {
+    if (signer.privateKey === undefined) {
+      throw Error(REQUIRE_PRIVATE_KEY);
     }
-    if(signer.address === undefined){
-      throw Error(REQUIRE_ADDRESS)
+    if (signer.address === undefined) {
+      throw Error(REQUIRE_ADDRESS);
     }
-    if(signer.keyId === undefined){
-      console.warning(WARNING_KEY_INDEX(signer.keyId))
+    if (signer.keyId === undefined) {
+      console.warning(WARNING_KEY_INDEX(signer.keyId));
     }
 
-    const {address, privateKey, keyId = 0} = signer;
-    return authorization(address, privateKey, keyId)
+    const { address, privateKey, keyId = 0 } = signer;
+    return authorization(address, privateKey, keyId);
   }
 
-  return signer
-}
+  return signer;
+};
