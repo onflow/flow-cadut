@@ -76,7 +76,7 @@ writeFile("./cadence/scripts/log.cdc", script);
 
 ### `clearPath(path)`
 
-Recursively delete contents of the provided folder and all it's contents. Syntax sugar for `fs.rmdirSync(path, { recursive: true })`
+Recursively deletes contents of the provided folder and all it's contents. Syntax sugar for `fs.rmdirSync(path, { recursive: true })`
 
 #### Arguments
 
