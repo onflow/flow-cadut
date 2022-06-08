@@ -1,6 +1,6 @@
 {
   "name": "flow-cadut",
-  "version": "0.1.16-alpha.3",
+  "version": "0.1.16-alpha.4",
   "description": "Flow Cadence Template Utilities",
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
@@ -33,9 +33,6 @@
       "require": "./dist/main.js"
     },
     "./generator": {
-      "browser": "./generator/dist/generator.module.js",
-      "umd": "./generator/dist/generator.umd.js",
-      "import": "./generator/dist/generator.modern.js",
       "require": "./generator/dist/generator.js"
     },
     "./views": {
@@ -64,15 +61,14 @@
     "build:views": "microbundle build --cwd views",
     "build:plugin-find": "microbundle build --cwd plugins/FIND",
     "build:plugin-flowns": "microbundle build --cwd plugins/FLOWNS",
+    "try-es-build": "./node_modules/.bin/esbuild ./generator/src/index.js --bundle --minify --sourcemap --platform=node --outfile=./generator/dist/generator.js ",
     "watch": "microbundle watch",
     "lint": "eslint src",
     "prettify": "prettier --write {src,tests}/**/*.js {src,tests}/*.js",
     "test": "jest",
     "check-headers": "sh ./check-headers.sh",
     "prepublishOnly": "npm test && npm run build",
-    "precompile-handlebars": "node_modules/.bin/handlebars ./generator/src/templates -f ./generator/src/templates/index.js -e hbs -c handlebars",
-    "generate-dev": "flow-generate ./generator-test/cadence ./generator-test/src/generated -d ../../../../src",
-    "regenerate-test": "npm run precompile-handlebars && npm run generate-dev"
+    "generate-dev": "flow-generate ./generator-test/cadence ./generator-test/src/generated -d ../../../../src"
   },
   "bin": {
     "flow-generate": "./bin/generate.js"
@@ -82,14 +78,13 @@
     "@onflow/fcl": "^0.0.78",
     "@onflow/types": "^0.0.6",
     "elliptic": "^6.5.4",
+    "esbuild": "^0.14.38",
     "esm": "^3.2.25",
-    "handlebars": "^4.7.7",
-    "handlebars-loader": "^1.7.1",
     "prettier": "^2.3.0",
     "rimraf": "^3.0.2",
     "rlp": "^3.0.0",
     "sha3": "^2.1.4",
-    "simple-git": "^2.40.0",
+    "simple-git": "^3.7.1",
     "yargs": "^15.4.1"
   },
   "devDependencies": {

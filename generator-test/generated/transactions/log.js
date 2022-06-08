@@ -1,3 +1,4 @@
+
 /** pragma type transaction **/
 
 import {
@@ -6,10 +7,10 @@ import {
   reportMissingImports,
   reportMissing,
   sendTransaction
-} from '../../../../generator/src'
+} from 'flow-cadut'
 
 export const CODE = `
-  transaction{
+transaction{
     prepare(signer: AuthAccount){
         log(signer.address)
     }
@@ -40,12 +41,13 @@ export const logTemplate = async (addressMap = {}) => {
 * @param Array<*> props.args - list of arguments
 * @param Array<*> props.signers - list of signers
 */
-export const log = async (props) => {
+export const log = async (props = {}) => {
   const { addressMap, args = [], signers = [] } = props;
   const code = await logTemplate(addressMap);
 
   reportMissing("arguments", args.length, 0, `log =>`);
   reportMissing("signers", signers.length, 1, `log =>`);
 
-  return sendTransaction({code, ...props})
-}
+  return sendTransaction({code, processed: true, ...props})
+}  
+  

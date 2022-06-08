@@ -1,3 +1,4 @@
+
 /** pragma type script **/
 
 import {
@@ -6,10 +7,10 @@ import {
   reportMissingImports,
   reportMissing,
   executeScript
-} from '../../../../generator/src'
+} from 'flow-cadut'
 
 export const CODE = `
-  import Basic from 0x1
+import Basic from 0x1
 
 pub fun main(): String{
     return Basic.message
@@ -17,14 +18,14 @@ pub fun main(): String{
 `;
 
 /**
-* Method to generate cadence code for TestAsset
-* @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
-*/
+ * Method to generate cadence code for basic script
+ * @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
+ */
 export const basicTemplate = async (addressMap = {}) => {
   const envMap = await getEnvironment();
   const fullMap = {
-  ...envMap,
-  ...addressMap,
+    ...envMap,
+    ...addressMap,
   };
 
   // If there are any missing imports in fullMap it will be reported via console
@@ -33,11 +34,12 @@ export const basicTemplate = async (addressMap = {}) => {
   return replaceImportAddresses(CODE, fullMap);
 };
 
-export const basic = async (props) => {
+export const basic = async (props = {}) => {
   const { addressMap = {}, args = [] } = props
   const code = await basicTemplate(addressMap);
 
   reportMissing("arguments", args.length, 0, `basic =>`);
 
-  return executeScript({code, ...props})
-}
+  return executeScript({code, processed: true, ...props})
+}  
+  

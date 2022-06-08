@@ -1,7 +1,7 @@
 {
   "name": "flow-cadut-generator",
   "amdName": "flowCadutGenerator",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
