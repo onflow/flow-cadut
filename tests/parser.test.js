@@ -10,12 +10,13 @@ import {
   extractContractParameters,
   getPragmaNotes,
   stripComments,
-  extractImports
+  stripStrings,
+  extractImports,
 } from "../src";
 
-import flovatarContract from "./stubs/flovatar"
-import versusContract from "./stubs/versus"
-import nftContract from "./stubs/non-fungible"
+import flovatarContract from "./stubs/flovatar";
+import versusContract from "./stubs/versus";
+import nftContract from "./stubs/non-fungible";
 
 describe("strip comments", () => {
   test("line comments", () => {
@@ -67,6 +68,31 @@ describe("strip comments", () => {
     `;
     const output = stripComments(input);
     expect(output.includes("hidden")).toBe(false);
+  });
+});
+
+describe("strip strings", () => {
+  test("empty string", () => {
+    const input = 'pub fun main():String{ return "" }';
+
+    const output = stripStrings(input);
+    expect(output).toBe(input);
+  });
+
+  test("escaped string", () => {
+    const input = 'pub fun main():String{ return "\\"hello, world!\\"" }';
+    const expectedOutput = 'pub fun main():String{ return "" }';
+
+    const output = stripStrings(input);
+    expect(output).toBe(expectedOutput);
+  });
+
+  test("regular string", () => {
+    const input = 'pub fun main():String{ return "hello, world!" }';
+    const expectedOutput = 'pub fun main():String{ return "" }';
+
+    const output = stripStrings(input);
+    expect(output).toBe(expectedOutput);
   });
 });
 
@@ -126,6 +152,18 @@ describe("parser", () => {
     expect(output.length).toBe(1);
   });
 
+  test("extract transaction arguments - keyword in string", () => {
+    const input = `
+      transaction(a: Int) {
+        prepare(){
+          log("the keyword \\"transaction\\" would cause problems if strings not stripped")
+        }
+      }
+    `;
+    const output = extractTransactionArguments(input);
+    expect(output.length).toBe(1);
+  });
+
   test("extract transaction arguments - multiline declaration", () => {
     const input = ` // nothing here
       // this is some basic transaction we want to send
@@ -152,25 +190,25 @@ describe("parser", () => {
     expect(output.length).toBe(1);
   });
 
-  test("shall not include incorrect imports",()=>{
-    const code = flovatarContract
-    const result = extractImports(code)
-    expect(Object.keys(result).length).toBe(6)
-  })
+  test("shall not include incorrect imports", () => {
+    const code = flovatarContract;
+    const result = extractImports(code);
+    expect(Object.keys(result).length).toBe(6);
+  });
 
-  test("shall not include incorrect imports - versus",()=>{
-    const code = versusContract
-    const result = extractImports(code)
-    expect(Object.keys(result).length).toBe(6)
-  })
+  test("shall not include incorrect imports - versus", () => {
+    const code = versusContract;
+    const result = extractImports(code);
+    expect(Object.keys(result).length).toBe(6);
+  });
 
-  test("shall not include incorrect imports - nft",()=>{
-    const code = nftContract
-    const result = extractImports(code)
-    expect(Object.keys(result).length).toBe(0)
-  })
+  test("shall not include incorrect imports - nft", () => {
+    const code = nftContract;
+    const result = extractImports(code);
+    expect(Object.keys(result).length).toBe(0);
+  });
 
-  test("shall not include Crypto library", ()=>{
+  test("shall not include Crypto library", () => {
     const code = `
       import FungibleToken from 0x9a0766d93b6608b7
       import NonFungibleToken from 0x631e88ae7f1d7c20
@@ -178,10 +216,10 @@ describe("parser", () => {
       import FlovatarComponentTemplate from 0x0cf264811b95d465
       import FlovatarComponent from 0x0cf264811b95d465
       import Crypto
-    `
-    const result = extractImports(code)
-    expect(Object.keys(result).length).toBe(5)
-  })
+    `;
+    const result = extractImports(code);
+    expect(Object.keys(result).length).toBe(5);
+  });
 });
 
 describe("extract contract name", () => {
