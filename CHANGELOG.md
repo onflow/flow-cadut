@@ -1,5 +1,11 @@
 # flow-cadut
 
+## 0.1.16
+
+### Patch Changes
+
+- bbad20a: Introduce changesets
+
 ## 0.1.15 - 2021-12-20
 
 - Added views for Flovatar and Versus
