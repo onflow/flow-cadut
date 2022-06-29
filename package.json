@@ -1,5 +1,5 @@
 {
-  "name": "flow-cadut",
+  "name": "@onflow/flow-cadut",
   "version": "0.1.16-alpha.3",
   "description": "Flow Cadence Template Utilities",
   "author": "Maksim Daunarovich",
