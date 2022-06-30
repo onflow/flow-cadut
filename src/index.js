@@ -50,6 +50,7 @@ export {
   generateSchema,
   getPragmaNotes,
   stripComments,
+  stripStrings,
   CONTRACT,
   TRANSACTION,
   SCRIPT,

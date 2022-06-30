@@ -34,6 +34,24 @@ export const stripComments = (code) => {
   return code.replace(commentsRegExp, "");
 };
 
+export const stripStrings = (code) => {
+  // replace all strings with ""
+  let inString = false;
+  let res = "";
+  for (let i = 0; i < code.length; i++) {
+    if (code[i] === '"') {
+      if (inString && code[i - 1] !== "\\") {
+        inString = false;
+        res += code[i];
+      } else inString = true;
+    }
+    if (!inString) {
+      res += code[i];
+    }
+  }
+  return res;
+};
+
 export const extract = (code, keyWord) => {
   const noComments = stripComments(code);
   const target = collapseSpaces(noComments.replace(/[\n\r]/g, ""));
@@ -92,7 +110,7 @@ export const getTemplateInfo = (template) => {
   const transactionMatcher = /transaction\s*(\(\s*\))*\s*/g;
   const scriptMatcher = /pub\s+fun\s+main\s*/g;
 
-  const code = stripComments(template);
+  const code = stripStrings(stripComments(template));
 
   if (transactionMatcher.test(code)) {
     const signers = extractSigners(code);
