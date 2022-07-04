@@ -1,5 +1,11 @@
 # flow-cadut
 
+## 0.1.16-alpha.5
+
+### Patch Changes
+
+- 7c5ee7d: Strip strings from templates in parser to prevent bugs related to cadence keywords existing in strings
+
 ## 0.1.16-alpha.4
 
 ### Patch Changes
