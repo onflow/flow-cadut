@@ -1,5 +1,11 @@
 # @onflow/flow-cadut
 
+## 0.2.0-alpha.7
+
+### Patch Changes
+
+- [#95](https://github.com/onflow/flow-cadut/pull/95) [`972b96a`](https://github.com/onflow/flow-cadut/commit/972b96a8b51691215585f011c79d05fd1feff11c) Thanks [@jribbink](https://github.com/jribbink)! - Remove residual references to flow-cadut and replace with @onflow/flow-cadut
+
 ## 0.2.0-alpha.6
 
 ### Minor Changes

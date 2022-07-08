@@ -5,6 +5,7 @@
     "@onflow/flow-cadut": "0.1.16-alpha.3"
   },
   "changesets": [
+    "beige-grapes-roll",
     "nasty-ducks-stare",
     "weak-cougars-chew",
     "wild-candles-sparkle"
