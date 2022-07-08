@@ -14,7 +14,7 @@
     "dev": "microbundle watch"
   },
   "peerDependencies": {
-    "flow-cadut": "^0.1.10"
+    "@onflow/flow-cadut": "^0.2.0-alpha.7"
   },
   "mangle": {
     "regex": "^_"

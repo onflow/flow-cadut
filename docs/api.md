@@ -19,7 +19,7 @@
 #### Usage
 
 ```javascript
-import { sansExtension } from "flow-cadut";
+import { sansExtension } from "@onflow/flow-cadut";
 
 const fileName = sansExtension("log-message-and-return.cdc");
 console.log({ fileName });
@@ -46,7 +46,7 @@ Reads the contents fo the file as `utf8`. Syntax sugar for `fs.readFileSync(path
 #### Usage
 
 ```javascript
-import { clearPath } from "flow-cadut";
+import { clearPath } from "@onflow/flow-cadut";
 
 const content = readFile("./log.cdc");
 ```
@@ -63,7 +63,7 @@ const content = readFile("./log.cdc");
 #### Usage
 
 ```javascript
-import { writeFile } from "flow-cadut";
+import { writeFile } from "@onflow/flow-cadut";
 
 const script = `
   pub fun main(){
@@ -87,7 +87,7 @@ Recursively deletes contents of the provided folder and all it's contents. Synta
 #### Usage
 
 ```javascript
-import { clearPath } from "flow-cadut";
+import { clearPath } from "@onflow/flow-cadut";
 
 clearPath("./ready-to-go");
 ```
@@ -109,7 +109,7 @@ Recursively looking for files under `path` and returns list of paths to found it
 #### Usage
 
 ```javascript
-import { getFileList } from "flow-cadut";
+import { getFileList } from "@onflow/flow-cadut";
 
 const list = getFileList("./cadence");
 ```
@@ -147,7 +147,7 @@ Default `options` are:
 #### Usage
 
 ```javascript
-import { prettify } from "flow-cadut";
+import { prettify } from "@onflow/flow-cadut";
 
 const code = `
   const a         = "Hello"
@@ -178,7 +178,7 @@ console.log(pretty);
 #### Usage
 
 ```javascript
-import { extractImports } from "flow-cadut";
+import { extractImports } from "@onflow/flow-cadut";
 
 const code = `
   import Message from 0x01
@@ -220,7 +220,7 @@ Given Cadence code template and addressMap, returns an array of missing contract
 #### Usage
 
 ```javascript
-import { missingImports } from "flow-cadut";
+import { missingImports } from "@onflow/flow-cadut";
 
 const code = `
   import Message from 0x01
@@ -253,7 +253,7 @@ Reports missing imports via `console.error` with format:
 #### Usage
 
 ```javascript
-import { missingImports, report } from "flow-cadut";
+import { missingImports, report } from "@onflow/flow-cadut";
 const code = `
       import Message from 0x01
       
@@ -282,7 +282,7 @@ Checks and reports missing contracts by matching code and addressMap in format:
 #### Usage
 
 ```javascript
-import { missingImports, report } from "flow-cadut";
+import { missingImports, report } from "@onflow/flow-cadut";
 
 const code = `
   import Message from 0x01
@@ -313,7 +313,7 @@ Replaces import statements in provided Cadence templates with corresponding valu
 #### Usage
 
 ```javascript
-import { replaceImportAddresses } from "flow-cadut";
+import { replaceImportAddresses } from "@onflow/flow-cadut";
 
 const code = `
   import Messages from 0x01
@@ -352,7 +352,7 @@ Converts provided value to `sdk` argument.
 
 ```javascript
 import { query, config } from "@onflow/fcl";
-import { mapArgument } from "flow-cadut";
+import { mapArgument } from "@onflow/flow-cadut";
 
 (async () => {
   config().put("accessNode.api", "https://access-testnet.onflow.org");
@@ -398,7 +398,7 @@ Converts provided values to `sdk` arguments.
 
 ```javascript
 import { query, config } from "@onflow/fcl";
-import { mapArgument } from "flow-cadut";
+import { mapArgument } from "@onflow/flow-cadut";
 
 (async () => {
   config().put("accessNode.api", "https://access-testnet.onflow.org");
@@ -448,7 +448,7 @@ This method will throw an error if user would fail to provide required amount of
 
 ```javascript
 import { query, config } from "@onflow/fcl";
-import { mapValuesToCode } from "flow-cadut";
+import { mapValuesToCode } from "@onflow/flow-cadut";
 
 (async () => {
   config().put("accessNode.api", "https://access-testnet.onflow.org");
@@ -487,7 +487,7 @@ Parses the code and returns [TemplateInfo](#TemplateInfo)
 #### Usage
 
 ```javascript
-import { getTemplateInfo } from "flow-cadut";
+import { getTemplateInfo } from "@onflow/flow-cadut";
 
 const script = `
   pub fun main(message:String):String{
@@ -525,7 +525,7 @@ Parses the code and returns array of [SignerPair](#SignerPair)
 #### Usage
 
 ```javascript
-import { extractSigners } from "flow-cadut";
+import { extractSigners } from "@onflow/flow-cadut";
 
 const script = `
   pub fun main(){
@@ -555,7 +555,7 @@ Parses the code and returns array of [ArgumentPair](#ArgumentPair)
 #### Usage
 
 ```javascript
-import { extractScriptArguments } from "flow-cadut";
+import { extractScriptArguments } from "@onflow/flow-cadut";
 
 const script = `
   pub fun main(message: String, metadata: {String:String}){
@@ -585,7 +585,7 @@ Parses the code and returns array of [ArgumentPair](#ArgumentPair)
 #### Usage
 
 ```javascript
-import { extractTransactionArguments } from "flow-cadut";
+import { extractTransactionArguments } from "@onflow/flow-cadut";
 
 const tx = `
   transaction(message: String, metadata: {String:String}){
@@ -617,7 +617,7 @@ Parses the code and returns contract name
 #### Usage
 
 ```javascript
-import { extractContractName } from "flow-cadut";
+import { extractContractName } from "@onflow/flow-cadut";
 
 const contract = `
   pub contract HelloWorld{
@@ -647,7 +647,7 @@ Splits [ArgumentPair](#ArgumentPair) into array of two items
 #### Usage
 
 ```javascript
-import { splitArgs } from "flow-cadut";
+import { splitArgs } from "@onflow/flow-cadut";
 const simplePair = "message:String";
 const metaPair = "metadata: {String:String}";
 
@@ -676,7 +676,7 @@ Splits [ArgumentPair](#ArgumentPair) and returns type of the argument
 #### Usage
 
 ```javascript
-import { argType } from "flow-cadut";
+import { argType } from "@onflow/flow-cadut";
 
 const simplePair = "message:String";
 const metaPair = "metadata: {String:String}";
@@ -706,7 +706,7 @@ Extracts item type from array type
 #### Usage
 
 ```javascript
-import { getArrayType } from "flow-cadut";
+import { getArrayType } from "@onflow/flow-cadut";
 
 const simpleType = getArrayType("[String]");
 const complexType = getArrayType("[{String: String}]");
@@ -733,7 +733,7 @@ Extracts key and value types from Dictionary type
 #### Usage
 
 ```javascript
-import { getDictionaryTypes } from "flow-cadut";
+import { getDictionaryTypes } from "@onflow/flow-cadut";
 
 const type = "{String: UFix64}";
 const types = getDictionaryTypes(type);
@@ -767,7 +767,7 @@ Write files under `output` path.
 
 ```javascript
 import path from "path";
-import { processFolder } from "flow-cadut";
+import { processFolder } from "@onflow/flow-cadut";
 
 (async () => {
   const input = path.resolve("./cadence");
@@ -802,7 +802,7 @@ Write files under `output` path.
 
 ```javascript
 import path from "path";
-import { processGitRepo } from "flow-cadut";
+import { processGitRepo } from "@onflow/flow-cadut";
 
 (async () => {
   const url = path.resolve("https://github.com/onflow/flow-core-contracts");
@@ -846,7 +846,7 @@ Sets `ix.env` config value
 #### Usage
 
 ```javascript
-import { setEnvironment } from "flow-cadut";
+import { setEnvironment } from "@onflow/flow-cadut";
 
 (async () => {
   await setEnvironment("testnet");
@@ -866,7 +866,7 @@ Returns a set of deployed contracts for current environment
 #### Usage
 
 ```javascript
-import { setEnvironment, getEnvironment } from "flow-cadut";
+import { setEnvironment, getEnvironment } from "@onflow/flow-cadut";
 
 (async () => {
   await setEnvironment("mainnet");
@@ -895,7 +895,7 @@ Syntax sugar for `Buffer.from(code, "utf8").toString("hex");`
 #### Usage
 
 ```javascript
-import { hexContract } from "flow-cadut";
+import { hexContract } from "@onflow/flow-cadut";
 
 const code = `
   pub contract HelloWorld{
@@ -942,7 +942,7 @@ Script result is represented as a tuple `[result, error]`
 #### Usage
 
 ```javascript
-import { executeScript } from "flow-cadut";
+import { executeScript } from "@onflow/flow-cadut";
 
 (async () => {
   const code = `
@@ -957,6 +957,7 @@ import { executeScript } from "flow-cadut";
 ```
 
 ##### Alias
+
 This method is also available under alias `query`
 
 ### `sendTransaction`
@@ -1006,7 +1007,7 @@ Transaction result is represented as a tuple `[result, error]`
 
 ```javascript
 import { authenticate, currentUser, authz, config } from "@onflow/fcl";
-import { sendTransaction } from "flow-cadut";
+import { sendTransaction } from "@onflow/flow-cadut";
 
 config()
   .put("accessNode.api", "https://access-testnet.onflow.org") // Configure FCL's Access Node
@@ -1031,4 +1032,5 @@ config()
 ```
 
 ##### Alias
+
 This method is also available under alias `mutate`
