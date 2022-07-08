@@ -1,5 +1,11 @@
 # flow-cadut
 
+## 0.2.0-alpha.6
+
+### Minor Changes
+
+- [#66](https://github.com/onflow/flow-cadut/pull/66) [`c901f5a`](https://github.com/onflow/flow-cadut/commit/c901f5a970ab09f501c717317a8ec933df0d93fe) Thanks [@hotrungnhan](https://github.com/hotrungnhan)! - Add support for PublicPath/StoragePath/PrivatePath/CapabilityPath arguments
+
 ## 0.1.16-alpha.5
 
 ### Patch Changes
