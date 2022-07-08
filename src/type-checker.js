@@ -32,7 +32,17 @@ export const isString = (type) => type === "String";
 export const isCharacter = (type) => type === "Character";
 export const isBoolean = (type) => type === "Bool";
 export const isAddress = (type) => type === "Address" || type === "Address?";
-export const isPath = (type) => type === "Path" || type === "Path?";
+export const isPath = (type) =>
+  type === "Path" ||
+  type === "Path?" ||
+  type === "PublicPath" ||
+  type === "PublicPath?" ||
+  type === "PrivatePath" ||
+  type === "PrivatePath?" ||
+  type === "StoragePath" ||
+  type === "StoragePath?" ||
+  type === "CapabilityPath" ||
+  type === "CapabilityPath?";
 
 export const isBasicType = (type) => {
   if (wrongType(type)) return false;
@@ -60,4 +70,4 @@ export const isDictionary = (type) => {
   return clearType.startsWith("{") && clearType.endsWith("}");
 };
 
-export const isComplexType = (type) => isArray(type) || isDictionary(type);
+export const isComplexType = (type) => isArray(type) || isDictionary(type) || isPath(type);

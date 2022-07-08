@@ -115,7 +115,9 @@ export const resolveType = (type) => {
         const dictionaryType = { key: resolveType(key), value: resolveType(value) };
         return t.Dictionary(dictionaryType);
       }
-
+      case isPath(type): {
+        return t.Path;
+      }
       default: {
         return resolveBasicType(type);
       }
@@ -166,10 +168,7 @@ export const mapArgument = async (rawType, rawValue) => {
     }
 
     case isPath(type): {
-      return fcl.arg(
-        parsePath(value),
-        resolvedType
-      );
+      return fcl.arg(parsePath(value), resolvedType);
     }
 
     case isArray(type): {
