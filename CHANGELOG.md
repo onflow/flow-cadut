@@ -1,4 +1,4 @@
-# flow-cadut
+# @onflow/flow-cadut
 
 ## 0.1.16-alpha.5
 
