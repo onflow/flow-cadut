@@ -16,145 +16,160 @@
  * limitations under the License.
  */
 
-import fs from "fs";
-import path from "path";
-import { resolve } from "path";
-import Handlebars from "handlebars";
-import simpleGit from "simple-git";
+import fs from "fs"
+import path from "path"
+import {resolve} from "path"
+import Handlebars from "handlebars"
+import simpleGit from "simple-git"
 
-import { getSplitCharacter, trimAndSplit, underscoreToCamelCase } from "../../src";
-import { generateExports, getFilesList, readFile, writeFile } from "./file";
-import { getTemplateInfo, CONTRACT, SCRIPT, TRANSACTION, extractSigners } from "../../src";
+import {getSplitCharacter, trimAndSplit, underscoreToCamelCase} from "../../src"
+import {generateExports, getFilesList, readFile, writeFile} from "./file"
+import {
+  getTemplateInfo,
+  CONTRACT,
+  SCRIPT,
+  TRANSACTION,
+  extractSigners,
+} from "../../src"
 
-import "./templates";
+import "./templates"
 
-const getFetchUrl = (input) => {
+const getFetchUrl = input => {
   // eslint-disable-next-line no-useless-escape
-  const groups = /(\w+:\/\/)(.+@)*([\w\d\.]+)(:[\d]+)?\/*(.*)/g.exec(input);
+  const groups = /(\w+:\/\/)(.+@)*([\w\d\.]+)(:[\d]+)?\/*(.*)/g.exec(input)
 
-  const inputPath = groups[5];
-  const inputBits = inputPath.split("/");
+  const inputPath = groups[5]
+  const inputBits = inputPath.split("/")
 
-  const [owner, repo] = inputBits;
+  const [owner, repo] = inputBits
   // TODO: use actual path with password and user
-  return `https://github.com/${owner}/${repo}`;
-};
+  return `https://github.com/${owner}/${repo}`
+}
 
-const TEMP_REPO_FOLDER = path.resolve(process.cwd(), "./temp-generator-repo");
+const TEMP_REPO_FOLDER = path.resolve(process.cwd(), "./temp-generator-repo")
 const clean = () => {
   if (fs.existsSync(TEMP_REPO_FOLDER)) {
-    fs.rmdirSync(TEMP_REPO_FOLDER, { recursive: true });
+    fs.rmdirSync(TEMP_REPO_FOLDER, {recursive: true})
   }
-};
+}
 
 export const getBranchesList = (branches, remotes) => {
-  const mappedRemotes = remotes.map((item) => item.name);
+  const mappedRemotes = remotes.map(item => item.name)
 
-  return branches.map((branch) => {
+  return branches.map(branch => {
     for (let i = 0; i < mappedRemotes.length; i++) {
-      const remote = mappedRemotes[i];
-      const suffix = `remotes/${remote}/`;
+      const remote = mappedRemotes[i]
+      const suffix = `remotes/${remote}/`
       if (branch.startsWith(suffix)) {
-        const sliceLength = suffix.length;
-        return branch.slice(sliceLength);
+        const sliceLength = suffix.length
+        return branch.slice(sliceLength)
       }
     }
-    return branch;
-  });
-};
+    return branch
+  })
+}
 
 export const getParamsFromUrl = (url, branches) => {
   for (let i = 0; i < branches.length; i++) {
-    const branch = branches[i];
-    const part = `tree/${branch}/`;
-    const index = url.indexOf(part);
+    const branch = branches[i]
+    const part = `tree/${branch}/`
+    const index = url.indexOf(part)
     if (index >= 0) {
       return {
         branch,
         fetchUrl: url.slice(0, index - 1),
         folderPath: `./${url.slice(index + part.length)}`,
-      };
+      }
     }
   }
   return {
     fetchUrl: url,
     folderPath: "./",
-  };
-};
+  }
+}
 
-export const processGitRepo = async (input, output, branch, cliOptions = {}) => {
+export const processGitRepo = async (
+  input,
+  output,
+  branch,
+  cliOptions = {}
+) => {
   const git = simpleGit({
     baseDir: process.cwd(),
     binary: "git",
-  });
+  })
 
-  const fetchUrl = getFetchUrl(input);
+  const fetchUrl = getFetchUrl(input)
 
-  console.log("Preparing space");
-  clean();
+  console.log("Preparing space")
+  clean()
 
-  const options = [];
+  const options = []
 
-  console.log(`Cloning ${fetchUrl} repository to local machine`);
-  await git.clone(fetchUrl, TEMP_REPO_FOLDER, options);
+  console.log(`Cloning ${fetchUrl} repository to local machine`)
+  await git.clone(fetchUrl, TEMP_REPO_FOLDER, options)
 
   const tempGit = simpleGit({
     baseDir: TEMP_REPO_FOLDER,
     binary: "git",
-  });
+  })
 
-  console.log("Extracting branch name and folder path from url");
-  const branchList = await tempGit.branch(["--list", "--all"]);
-  const remotes = await tempGit.getRemotes();
-  const branches = getBranchesList(branchList.all, remotes);
-  const params = getParamsFromUrl(input, branches);
+  console.log("Extracting branch name and folder path from url")
+  const branchList = await tempGit.branch(["--list", "--all"])
+  const remotes = await tempGit.getRemotes()
+  const branches = getBranchesList(branchList.all, remotes)
+  const params = getParamsFromUrl(input, branches)
 
   if (params.branch) {
-    console.log(`Branch name: ${params.branch}`);
-    console.log(`Check out ${params.branch} branch`);
-    tempGit.checkout(params.branch);
+    console.log(`Branch name: ${params.branch}`)
+    console.log(`Check out ${params.branch} branch`)
+    tempGit.checkout(params.branch)
   }
 
-  console.log("Processing Cadence template files");
-  await processFolder(`${TEMP_REPO_FOLDER}/${params.folderPath}`, output, cliOptions);
+  console.log("Processing Cadence template files")
+  await processFolder(
+    `${TEMP_REPO_FOLDER}/${params.folderPath}`,
+    output,
+    cliOptions
+  )
 
   // Teardown
-  console.log("Cleaning up");
-  clean();
+  console.log("Cleaning up")
+  clean()
 
-  console.log("Done!");
-};
+  console.log("Done!")
+}
 
 export const processFolder = async (input, output, options = {}) => {
-  const splitCharacter = getSplitCharacter(input);
-  const fullBasePath = `${resolve(input)}${splitCharacter}`;
-  const fileList = await getFilesList(input);
+  const splitCharacter = getSplitCharacter(input)
+  const fullBasePath = `${resolve(input)}${splitCharacter}`
+  const fileList = await getFilesList(input)
 
   for (let i = 0; i < fileList.length; i++) {
-    const path = fileList[i];
+    const path = fileList[i]
 
     // Skip all but Cadence template files
     if (!path.endsWith(".cdc")) {
-      continue;
+      continue
     }
 
-    const packages = trimAndSplit(path, fullBasePath);
-    const pathPackages = packages.slice(0, -1);
-    const file = packages.slice(-1)[0];
+    const packages = trimAndSplit(path, fullBasePath)
+    const pathPackages = packages.slice(0, -1)
+    const file = packages.slice(-1)[0]
 
-    const ixDependency = options.dependency || "flow-cadut";
+    const ixDependency = options.dependency || "flow-cadut"
 
-    const code = readFile(path).replace(/`/g, "'");
-    const name = underscoreToCamelCase(file.replace(".cdc", ""));
+    const code = readFile(path).replace(/`/g, "'")
+    const name = underscoreToCamelCase(file.replace(".cdc", ""))
 
-    const templateInfo = getTemplateInfo(code);
+    const templateInfo = getTemplateInfo(code)
 
-    let argsAmount = 0;
+    let argsAmount = 0
     if (templateInfo.args) {
-      argsAmount = templateInfo.args.length;
+      argsAmount = templateInfo.args.length
     }
 
-    let data;
+    let data
     switch (templateInfo.type) {
       case SCRIPT:
         data = Handlebars.templates.script({
@@ -163,10 +178,10 @@ export const processFolder = async (input, output, options = {}) => {
           ixDependency,
           argsAmount,
           assetName: name,
-        });
-        break;
+        })
+        break
       case TRANSACTION: {
-        const signers = extractSigners(code);
+        const signers = extractSigners(code)
         data = Handlebars.templates.transaction({
           code,
           name,
@@ -174,31 +189,31 @@ export const processFolder = async (input, output, options = {}) => {
           argsAmount,
           signersAmount: signers.length,
           assetName: name,
-        });
-        break;
+        })
+        break
       }
       case CONTRACT: {
-        const contractName = templateInfo.contractName;
+        const contractName = templateInfo.contractName
         data = Handlebars.templates.contract({
           code,
           name,
           ixDependency,
           contractName,
           assetName: name,
-        });
-        break;
+        })
+        break
       }
       default:
         // TODO: implement empty plug
-        data = "// Unsupported file";
+        data = "// Unsupported file"
     }
 
-    const templateFolder = pathPackages.join(`/`);
-    const filePath = `${output}/${templateFolder}/${name}.js`;
+    const templateFolder = pathPackages.join(`/`)
+    const filePath = `${output}/${templateFolder}/${name}.js`
 
-    writeFile(filePath, data);
+    writeFile(filePath, data)
   }
 
   // Generate index.js exports in each folder
-  await generateExports(output, Handlebars.templates.package);
-};
+  await generateExports(output, Handlebars.templates.package)
+}

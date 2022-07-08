@@ -16,48 +16,50 @@
  * limitations under the License.
  */
 
-export const wrongType = (type) => !type || typeof type != "string";
+export const wrongType = type => !type || typeof type != "string"
 
-export const isBasicNumType = (type) => {
-  if (wrongType(type)) return false;
-  return type.startsWith("Int") || type.startsWith("UInt") || type.startsWith("Word");
-};
+export const isBasicNumType = type => {
+  if (wrongType(type)) return false
+  return (
+    type.startsWith("Int") || type.startsWith("UInt") || type.startsWith("Word")
+  )
+}
 
-export const isFixedNumType = (type) => {
-  if (wrongType(type)) return false;
-  return type.startsWith("Fix64") || type.startsWith("UFix64");
-};
+export const isFixedNumType = type => {
+  if (wrongType(type)) return false
+  return type.startsWith("Fix64") || type.startsWith("UFix64")
+}
 
-export const isString = (type) => type === "String";
-export const isCharacter = (type) => type === "Character";
-export const isBoolean = (type) => type === "Bool";
-export const isAddress = (type) => type === "Address" || type === "Address?";
-export const isPath = (type) => type === "Path" || type === "Path?";
+export const isString = type => type === "String"
+export const isCharacter = type => type === "Character"
+export const isBoolean = type => type === "Bool"
+export const isAddress = type => type === "Address" || type === "Address?"
+export const isPath = type => type === "Path" || type === "Path?"
 
-export const isBasicType = (type) => {
-  if (wrongType(type)) return false;
+export const isBasicType = type => {
+  if (wrongType(type)) return false
 
-  let fixedType = type.endsWith("?") ? type.slice(0, -1) : type;
+  let fixedType = type.endsWith("?") ? type.slice(0, -1) : type
   return (
     isBasicNumType(fixedType) ||
     isString(fixedType) ||
     isCharacter(fixedType) ||
     isBoolean(fixedType)
-  );
-};
+  )
+}
 
-export const isArray = (type) => {
-  if (wrongType(type)) return false;
+export const isArray = type => {
+  if (wrongType(type)) return false
 
-  const clearType = type.replace(/\s/g, "");
-  return clearType.startsWith("[") && clearType.endsWith("]");
-};
+  const clearType = type.replace(/\s/g, "")
+  return clearType.startsWith("[") && clearType.endsWith("]")
+}
 
-export const isDictionary = (type) => {
-  if (wrongType(type)) return false;
+export const isDictionary = type => {
+  if (wrongType(type)) return false
 
-  const clearType = type.replace(/\s/g, "");
-  return clearType.startsWith("{") && clearType.endsWith("}");
-};
+  const clearType = type.replace(/\s/g, "")
+  return clearType.startsWith("{") && clearType.endsWith("}")
+}
 
-export const isComplexType = (type) => isArray(type) || isDictionary(type);
+export const isComplexType = type => isArray(type) || isDictionary(type)
