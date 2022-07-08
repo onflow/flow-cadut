@@ -24,7 +24,7 @@ const ec = new EC("p256");
 
 const hashMsgHex = (msgHex) => {
   const sha = new SHA3(256);
-  sha.update(Buffer.from(msgHex, "hex"));
+  sha.update(msgHex, "hex");
   return sha.digest();
 };
 
