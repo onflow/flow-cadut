@@ -123,7 +123,9 @@ export const resolveType = type => {
         }
         return t.Dictionary(dictionaryType)
       }
-
+      case isPath(type): {
+        return t.Path;
+      }
       default: {
         return resolveBasicType(type)
       }

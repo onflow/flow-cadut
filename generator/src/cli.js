@@ -75,7 +75,7 @@ export async function run(args) {
     .default({
       i: "./cadence",
       o: "./src/generated",
-      dependency: "flow-cadut",
+      dependency: "@onflow/flow-cadut",
     }).argv
   // console.log(argv)
   const {input, output, branch, dependency} = parseArgs(argv)

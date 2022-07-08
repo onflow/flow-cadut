@@ -157,7 +157,7 @@ export const processFolder = async (input, output, options = {}) => {
     const pathPackages = packages.slice(0, -1)
     const file = packages.slice(-1)[0]
 
-    const ixDependency = options.dependency || "flow-cadut"
+    const ixDependency = options.dependency || "@onflow/flow-cadut"
 
     const code = readFile(path).replace(/`/g, "'")
     const name = underscoreToCamelCase(file.replace(".cdc", ""))

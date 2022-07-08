@@ -48,7 +48,7 @@ validation criteria)
 ### Example
 
 ```javascript
-import { PLUGIN_TYPES } from "flow-cadut";
+import { PLUGIN_TYPES } from "@onflow/flow-cadut";
 
 const ArgumentLoggerPlugin = {
   id: "cadut-argument-logger",

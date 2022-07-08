@@ -4,28 +4,28 @@ This package provides plugin for FIND address resolver.
 
 ## Installation
 
-FIND package goes pre-bundled together with other plugins from `flow-cadut` package.
-If you have `flow-cadut` installed - you can use it right away.
+FIND package goes pre-bundled together with other plugins from `@onflow/flow-cadut` package.
+If you have `@onflow/flow-cadut` installed - you can use it right away.
 Otherwise call
 
 ```shell
-npm run install flow-cadut
+npm run install @onflow/flow-cadut
 ```
 
 or
 
 ```shell
-yarn add flow-cadut
+yarn add @onflow/flow-cadut
 ```
 
 ## Usage
 
 FIND plugin is dependent on value of current environment, so you will need to set it first with `setEnvironment` method.
-Then register plugin with `registerPlugin` from `flow-cadut` package
+Then register plugin with `registerPlugin` from `@onflow/flow-cadut` package
 
 ```javascript
-import { executeScript, setEnvironment, registerPlugin } from "flow-cadut";
-import { FIND } from "flow-cadut/plugins/FIND";
+import { executeScript, setEnvironment, registerPlugin } from "@onflow/flow-cadut";
+import { FIND } from "@onflow/flow-cadut/plugins/FIND";
 
 (async () => {
   await setEnvironment("testnet");
