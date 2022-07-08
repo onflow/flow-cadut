@@ -266,7 +266,6 @@ describe("mapArgument", () => {
     const type = "Path";
     const input = "/public/FlowTokens";
     const output = await mapArgument(type, input);
-    console.log(output);
     expect(output.value["domain"]).toBe("public");
     expect(output.value["identifier"]).toBe("FlowTokens");
     expect(output.xform.label).toBe("Path");
@@ -294,6 +293,23 @@ describe("mapArgument", () => {
     expect(output.value["domain"]).toBe("storage");
     expect(output.value["identifier"]).toBe("FlowTokens");
     expect(output.xform.label).toBe("Path");
+  });
+  test("Capability Path", async () => {
+    const typePrivate = "PrivatePath";
+    const inputPrivate = "/private/FlowTokens";
+    const outputPrivate = await mapArgument(typePrivate, inputPrivate);
+
+    const typePublic = "PublicPath";
+    const inputPublic = "/public/FlowTokens";
+    const outputPublic = await mapArgument(typePublic, inputPublic);
+
+    expect(outputPrivate.value["domain"]).toBe("private");
+    expect(outputPrivate.value["identifier"]).toBe("FlowTokens");
+    expect(outputPrivate.xform.label).toBe("Path");
+
+    expect(outputPublic.value["domain"]).toBe("public");
+    expect(outputPublic.value["identifier"]).toBe("FlowTokens");
+    expect(outputPublic.xform.label).toBe("Path");
   });
 });
 

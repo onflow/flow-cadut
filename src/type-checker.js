@@ -40,7 +40,9 @@ export const isPath = (type) =>
   type === "PrivatePath" ||
   type === "PrivatePath?" ||
   type === "StoragePath" ||
-  type === "StoragePath?";
+  type === "StoragePath?" ||
+  type === "CapabilityPath" ||
+  type === "CapabilityPath?";
 
 export const isBasicType = (type) => {
   if (wrongType(type)) return false;
