@@ -6,12 +6,15 @@
   "author": "Maksim Daunarovich",
   "license": "Apache-2.0",
   "main": "dist/generator.js",
-  "module": "dist/generator.module.js",
-  "umd:main": "dist/generator.umd.js",
-  "source": "src/index.js",
   "scripts": {
     "build": "microbundle",
     "dev": "microbundle watch"
+  },
+  "exports": {
+    "module": "./dist/generator.module.js",
+    "umd": "./dist/generator.umd.js",
+    "import": "./dist/generator.modern.mjs",
+    "require": "./dist/generator.js"
   },
   "peerDependencies": {
     "flow-cadut": "^0.1.10"
