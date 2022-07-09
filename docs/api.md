@@ -424,7 +424,7 @@ import { mapArgument } from "@onflow/flow-cadut";
 
 ### `mapValuesToCode(code, values)`
 
-This method will extract argument types from provided Cadence code and then coverts
+This method will extract argument types from provided Cadence code and then converts
 values to corresponding types, preparing them to be passed into `sdk.send`
 
 📣 Best usage of this method is with combination of `query`/`mutate` methods from Javascript SDK.
