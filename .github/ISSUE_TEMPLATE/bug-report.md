@@ -3,7 +3,6 @@ name: Reporting a Problem/Bug
 about: Reporting a Problem/Bug
 title: ''
 labels: bug, Feedback
-assignees: MaxStalker
 
 ---
 ### Instructions
