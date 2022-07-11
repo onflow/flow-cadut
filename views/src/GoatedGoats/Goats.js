@@ -1,6 +1,6 @@
-import { query, extendEnvironment } from "../../../src";
-import { GoatedGoatsEnvironment } from "./env";
-import { getGoatBaseScore, getRarityScore, pinataLink } from "./utils";
+import {query, extendEnvironment} from "../../../src"
+import {GoatedGoatsEnvironment} from "./env"
+import {getGoatBaseScore, getRarityScore, pinataLink} from "./utils"
 
 export const fetchGoats = `
   import GoatedGoats from 0x01
@@ -55,15 +55,15 @@ export const fetchGoats = `
     }
     return goatsData
   }
-`;
+`
 
-export default (address) => {
+export default address => {
   // Register addresses for contracts
-  extendEnvironment(GoatedGoatsEnvironment);
+  extendEnvironment(GoatedGoatsEnvironment)
 
   // const resolvedAddress = address;
-  const code = fetchGoats;
-  const args = [address];
+  const code = fetchGoats
+  const args = [address]
 
   return {
     name: "GoatedGoats",
@@ -72,28 +72,28 @@ export default (address) => {
         code,
         args,
         processed: false,
-      });
+      })
     },
-    mapData: (goat) => {
-      const { id, metadata, creationDate: timestamp, traitSlots } = goat;
-      const { thumbnailCID, skinRarity } = metadata;
-      const image = pinataLink(thumbnailCID);
-      const creationDate = parseInt(timestamp) * 1000;
-      const skinScore = getGoatBaseScore(skinRarity, traitSlots);
+    mapData: goat => {
+      const {id, metadata, creationDate: timestamp, traitSlots} = goat
+      const {thumbnailCID, skinRarity} = metadata
+      const image = pinataLink(thumbnailCID)
+      const creationDate = parseInt(timestamp) * 1000
+      const skinScore = getGoatBaseScore(skinRarity, traitSlots)
 
-      let traitsScore = 0;
-      const equippedTraits = goat.equippedTraits.map((trait) => {
-        const { traitID: id, traitEditionMetadata: metadata } = trait;
-        const { rarity, thumbnailCID } = metadata;
-        const score = getRarityScore(rarity);
-        traitsScore += score;
+      let traitsScore = 0
+      const equippedTraits = goat.equippedTraits.map(trait => {
+        const {traitID: id, traitEditionMetadata: metadata} = trait
+        const {rarity, thumbnailCID} = metadata
+        const score = getRarityScore(rarity)
+        traitsScore += score
         return {
           id,
           image: pinataLink(thumbnailCID),
           traitScore: score,
           metadata,
-        };
-      });
+        }
+      })
 
       return {
         id,
@@ -104,7 +104,7 @@ export default (address) => {
         skinScore,
         traitsScore,
         traitSlots,
-      };
+      }
     },
-  };
-};
+  }
+}

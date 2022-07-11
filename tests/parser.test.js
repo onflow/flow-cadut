@@ -1,4 +1,4 @@
-import { cdc } from "@onflow/fcl";
+import {cdc} from "@onflow/fcl"
 import {
   extractContractName,
   getTemplateInfo,
@@ -12,11 +12,11 @@ import {
   stripComments,
   stripStrings,
   extractImports,
-} from "../src";
+} from "../src"
 
-import flovatarContract from "./stubs/flovatar";
-import versusContract from "./stubs/versus";
-import nftContract from "./stubs/non-fungible";
+import flovatarContract from "./stubs/flovatar"
+import versusContract from "./stubs/versus"
+import nftContract from "./stubs/non-fungible"
 
 describe("strip comments", () => {
   test("line comments", () => {
@@ -24,19 +24,19 @@ describe("strip comments", () => {
       // hidden
       pub fun main():String{ return "hello, world!" }
       // hidden
-    `;
-    const output = stripComments(input);
-    expect(output.includes("hidden")).toBe(false);
-  });
+    `
+    const output = stripComments(input)
+    expect(output.includes("hidden")).toBe(false)
+  })
 
   test("inline line comments", () => {
     const input = `
       pub fun main():String{ return "hello, world!" } // hidden
-    `;
-    const output = stripComments(input);
-    expect(output.includes("pub fun main")).toBe(true);
-    expect(output.includes("hidden")).toBe(false);
-  });
+    `
+    const output = stripComments(input)
+    expect(output.includes("pub fun main")).toBe(true)
+    expect(output.includes("hidden")).toBe(false)
+  })
 
   test("block comments", () => {
     const input = `
@@ -44,19 +44,19 @@ describe("strip comments", () => {
         hidden
       */
       pub fun main():String{ return "hello, world!" }
-    `;
-    const output = stripComments(input);
-    expect(output.includes("hidden")).toBe(false);
-  });
+    `
+    const output = stripComments(input)
+    expect(output.includes("hidden")).toBe(false)
+  })
 
   test("inline block comments", () => {
     const input = `
       pub fun /* hidden */main():String{ return "hello, world!" }
-    `;
-    const output = stripComments(input);
-    expect(output.includes("pub fun main")).toBe(true);
-    expect(output.includes("hidden")).toBe(false);
-  });
+    `
+    const output = stripComments(input)
+    expect(output.includes("pub fun main")).toBe(true)
+    expect(output.includes("hidden")).toBe(false)
+  })
 
   test("combined comments", () => {
     const input = `
@@ -65,36 +65,36 @@ describe("strip comments", () => {
       */
       pub fun main():String{ return "hello, world!" }
       // hidden
-    `;
-    const output = stripComments(input);
-    expect(output.includes("hidden")).toBe(false);
-  });
-});
+    `
+    const output = stripComments(input)
+    expect(output.includes("hidden")).toBe(false)
+  })
+})
 
 describe("strip strings", () => {
   test("empty string", () => {
-    const input = 'pub fun main():String{ return "" }';
+    const input = 'pub fun main():String{ return "" }'
 
-    const output = stripStrings(input);
-    expect(output).toBe(input);
-  });
+    const output = stripStrings(input)
+    expect(output).toBe(input)
+  })
 
   test("escaped string", () => {
-    const input = 'pub fun main():String{ return "\\"hello, world!\\"" }';
-    const expectedOutput = 'pub fun main():String{ return "" }';
+    const input = 'pub fun main():String{ return "\\"hello, world!\\"" }'
+    const expectedOutput = 'pub fun main():String{ return "" }'
 
-    const output = stripStrings(input);
-    expect(output).toBe(expectedOutput);
-  });
+    const output = stripStrings(input)
+    expect(output).toBe(expectedOutput)
+  })
 
   test("regular string", () => {
-    const input = 'pub fun main():String{ return "hello, world!" }';
-    const expectedOutput = 'pub fun main():String{ return "" }';
+    const input = 'pub fun main():String{ return "hello, world!" }'
+    const expectedOutput = 'pub fun main():String{ return "" }'
 
-    const output = stripStrings(input);
-    expect(output).toBe(expectedOutput);
-  });
-});
+    const output = stripStrings(input)
+    expect(output).toBe(expectedOutput)
+  })
+})
 
 describe("parser", () => {
   test("extract script arguments - no arguments", () => {
@@ -102,30 +102,30 @@ describe("parser", () => {
       pub fun main(){
         log(a)
       }
-    `;
-    const output = extractScriptArguments(input);
-    expect(output.length).toBe(0);
-  });
+    `
+    const output = extractScriptArguments(input)
+    expect(output.length).toBe(0)
+  })
 
   test("extract script arguments", () => {
     const input = `
       pub fun main(a: Int){
         log(a)
       }
-    `;
-    const output = extractScriptArguments(input);
-    expect(output.length).toBe(1);
-  });
+    `
+    const output = extractScriptArguments(input)
+    expect(output.length).toBe(1)
+  })
 
   test("extract script arguments - complex arguments", () => {
     const input = `
       pub fun main(metadata: {String:String}){
         log(a)
       }
-    `;
-    const output = extractScriptArguments(input);
-    expect(output.length).toBe(1);
-  });
+    `
+    const output = extractScriptArguments(input)
+    expect(output.length).toBe(1)
+  })
 
   test("extract transaction arguments - no arguments", () => {
     const input = `
@@ -134,10 +134,10 @@ describe("parser", () => {
           log("hello")
         }
       }
-    `;
-    const output = extractTransactionArguments(input);
-    expect(output.length).toBe(0);
-  });
+    `
+    const output = extractTransactionArguments(input)
+    expect(output.length).toBe(0)
+  })
 
   test("extract transaction arguments - keyword in comments", () => {
     const input = ` // nothing here
@@ -147,10 +147,10 @@ describe("parser", () => {
           log("hello")
         }
       }
-    `;
-    const output = extractTransactionArguments(input);
-    expect(output.length).toBe(1);
-  });
+    `
+    const output = extractTransactionArguments(input)
+    expect(output.length).toBe(1)
+  })
 
   test("extract transaction arguments - keyword in string", () => {
     const input = `
@@ -159,10 +159,10 @@ describe("parser", () => {
           log("the keyword \\"transaction\\" would cause problems if strings not stripped")
         }
       }
-    `;
-    const output = extractTransactionArguments(input);
-    expect(output.length).toBe(1);
-  });
+    `
+    const output = extractTransactionArguments(input)
+    expect(output.length).toBe(1)
+  })
 
   test("extract transaction arguments - multiline declaration", () => {
     const input = ` // nothing here
@@ -175,38 +175,38 @@ describe("parser", () => {
           log("hello")
         }
       }
-    `;
-    const output = extractTransactionArguments(input);
-    expect(output.length).toBe(2);
-  });
+    `
+    const output = extractTransactionArguments(input)
+    expect(output.length).toBe(2)
+  })
 
   test("extract transaction arguments - spaces in definition", () => {
     const input = `
       transaction ( code: String ) {
         prepare( admin: AuthAccount) { }  
       }
-    `;
-    const output = extractTransactionArguments(input);
-    expect(output.length).toBe(1);
-  });
+    `
+    const output = extractTransactionArguments(input)
+    expect(output.length).toBe(1)
+  })
 
   test("shall not include incorrect imports", () => {
-    const code = flovatarContract;
-    const result = extractImports(code);
-    expect(Object.keys(result).length).toBe(6);
-  });
+    const code = flovatarContract
+    const result = extractImports(code)
+    expect(Object.keys(result).length).toBe(6)
+  })
 
   test("shall not include incorrect imports - versus", () => {
-    const code = versusContract;
-    const result = extractImports(code);
-    expect(Object.keys(result).length).toBe(6);
-  });
+    const code = versusContract
+    const result = extractImports(code)
+    expect(Object.keys(result).length).toBe(6)
+  })
 
   test("shall not include incorrect imports - nft", () => {
-    const code = nftContract;
-    const result = extractImports(code);
-    expect(Object.keys(result).length).toBe(0);
-  });
+    const code = nftContract
+    const result = extractImports(code)
+    expect(Object.keys(result).length).toBe(0)
+  })
 
   test("shall not include Crypto library", () => {
     const code = `
@@ -216,30 +216,30 @@ describe("parser", () => {
       import FlovatarComponentTemplate from 0x0cf264811b95d465
       import FlovatarComponent from 0x0cf264811b95d465
       import Crypto
-    `;
-    const result = extractImports(code);
-    expect(Object.keys(result).length).toBe(5);
-  });
-});
+    `
+    const result = extractImports(code)
+    expect(Object.keys(result).length).toBe(5)
+  })
+})
 
 describe("extract contract name", () => {
   test("extract contract name - contract interface", () => {
-    const contractName = "KittyItems";
+    const contractName = "KittyItems"
     const input = `
       pub contract interface ${contractName} {
-    `;
-    const output = extractContractName(input);
-    expect(output).toEqual(contractName);
-  });
+    `
+    const output = extractContractName(input)
+    expect(output).toEqual(contractName)
+  })
 
   test("extract contract name - contract", () => {
-    const contractName = "KittyItems";
+    const contractName = "KittyItems"
     const input = `
       pub contract ${contractName} {
-    `;
-    const output = extractContractName(input);
-    expect(output).toEqual(contractName);
-  });
+    `
+    const output = extractContractName(input)
+    expect(output).toEqual(contractName)
+  })
 
   test("extract contract name - transaction", () => {
     const input = `
@@ -248,40 +248,40 @@ describe("extract contract name", () => {
           execute{}
           post{}
       }
-    `;
+    `
     expect(() => extractContractName(input)).toThrow(
       "Contract Error: can't find name of the contract"
-    );
-  });
-});
+    )
+  })
+})
 
 describe("extract contract parameters", () => {
   test("no init method in code", () => {
-    const contractName = "Hello";
+    const contractName = "Hello"
     const input = `
     pub contract ${contractName}     {
       // no init method here either
     }
-  `;
-    const output = extractContractParameters(input);
-    expect(output.contractName).toBe(contractName);
-    expect(output.args).toBe("");
-  });
+  `
+    const output = extractContractParameters(input)
+    expect(output.contractName).toBe(contractName)
+    expect(output.args).toBe("")
+  })
 
   test("no init method in code - interface", () => {
-    const contractName = "Hello";
+    const contractName = "Hello"
     const input = `
     pub contract interface ${contractName}     {
       // no init method here either
     }
-  `;
-    const output = extractContractParameters(input);
-    expect(output.contractName).toBe(contractName);
-    expect(output.args).toBe("");
-  });
+  `
+    const output = extractContractParameters(input)
+    expect(output.contractName).toBe(contractName)
+    expect(output.args).toBe("")
+  })
 
   test("no init method in code - with comments", () => {
-    const contractName = "Hello";
+    const contractName = "Hello"
     const input = `
     ////////////////////
     // basic contract //
@@ -290,55 +290,55 @@ describe("extract contract parameters", () => {
     pub contract ${contractName}     {
       // no init method here either
     }
-  `;
-    const output = extractContractParameters(input);
-    expect(output.contractName).toBe(contractName);
-    expect(output.args).toBe("");
-  });
+  `
+    const output = extractContractParameters(input)
+    expect(output.contractName).toBe(contractName)
+    expect(output.args).toBe("")
+  })
 
   test("with init method in code - no arguments", () => {
-    const contractName = "Hello";
+    const contractName = "Hello"
     const input = `
     pub contract interface ${contractName}     {
       // init method here
       init(){}
     }
-  `;
-    const output = extractContractParameters(input);
-    expect(output.contractName).toBe(contractName);
-    expect(output.args).toBe("");
-  });
+  `
+    const output = extractContractParameters(input)
+    expect(output.contractName).toBe(contractName)
+    expect(output.args).toBe("")
+  })
 
   test("with init method in code - single argument", () => {
-    const contractName = "Hello";
-    const args = "a: String";
+    const contractName = "Hello"
+    const args = "a: String"
     const input = `
     pub contract interface ${contractName}     {
       // init method here
       init(${args}){}
     }
-  `;
-    const output = extractContractParameters(input);
-    expect(output.contractName).toBe(contractName);
-    expect(output.args).toBe(args);
-  });
+  `
+    const output = extractContractParameters(input)
+    expect(output.contractName).toBe(contractName)
+    expect(output.args).toBe(args)
+  })
 
   test("with init method in code - multiple argument", () => {
-    const contractName = "Hello";
-    const args = "a: String, b: {String: String}";
+    const contractName = "Hello"
+    const args = "a: String, b: {String: String}"
     const input = `
     pub contract interface ${contractName}     {
       // init method here
       init(${args}){}
     }
-  `;
-    const output = extractContractParameters(input);
-    expect(output.contractName).toBe(contractName);
-    expect(output.args).toBe(args);
-  });
+  `
+    const output = extractContractParameters(input)
+    expect(output.contractName).toBe(contractName)
+    expect(output.args).toBe(args)
+  })
 
   test("init method on resource", () => {
-    const contractName = "Hello";
+    const contractName = "Hello"
     const input = `
     pub contract interface ${contractName}     {
       // init method on resource
@@ -349,15 +349,15 @@ describe("extract contract parameters", () => {
         }
       }
     }
-  `;
-    const output = extractContractParameters(input);
-    expect(output.contractName).toBe(contractName);
-    expect(output.args).toBe("");
-  });
+  `
+    const output = extractContractParameters(input)
+    expect(output.contractName).toBe(contractName)
+    expect(output.args).toBe("")
+  })
 
   test("init method on resource - contract init before resource", () => {
-    const contractName = "Hello";
-    const args = "a: String, b: {String: String}";
+    const contractName = "Hello"
+    const args = "a: String, b: {String: String}"
     const input = `
     pub contract interface ${contractName}     {
       init(${args}){ 
@@ -372,48 +372,48 @@ describe("extract contract parameters", () => {
         }
       }
     }
-  `;
-    const output = extractContractParameters(input);
-    expect(output.contractName).toBe(contractName);
-    expect(output.args).toBe(args);
-  });
-});
+  `
+    const output = extractContractParameters(input)
+    expect(output.contractName).toBe(contractName)
+    expect(output.args).toBe(args)
+  })
+})
 
 describe("template type checker", () => {
   test("is contract - script", () => {
     const input = `
       pub fun main(){}
-    `;
-    expect(getTemplateInfo(input).type).not.toBe(CONTRACT);
-  });
+    `
+    expect(getTemplateInfo(input).type).not.toBe(CONTRACT)
+  })
   test("is contract - transaction", () => {
     const input = `
       transaction{
         prepare()
       }
-    `;
-    expect(getTemplateInfo(input).type).not.toBe(CONTRACT);
-  });
+    `
+    expect(getTemplateInfo(input).type).not.toBe(CONTRACT)
+  })
   test("is contract - contract", () => {
     const input = `
       pub contract Basic{}
-    `;
-    expect(getTemplateInfo(input).type).toBe(CONTRACT);
-  });
+    `
+    expect(getTemplateInfo(input).type).toBe(CONTRACT)
+  })
 
   test("is contract - contract interface", () => {
     const input = `
       pub contract interface      Basic {      }
-    `;
-    expect(getTemplateInfo(input).type).toBe(CONTRACT);
-  });
+    `
+    expect(getTemplateInfo(input).type).toBe(CONTRACT)
+  })
 
   test("is script - script", () => {
     const input = `
       pub fun main(){}
-    `;
-    expect(getTemplateInfo(input).type).toBe(SCRIPT);
-  });
+    `
+    expect(getTemplateInfo(input).type).toBe(SCRIPT)
+  })
 
   test("is transaction - transaction", () => {
     const input = `
@@ -422,12 +422,12 @@ describe("template type checker", () => {
           log(a)
         }
       }
-    `;
-    const { type, args, signers } = getTemplateInfo(input);
-    expect(type).toBe(TRANSACTION);
-    expect(signers).toBe(1);
-    expect(args.length).toBe(1);
-  });
+    `
+    const {type, args, signers} = getTemplateInfo(input)
+    expect(type).toBe(TRANSACTION)
+    expect(signers).toBe(1)
+    expect(args.length).toBe(1)
+  })
 
   test("is transaction - real example", () => {
     const input = `
@@ -438,11 +438,11 @@ describe("template type checker", () => {
           let decoded = code.decodeHex()
         }
       }
-    `;
-    const { type } = getTemplateInfo(input);
-    expect(type).toBe(TRANSACTION);
-  });
-});
+    `
+    const {type} = getTemplateInfo(input)
+    expect(type).toBe(TRANSACTION)
+  })
+})
 
 describe("spaces in definitions", () => {
   test("spaces in definition - transaction", () => {
@@ -450,36 +450,36 @@ describe("spaces in definitions", () => {
       transaction ( code: String ) {
         prepare(  signer:   AuthAccount    ) {}
       }
-    `;
-    const { type, signers, args } = getTemplateInfo(input);
-    expect(type).toBe(TRANSACTION);
-    expect(signers).toBe(1);
-    expect(args.length).toBe(1);
-  });
+    `
+    const {type, signers, args} = getTemplateInfo(input)
+    expect(type).toBe(TRANSACTION)
+    expect(signers).toBe(1)
+    expect(args.length).toBe(1)
+  })
 
   test("spaces in definition - more spaces", () => {
     const input = `
       transaction      (    code:            String        ) {
         prepare       (  signer:                AuthAccount          ) {}
       }
-    `;
-    const { type, signers, args } = getTemplateInfo(input);
-    expect(type).toBe(TRANSACTION);
-    expect(signers).toBe(1);
-    expect(args.length).toBe(1);
-  });
+    `
+    const {type, signers, args} = getTemplateInfo(input)
+    expect(type).toBe(TRANSACTION)
+    expect(signers).toBe(1)
+    expect(args.length).toBe(1)
+  })
 
   test("script", () => {
     const input = `
       pub fun main ( code:        String ) {
          log(code)
       }
-    `;
-    const { type, args } = getTemplateInfo(input);
-    expect(type).toBe(SCRIPT);
-    expect(args.length).toBe(1);
-  });
-});
+    `
+    const {type, args} = getTemplateInfo(input)
+    expect(type).toBe(SCRIPT)
+    expect(args.length).toBe(1)
+  })
+})
 
 describe("interaction signatures", () => {
   test("multi line transaction signature - no arguments", async () => {
@@ -488,19 +488,19 @@ describe("interaction signatures", () => {
       transaction     {
         prepare(){}
       }
-    `;
-    const args = extractTransactionArguments(code);
-    expect(args.length).toBe(0);
-  });
+    `
+    const args = extractTransactionArguments(code)
+    expect(args.length).toBe(0)
+  })
 
   test("multi line script signature", async () => {
     const code = `
       // this is some basic transaction we want to send
       pub fun main      (       ) : String { return "Hello" }
-    `;
-    const args = extractTransactionArguments(code);
-    expect(args.length).toBe(0);
-  });
+    `
+    const args = extractTransactionArguments(code)
+    expect(args.length).toBe(0)
+  })
 
   test("multi line transaction signature", async () => {
     const code = `
@@ -511,34 +511,34 @@ describe("interaction signatures", () => {
       ) {
         prepare(){}
       }
-    `;
-    const args = extractTransactionArguments(code);
-    expect(args.length).toBe(2);
-    expect(args[0]).toBe("a:Int");
-    expect(args[1]).toBe("b:String");
-  });
-});
+    `
+    const args = extractTransactionArguments(code)
+    expect(args.length).toBe(2)
+    expect(args[0]).toBe("a:Int")
+    expect(args[1]).toBe("b:String")
+  })
+})
 
 describe("pragma extractor", () => {
   test("shall extract single param", () => {
-    const param = "title";
-    const value = "Flovatar Total Supply";
+    const param = "title"
+    const value = "Flovatar Total Supply"
     const input = cdc`
       /// pragma ${param} ${value}
-    `();
-    const result = getPragmaNotes(input);
-    expect(result[param]).toBe(value);
-  });
+    `()
+    const result = getPragmaNotes(input)
+    expect(result[param]).toBe(value)
+  })
 
   test("shall extract single param - with tabs", () => {
-    const param = "title";
-    const value = "Flovatar Total Supply";
+    const param = "title"
+    const value = "Flovatar Total Supply"
     const input = cdc`
       /// pragma     ${param}    ${value}
-    `();
-    const result = getPragmaNotes(input);
-    expect(result[param]).toBe(value);
-  });
+    `()
+    const result = getPragmaNotes(input)
+    expect(result[param]).toBe(value)
+  })
 
   test("shall extract multiple params", () => {
     const input = cdc`
@@ -549,10 +549,10 @@ describe("pragma extractor", () => {
       pub fun main(){
         // this shall still work just fine
       }
-    `();
-    const result = getPragmaNotes(input);
-    expect(result.name).toBe("Max");
-    expect(result.title).toBe("Flow Cadut");
-    expect(result.description).toBe("Simple Script to ping network");
-  });
-});
+    `()
+    const result = getPragmaNotes(input)
+    expect(result.name).toBe("Max")
+    expect(result.title).toBe("Flow Cadut")
+    expect(result.description).toBe("Simple Script to ping network")
+  })
+})

@@ -16,19 +16,19 @@
  * limitations under the License.
  */
 
-import fs from "fs";
-import { resolve, dirname } from "path";
-import prettier from "prettier";
-import parserBabel from "prettier/parser-babel";
-import { underscoreToCamelCase } from "../../src";
+import fs from "fs"
+import {resolve, dirname} from "path"
+import prettier from "prettier"
+import parserBabel from "prettier/parser-babel"
+import {underscoreToCamelCase} from "../../src"
 
 /**
  * Syntax sugar for file reading
  * @param {string} path - path to file to be read
  */
-export const readFile = (path) => {
-  return fs.readFileSync(path, "utf8");
-};
+export const readFile = path => {
+  return fs.readFileSync(path, "utf8")
+}
 
 /**
  * Syntax sugar for file writing
@@ -36,33 +36,33 @@ export const readFile = (path) => {
  * @param {string} data - data to write into file
  */
 export const writeFile = (path, data) => {
-  const targetDir = dirname(path);
-  fs.mkdirSync(targetDir, { recursive: true });
-  return fs.writeFileSync(path, data, { encoding: "utf8" });
-};
+  const targetDir = dirname(path)
+  fs.mkdirSync(targetDir, {recursive: true})
+  return fs.writeFileSync(path, data, {encoding: "utf8"})
+}
 
 /**
  * Syntax sugar for removing directory and all it's contents
  * @param {string} path - path to directory to delete
  */
-export const clearPath = (path) => {
-  fs.rmdirSync(path, { recursive: true });
-};
+export const clearPath = path => {
+  fs.rmdirSync(path, {recursive: true})
+}
 
-export const getFilesList = async (dir) => {
-  const dirents = await fs.promises.readdir(dir, { withFileTypes: true });
+export const getFilesList = async dir => {
+  const dirents = await fs.promises.readdir(dir, {withFileTypes: true})
   const files = await Promise.all(
-    dirents.map((dirent) => {
-      const res = resolve(dir, dirent.name);
-      return dirent.isDirectory() ? getFilesList(res) : res;
+    dirents.map(dirent => {
+      const res = resolve(dir, dirent.name)
+      return dirent.isDirectory() ? getFilesList(res) : res
     })
-  );
-  return files.flat();
-};
+  )
+  return files.flat()
+}
 
-export const sansExtension = (fileName) => {
-  return fileName.replace(/\..*/, "");
-};
+export const sansExtension = fileName => {
+  return fileName.replace(/\..*/, "")
+}
 
 export const prettify = (code, props) => {
   // Use the same formatting options as in this repository
@@ -76,53 +76,57 @@ export const prettify = (code, props) => {
     trailingComma: "es5",
     tabWidth: 2,
     ...props,
-  };
-  return prettier.format(code, { parser: "babel", plugins: [parserBabel], ...options });
-};
+  }
+  return prettier.format(code, {
+    parser: "babel",
+    plugins: [parserBabel],
+    ...options,
+  })
+}
 
 export const generateExports = async (dir, template) => {
-  const entities = await fs.promises.readdir(dir, { withFileTypes: true });
+  const entities = await fs.promises.readdir(dir, {withFileTypes: true})
 
   const currentFolder = entities.reduce(
     (acc, entity) => {
       if (entity.isDirectory()) {
-        acc.folders.push(entity);
-        acc.folderNames.push(entity.name);
+        acc.folders.push(entity)
+        acc.folderNames.push(entity.name)
       } else {
-        const camelCased = underscoreToCamelCase(entity.name);
-        const fileName = sansExtension(camelCased);
+        const camelCased = underscoreToCamelCase(entity.name)
+        const fileName = sansExtension(camelCased)
 
-        const contractPragma = "/** pragma type contract **/";
+        const contractPragma = "/** pragma type contract **/"
 
         if (entity.isFile()) {
-          const filePath = resolve(dir, entity.name);
-          const content = fs.readFileSync(filePath, "utf8");
+          const filePath = resolve(dir, entity.name)
+          const content = fs.readFileSync(filePath, "utf8")
           if (content.includes(contractPragma)) {
-            acc.contracts.push(fileName);
+            acc.contracts.push(fileName)
           } else {
-            acc.files.push(fileName);
+            acc.files.push(fileName)
           }
         }
       }
-      return acc;
+      return acc
     },
-    { folderNames: [], folders: [], files: [], contracts: [] }
-  );
+    {folderNames: [], folders: [], files: [], contracts: []}
+  )
 
-  currentFolder.name = dir;
+  currentFolder.name = dir
   const packageData = template({
     folders: currentFolder.folderNames,
     files: currentFolder.files,
     contracts: currentFolder.contracts,
-  });
-  writeFile(`${dir}/index.js`, prettify(packageData));
+  })
+  writeFile(`${dir}/index.js`, prettify(packageData))
 
   await Promise.all(
-    currentFolder.folders.map((dirent) => {
-      const res = resolve(dir, dirent.name);
-      return dirent.isDirectory() ? generateExports(res, template) : res;
+    currentFolder.folders.map(dirent => {
+      const res = resolve(dir, dirent.name)
+      return dirent.isDirectory() ? generateExports(res, template) : res
     })
-  );
+  )
 
-  return currentFolder;
-};
+  return currentFolder
+}

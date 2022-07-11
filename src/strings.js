@@ -16,39 +16,39 @@
  * limitations under the License.
  */
 
-export const capitalizeFirstLetter = (input) => {
-  const [first] = input.split("");
-  return first.toUpperCase() + input.slice(1);
-};
+export const capitalizeFirstLetter = input => {
+  const [first] = input.split("")
+  return first.toUpperCase() + input.slice(1)
+}
 
-export const underscoreToCamelCase = (text) => {
+export const underscoreToCamelCase = text => {
   return text
     .replace(/-/g, "_")
     .split("_")
     .map((word, i) => (i > 0 ? capitalizeFirstLetter(word) : word))
-    .join("");
-};
+    .join("")
+}
 
 export const trimAndSplit = (input, trimWith, splitBy) => {
   if (splitBy) {
-    return input.replace(trimWith, "").split(splitBy);
+    return input.replace(trimWith, "").split(splitBy)
   }
-  return input.replace(trimWith, "").split(getSplitCharacter(input));
-};
+  return input.replace(trimWith, "").split(getSplitCharacter(input))
+}
 
-export const getSplitCharacter = (input) => {
+export const getSplitCharacter = input => {
   switch (true) {
     case input.indexOf("//") >= 0:
-      return "//";
+      return "//"
     case input.indexOf("/") >= 0:
-      return "/";
+      return "/"
     case input.indexOf("\\") >= 0:
-      return "\\";
+      return "\\"
     default:
-      return "";
+      return ""
   }
-};
+}
 
-export const collapseSpaces = (input) => input.replace(/\s+/g, " ");
-export const removeSpaces = (input) => input.replace(/\s+/g, "");
-export const stripNewLines = (input) => input.replace(/\r\n|\n|\r/g, " ");
+export const collapseSpaces = input => input.replace(/\s+/g, " ")
+export const removeSpaces = input => input.replace(/\s+/g, "")
+export const stripNewLines = input => input.replace(/\r\n|\n|\r/g, " ")
