@@ -78,13 +78,13 @@ export const extendEnvironment = (branch) => {
 };
 
 export const ACCESS_NODES = {
-  mainnet: "https://access-mainnet-beta.onflow.org",
-  testnet: "https://access-testnet.onflow.org",
-  emulator: "http://localhost:8080",
+  mainnet: "https://rest-mainnet.onflow.org",
+  testnet: "https://rest-testnet.onflow.org",
+  emulator: "http://localhost:8888",
 };
 
 export const getEnvironmentName = async () => {
-  return (await config().get("ix.env")) || "emulator";
+  return (await config().get("flow.network")) || "emulator";
 };
 
 export const getEnvironment = async () => {
@@ -112,10 +112,10 @@ export const setEnvironment = async (networkName = "emulator", options = {}) => 
     network === "emulator" && port ? `http://localhost:${port}` : ACCESS_NODES[network];
   const accessNode = endpoint || portBased;
 
-  await config().put("ix.env", network);
+  await config().put("flow.network", network);
 
   if (limit) {
-    await config().put("ix.executionLimit", limit);
+    await config().put("fcl.limit", limit);
   }
 
   if (extend){

@@ -817,7 +817,7 @@ import { processGitRepo } from "@onflow/flow-cadut";
 
 ### `setEnvironment(network, options)`
 
-Sets `ix.env` config value
+Sets `flow.network` config value
 
 #### Arguments
 

@@ -44,11 +44,7 @@ export const prepareInteraction = async (props, type) => {
   }
 
   // Handle execution limit
-  const defaultLimit = await config().get("ix.executionLimit");
-  const fallBackLimit = defaultLimit || 100;
-
-  const ixLimit = limit || fallBackLimit;
-  ix.push(fcl.limit(ixLimit));
+  ix.push(fcl.limit(limit));
 
   if (type === "transaction") {
     const { proposer, payer, signers = [] } = props;
