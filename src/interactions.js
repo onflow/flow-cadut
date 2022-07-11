@@ -19,7 +19,6 @@
 import * as fcl from "@onflow/fcl"
 import {resolveArguments} from "./args"
 import {replaceImportAddresses} from "./imports"
-import {config} from "@onflow/config"
 import {getEnvironment} from "./env"
 import {processSigner} from "./signers"
 
@@ -47,7 +46,7 @@ export const prepareInteraction = async (props, type) => {
   }
 
   // Handle execution limit
-  ix.push(fcl.limit(limit));
+  ix.push(fcl.limit(limit))
 
   if (type === "transaction") {
     const {proposer, payer, signers = []} = props
