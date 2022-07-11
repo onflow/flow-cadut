@@ -16,5 +16,5 @@
  * limitations under the License.
  */
 
-export const CURRENT_SPORK_ROOT = 23830813;
-export const CURRENT_SPORK_NUMBER = 16;
+export const CURRENT_SPORK_ROOT = 23830813
+export const CURRENT_SPORK_NUMBER = 16

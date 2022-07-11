@@ -16,120 +16,123 @@
  * limitations under the License.
  */
 
-import * as fcl from "@onflow/fcl";
-import { resolveArguments } from "./args";
-import { replaceImportAddresses } from "./imports";
-import { config } from "@onflow/config";
-import { getEnvironment } from "./env";
-import { processSigner } from "./signers";
+import * as fcl from "@onflow/fcl"
+import {resolveArguments} from "./args"
+import {replaceImportAddresses} from "./imports"
+import {config} from "@onflow/config"
+import {getEnvironment} from "./env"
+import {processSigner} from "./signers"
 
 export const prepareInteraction = async (props, type) => {
-  const { code, cadence, args, addressMap, limit, processed } = props;
+  const {code, cadence, args, addressMap, limit, processed} = props
 
   // allow to pass code via "cadence" field similar to fcl.query/mutate
-  const codeTemplate = code || cadence;
+  const codeTemplate = code || cadence
 
-  const env = await getEnvironment();
+  const env = await getEnvironment()
   const ixAddressMap = {
     ...env,
     ...addressMap,
-  };
-  const ixCode = processed ? codeTemplate : replaceImportAddresses(codeTemplate, ixAddressMap);
+  }
+  const ixCode = processed
+    ? codeTemplate
+    : replaceImportAddresses(codeTemplate, ixAddressMap)
 
-  const ix = type === "script" ? [fcl.script(ixCode)] : [fcl.transaction(ixCode)];
+  const ix =
+    type === "script" ? [fcl.script(ixCode)] : [fcl.transaction(ixCode)]
 
   if (args) {
-    const resolvedArgs = await resolveArguments(args, codeTemplate);
-    ix.push(fcl.args(resolvedArgs));
+    const resolvedArgs = await resolveArguments(args, codeTemplate)
+    ix.push(fcl.args(resolvedArgs))
   }
 
   // Handle execution limit
-  const defaultLimit = await config().get("ix.executionLimit");
-  const fallBackLimit = defaultLimit || 100;
+  const defaultLimit = await config().get("ix.executionLimit")
+  const fallBackLimit = defaultLimit || 100
 
-  const ixLimit = limit || fallBackLimit;
-  ix.push(fcl.limit(ixLimit));
+  const ixLimit = limit || fallBackLimit
+  ix.push(fcl.limit(ixLimit))
 
   if (type === "transaction") {
-    const { proposer, payer, signers = [] } = props;
-    const ixSigners = signers.length === 0 ? [payer] : signers;
-    const ixProposer = proposer || payer;
+    const {proposer, payer, signers = []} = props
+    const ixSigners = signers.length === 0 ? [payer] : signers
+    const ixProposer = proposer || payer
 
-    ix.push(fcl.payer(processSigner(payer)));
-    ix.push(fcl.proposer(processSigner(ixProposer)));
-    ix.push(fcl.authorizations(ixSigners.map(processSigner)));
+    ix.push(fcl.payer(processSigner(payer)))
+    ix.push(fcl.proposer(processSigner(ixProposer)))
+    ix.push(fcl.authorizations(ixSigners.map(processSigner)))
   }
 
-  return fcl.send(ix);
-};
+  return fcl.send(ix)
+}
 
 /**
  * Sends script code for execution.
  * Returns decoded value.
  */
 
-export const executeScript = async (props) => {
-  const { raw = false } = props;
+export const executeScript = async props => {
+  const {raw = false} = props
   try {
-    const response = await prepareInteraction(props, "script");
+    const response = await prepareInteraction(props, "script")
 
     // In some cases one might want to have raw output without decoding the response
     if (raw) {
-      return [response.encodedData, null];
+      return [response.encodedData, null]
     }
 
-    const decoded = await fcl.decode(response);
-    return [decoded, null];
+    const decoded = await fcl.decode(response)
+    return [decoded, null]
   } catch (e) {
-    return [null, e];
+    return [null, e]
   }
-};
+}
 
-export const waitForStatus = (statusValue) => {
+export const waitForStatus = statusValue => {
   if (typeof statusValue === "string") {
-    const status = statusValue.toLowerCase();
+    const status = statusValue.toLowerCase()
     if (status.includes("final")) {
-      return "onceFinalized";
+      return "onceFinalized"
     }
 
     if (status.includes("exec")) {
-      return "onceExecuted";
+      return "onceExecuted"
     }
 
     if (status.includes("seal")) {
-      return "onceSealed";
+      return "onceSealed"
     }
   }
 
   // wait for transaction to be sealed by default
   console.log(
     `⚠️ \x1b[33mStatus value \x1b[1m\x1b[35m"${statusValue}"\x1b[33m\x1b[2m is not supported. Reverting to \x1b[32m"onceSealed"\x1b[0m`
-  );
-  return "onceSealed";
-};
+  )
+  return "onceSealed"
+}
 
 /**
  * Submits transaction to emulator network and waits before it will be sealed.
  * Returns transaction result.
  */
-export const sendTransaction = async (props) => {
-  const { wait = "seal" } = props;
+export const sendTransaction = async props => {
+  const {wait = "seal"} = props
   try {
-    const response = await prepareInteraction(props, "transaction");
+    const response = await prepareInteraction(props, "transaction")
     if (wait) {
-      const waitMethod = waitForStatus(wait);
-      const rawResult = await fcl.tx(response)[waitMethod]();
+      const waitMethod = waitForStatus(wait)
+      const rawResult = await fcl.tx(response)[waitMethod]()
       const txResult = {
         txId: response,
         ...rawResult,
-      };
-      return [txResult, null];
+      }
+      return [txResult, null]
     }
-    return [response.transactionId, null];
+    return [response.transactionId, null]
   } catch (e) {
-    return [null, e];
+    return [null, e]
   }
-};
+}
 
 // TODO: add arguments for "init" method into template
 export const addContractTemplate = `
@@ -143,7 +146,7 @@ export const addContractTemplate = `
         )
       }
     }
-  `;
+  `
 export const updateContractTemplate = `
   transaction(name: String, code: String){
     prepare(acct: AuthAccount){
@@ -156,12 +159,13 @@ export const updateContractTemplate = `
       }
     }
   }
-`;
+`
 
 // TODO: add jsdoc
-export const hexContract = (contract) => Buffer.from(contract, "utf8").toString("hex");
+export const hexContract = contract =>
+  Buffer.from(contract, "utf8").toString("hex")
 
-export const deployContract = async (props) => {
+export const deployContract = async props => {
   const {
     name,
     to,
@@ -171,26 +175,26 @@ export const deployContract = async (props) => {
     update = false,
     processed = false,
     addressMap = {},
-  } = props;
+  } = props
 
   // Update imprort statement with addresses from addressMap
   const ixContractCode = processed
     ? contractCode
-    : replaceImportAddresses(contractCode, addressMap);
+    : replaceImportAddresses(contractCode, addressMap)
 
   // TODO: Implement arguments for "init" method
-  const template = update ? addContractTemplate : updateContractTemplate;
+  const template = update ? addContractTemplate : updateContractTemplate
 
-  const hexedCode = hexContract(ixContractCode);
-  const args = [name, hexedCode];
+  const hexedCode = hexContract(ixContractCode)
+  const args = [name, hexedCode]
   // Set roles
-  let ixProposer = to;
-  let ixPayer = to;
-  let ixSigners = [to];
+  let ixProposer = to
+  let ixPayer = to
+  let ixSigners = [to]
 
   if (payer) {
-    ixPayer = payer;
-    ixProposer = proposer || payer;
+    ixPayer = payer
+    ixProposer = proposer || payer
   }
 
   return sendTransaction({
@@ -199,9 +203,9 @@ export const deployContract = async (props) => {
     signers: ixSigners,
     code: template,
     args,
-  });
-};
+  })
+}
 
-export const updateContract = async (props) => {
-  return deployContract({ ...props, update: true });
-};
+export const updateContract = async props => {
+  return deployContract({...props, update: true})
+}

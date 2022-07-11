@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
-import * as t from "@onflow/types";
-import * as fcl from "@onflow/fcl";
+import * as t from "@onflow/types"
+import * as fcl from "@onflow/fcl"
 
-import { parsePath, toFixedValue, withPrefix } from "./fixer";
-import { getTemplateInfo } from "./parser";
+import {parsePath, toFixedValue, withPrefix} from "./fixer"
+import {getTemplateInfo} from "./parser"
 import {
   isBasicType,
   isFixedNumType,
@@ -31,36 +31,36 @@ import {
   isComplexType,
   wrongType,
   isBasicNumType,
-} from "./type-checker";
+} from "./type-checker"
 
-import { removeSpaces } from "./strings";
-import { getPlugins, applyPlugins, PLUGIN_TYPES } from "./plugins";
+import {removeSpaces} from "./strings"
+import {getPlugins, applyPlugins, PLUGIN_TYPES} from "./plugins"
 
-const throwTypeError = (msg) => {
-  throw new Error("Type Error: " + msg);
-};
+const throwTypeError = msg => {
+  throw new Error("Type Error: " + msg)
+}
 
-export const splitArgs = (pair) => {
+export const splitArgs = pair => {
   return pair
     .split(/(\w+)\s*:\s*([\w{}[\]:\s?]*)/)
-    .filter((item) => item !== "")
-    .map((item) => item.replace(/\s*/g, ""));
-};
+    .filter(item => item !== "")
+    .map(item => item.replace(/\s*/g, ""))
+}
 
-export const argType = (pair) => splitArgs(pair)[1];
+export const argType = pair => splitArgs(pair)[1]
 
-export const getDictionaryTypes = (type) => {
-  const match = /{(.*)}/.exec(type);
+export const getDictionaryTypes = type => {
+  const match = /{(.*)}/.exec(type)
   return match[1]
     .split(/([^:]*):(.*)/)
-    .map((item) => item.replace(/\s/g, ""))
-    .filter((item) => item);
-};
+    .map(item => item.replace(/\s/g, ""))
+    .filter(item => item)
+}
 
-export const getArrayType = (type) => {
-  const match = /\[(.*)\]/.exec(type);
-  return removeSpaces(match[1]);
-};
+export const getArrayType = type => {
+  const match = /\[(.*)\]/.exec(type)
+  return removeSpaces(match[1])
+}
 
 /**
  * Reports missing arguments.
@@ -70,11 +70,11 @@ export const getArrayType = (type) => {
  */
 export const reportArguments = (found, required, prefix = "") => {
   if (required > found) {
-    const errorMessage = `Incorrect number of arguments: found ${found} of ${required}`;
-    const message = prefix ? `${prefix} ${errorMessage}` : errorMessage;
-    console.error(message);
+    const errorMessage = `Incorrect number of arguments: found ${found} of ${required}`
+    const message = prefix ? `${prefix} ${errorMessage}` : errorMessage
+    console.error(message)
   }
-};
+}
 
 /**
  * Reports missing items.
@@ -83,48 +83,56 @@ export const reportArguments = (found, required, prefix = "") => {
  * @param {number} required - number of arguments required to execute the code
  * @param {string} prefix - error message prefix
  */
-export const reportMissing = (itemType = "items", found, required, prefix = "") => {
+export const reportMissing = (
+  itemType = "items",
+  found,
+  required,
+  prefix = ""
+) => {
   if (required !== found) {
-    const errorMessage = `Incorrect number of ${itemType}: found ${found} of ${required}`;
-    const message = prefix ? `${prefix} ${errorMessage}` : errorMessage;
-    console.error(message);
+    const errorMessage = `Incorrect number of ${itemType}: found ${found} of ${required}`
+    const message = prefix ? `${prefix} ${errorMessage}` : errorMessage
+    console.error(message)
   }
-};
+}
 
-export const raw = (type) => type.slice(0, -1);
+export const raw = type => type.slice(0, -1)
 
-export const resolveBasicType = (type) => {
-  if (wrongType(type)) return false;
+export const resolveBasicType = type => {
+  if (wrongType(type)) return false
 
   if (type.includes("?")) {
-    return t.Optional(t[raw(type)]);
+    return t.Optional(t[raw(type)])
   }
-  return t[type];
-};
+  return t[type]
+}
 
-export const resolveType = (type) => {
+export const resolveType = type => {
   if (isComplexType(type)) {
     switch (true) {
       case isArray(type): {
-        const arrayType = getArrayType(type);
-        return t.Array(resolveType(arrayType));
+        const arrayType = getArrayType(type)
+        return t.Array(resolveType(arrayType))
       }
 
       case isDictionary(type): {
-        const [key, value] = getDictionaryTypes(type);
-        const dictionaryType = { key: resolveType(key), value: resolveType(value) };
-        return t.Dictionary(dictionaryType);
+        const [key, value] = getDictionaryTypes(type)
+        const dictionaryType = {
+          key: resolveType(key),
+          value: resolveType(value),
+        }
+        return t.Dictionary(dictionaryType)
       }
       case isPath(type): {
-        return t.Path;
+        return t.Path
       }
       default: {
-        return resolveBasicType(type);
+        return resolveBasicType(type)
       }
     }
   }
-  return resolveBasicType(type);
-};
+  return resolveBasicType(type)
+}
 
 /**
  * Map single argument to fcl.arg representation.
@@ -133,96 +141,96 @@ export const resolveType = (type) => {
  * @returns any - mapped fcl.arg value
  */
 export const mapArgument = async (rawType, rawValue) => {
-  const plugins = await getPlugins(PLUGIN_TYPES.ARGUMENT);
+  const plugins = await getPlugins(PLUGIN_TYPES.ARGUMENT)
 
-  let value = rawValue;
-  let type = rawType;
+  let value = rawValue
+  let type = rawType
 
   if (plugins) {
-    let applied = await applyPlugins({ type: rawType, value: rawValue }, plugins);
-    value = applied.value;
-    type = applied.type;
+    let applied = await applyPlugins({type: rawType, value: rawValue}, plugins)
+    value = applied.value
+    type = applied.type
   }
 
-  const resolvedType = resolveType(type);
+  const resolvedType = resolveType(type)
 
   switch (true) {
     case isBasicType(type): {
-      return fcl.arg(value, resolvedType);
+      return fcl.arg(value, resolvedType)
     }
 
     case isFixedNumType(type): {
       // Try to parse value and throw if it fails
       if (value === null) {
-        return fcl.arg(null, resolvedType);
+        return fcl.arg(null, resolvedType)
       }
       if (isNaN(parseFloat(value))) {
-        throwTypeError("Expected proper value for fixed type");
+        throwTypeError("Expected proper value for fixed type")
       }
-      return fcl.arg(toFixedValue(value), resolvedType);
+      return fcl.arg(toFixedValue(value), resolvedType)
     }
 
     case isAddress(type): {
-      const prefixedAddress = withPrefix(value);
-      return fcl.arg(prefixedAddress, resolvedType);
+      const prefixedAddress = withPrefix(value)
+      return fcl.arg(prefixedAddress, resolvedType)
     }
 
     case isPath(type): {
-      return fcl.arg(parsePath(value), resolvedType);
+      return fcl.arg(parsePath(value), resolvedType)
     }
 
     case isArray(type): {
-      const arrayType = getArrayType(type);
+      const arrayType = getArrayType(type)
 
       if (isComplexType(arrayType)) {
         const mappedValue = await Promise.all(
-          value.map(async (v) => {
-            const { value } = await mapArgument(arrayType, v);
-            return value;
+          value.map(async v => {
+            const {value} = await mapArgument(arrayType, v)
+            return value
           })
-        );
-        return fcl.arg(mappedValue, resolvedType);
+        )
+        return fcl.arg(mappedValue, resolvedType)
       }
 
-      const result = fcl.arg(value, resolvedType);
-      return result;
+      const result = fcl.arg(value, resolvedType)
+      return result
     }
 
     case isDictionary(type): {
-      const [keyType, valueType] = getDictionaryTypes(type);
-      const finalValue = [];
-      const keys = Object.keys(value);
+      const [keyType, valueType] = getDictionaryTypes(type)
+      const finalValue = []
+      const keys = Object.keys(value)
 
       for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        let resolvedValue;
+        const key = keys[i]
+        let resolvedValue
         if (isComplexType(valueType)) {
-          resolvedValue = (await mapArgument(valueType, value[key])).value;
+          resolvedValue = (await mapArgument(valueType, value[key])).value
         } else {
-          resolvedValue = value[key];
+          resolvedValue = value[key]
         }
 
-        const fixedKey = isBasicNumType(keyType) ? parseInt(key) : key;
+        const fixedKey = isBasicNumType(keyType) ? parseInt(key) : key
 
         finalValue.push({
           key: fixedKey,
           value: resolvedValue,
-        });
+        })
       }
 
-      const result = fcl.arg(finalValue, resolvedType);
-      return result;
+      const result = fcl.arg(finalValue, resolvedType)
+      return result
     }
 
     default: {
-      throw `${type} is not supported`;
+      throw `${type} is not supported`
     }
   }
-};
+}
 
-export const assertType = (arg) => {
-  return arg.xform.asArgument(arg.value);
-};
+export const assertType = arg => {
+  return arg.xform.asArgument(arg.value)
+}
 
 /**
  * Map arguments with provided schema.
@@ -232,16 +240,16 @@ export const assertType = (arg) => {
  */
 export const mapArguments = async (schema = [], values) => {
   if (schema.length > values.length) {
-    throw new Error("Not enough arguments");
+    throw new Error("Not enough arguments")
   }
   return Promise.all(
     values.map(async (value, i) => {
-      const mapped = await mapArgument(schema[i], value);
-      assertType(mapped);
-      return mapped;
+      const mapped = await mapArgument(schema[i], value)
+      assertType(mapped)
+      return mapped
     })
-  );
-};
+  )
+}
 
 /**
  * Map arguments via Cadence template.
@@ -250,39 +258,39 @@ export const mapArguments = async (schema = [], values) => {
  * @returns [any] - array of mapped fcl.arg
  */
 export const mapValuesToCode = async (code, values = []) => {
-  const schema = getTemplateInfo(code).args.map(argType);
-  return mapArguments(schema, values);
-};
+  const schema = getTemplateInfo(code).args.map(argType)
+  return mapArguments(schema, values)
+}
 
 export const unwrap = (arr, convert) => {
-  const type = arr[arr.length - 1];
-  return arr.slice(0, -1).map((value) => convert(value, type));
-};
+  const type = arr[arr.length - 1]
+  return arr.slice(0, -1).map(value => convert(value, type))
+}
 
-const rawArgs = (args) => {
+const rawArgs = args => {
   return args.reduce((acc, arg) => {
     const unwrapped = unwrap(arg, (value, type) => {
-      return fcl.arg(value, type);
-    });
-    acc = [...acc, ...unwrapped];
-    return acc;
-  }, []);
-};
+      return fcl.arg(value, type)
+    })
+    acc = [...acc, ...unwrapped]
+    return acc
+  }, [])
+}
 
 export const resolveArguments = async (args, code) => {
   if (args.length === 0) {
-    return [];
+    return []
   }
 
   // We can check first element in array. If it's last value is instance
   // of @onflow/types then we assume that the rest of them are also unprocessed
-  const first = args[0];
+  const first = args[0]
   if (Array.isArray(first) && first.length > 0) {
-    const last = first[first.length - 1];
+    const last = first[first.length - 1]
     if (last.asArgument) {
-      return rawArgs(args);
+      return rawArgs(args)
     }
   }
   // Otherwise we process them and try to match them against the code
-  return mapValuesToCode(code, args);
-};
+  return mapValuesToCode(code, args)
+}
