@@ -66,7 +66,7 @@ describe("type resolvers", () => {
       },
       {
         type: "UFix64",
-        argInput: "0.1337",
+        argInput: "0.13370000",
       },
       {
         type: "Bool",
@@ -359,7 +359,7 @@ describe("complex example", () => {
 
     // Incorrect integer value provided
     await expect(
-      invoke(["42", "0x01", ["Hello"], "1.337"])
+      invoke([0.123, "0x01", ["Hello"], "1.337"])
     ).rejects.toThrowError("Type Error: Expected Integer for type Int")
 
     // Incorrect address
@@ -375,7 +375,7 @@ describe("complex example", () => {
 
     // Incorrect array
     await expect(invoke([42, "0x1", 12, "1.337"])).rejects.toThrowError(
-      "t.map is not a function"
+      /\.map is not a function/
     )
 
     await expect(invoke([42, "0x01", ["Hello"], "hello"])).rejects.toThrowError(

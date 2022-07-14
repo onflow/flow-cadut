@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import {config} from "@onflow/config"
+import {config} from "@onflow/fcl"
 
 export const DEPLOYED_CONTRACTS = {
   emulator: {

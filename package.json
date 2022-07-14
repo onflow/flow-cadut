@@ -80,7 +80,6 @@
     "flow-generate": "./bin/generate.js"
   },
   "dependencies": {
-    "@onflow/config": "0.0.2",
     "@onflow/fcl": "^1.1.1-alpha.1",
     "elliptic": "^6.5.4",
     "esm": "^3.2.25",

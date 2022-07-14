@@ -1,5 +1,5 @@
 import {flowConfig} from "@onflow/fcl-config"
-import {config} from "@onflow/config"
+import {config} from "@onflow/fcl"
 
 export const get = (scope, path, fallback) => {
   if (typeof path === "string") return get(scope, path.split("/"), fallback)

@@ -2,7 +2,7 @@ import {ec as EC} from "elliptic"
 import {SHA3} from "sha3"
 import * as fcl from "@onflow/fcl"
 import * as rlp from "rlp"
-import {config} from "@onflow/config"
+import {config} from "@onflow/fcl"
 import {sansPrefix, withPrefix} from "./utils"
 
 const ec = new EC("p256")
