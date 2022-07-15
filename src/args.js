@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-import * as t from "@onflow/types"
 import * as fcl from "@onflow/fcl"
+import {t} from "@onflow/fcl"
 
 import {parsePath, toFixedValue, withPrefix} from "./fixer"
 import {getTemplateInfo} from "./parser"
