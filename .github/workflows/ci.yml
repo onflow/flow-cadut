@@ -42,10 +42,10 @@ jobs:
       - name: Lint Code
         run: npm run lint
 
-        # run provided tests
-      - name: Test Code
-        run: npm test
-
         # build modules with microbundle
       - name: Build
         run: npm run build
+
+        # run provided tests
+      - name: Test Code
+        run: npm test
