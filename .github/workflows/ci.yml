@@ -34,6 +34,10 @@ jobs:
       - name: Check license headers
         run: ./check-headers.sh
 
+        # install Flow CLI
+      - name: Install Flow CLI
+        run: brew install flow-cli
+
         # use fresh install
       - name: Install Dependencies
         run: npm ci
