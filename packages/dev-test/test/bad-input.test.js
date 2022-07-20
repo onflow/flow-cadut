@@ -1,0 +1,47 @@
+import path from "path"
+import {emulator, init} from "@onflow/flow-js-testing"
+import {executeScript, mutate} from "@onflow/flow-cadut"
+
+// Increase timeout if your tests failing due to timeout
+jest.setTimeout(10000)
+
+describe("optional arguments", () => {
+  beforeEach(async () => {
+    const basePath = path.resolve(__dirname, "../cadence")
+
+    await init(basePath)
+    return emulator.start()
+  })
+
+  // Stop emulator, so it could be restarted
+  afterEach(async () => {
+    return emulator.stop()
+  })
+
+  it("shall throw - from faulty script", async () => {
+    const executionResult = await executeScript({
+      code: `
+        pub fun main(): Int{
+          return "bazinga"
+        }
+      `,
+    })
+    const [result, err] = executionResult
+    expect(result).toBe(null)
+    expect(err).not.toBe(null)
+  })
+
+  it("shall throw - transaction", async () => {
+    const cadence = `
+      transaction{
+        prepare(singer: AuthAccount){
+          log("all cool")
+        }
+      }
+    `
+    const payer = (() => {})()
+    const [txResult, err] = await mutate({cadence, payer})
+    expect(txResult).toBe(null)
+    expect(err).not.toBe(null)
+  })
+})
