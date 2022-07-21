@@ -337,6 +337,20 @@ describe("extract contract parameters", () => {
     expect(output.args).toBe(args)
   })
 
+  test("with init method in code, contract implements interface - multiple argument", () => {
+    const contractName = "Hello"
+    const args = "a: String, b: {String: String}"
+    const input = `
+    pub contract interface ${contractName}   : I${contractName}     {
+      // init method here
+      init(${args}){}
+    }
+  `
+    const output = extractContractParameters(input)
+    expect(output.contractName).toBe(contractName)
+    expect(output.args).toBe(args)
+  })
+
   test("init method on resource", () => {
     const contractName = "Hello"
     const input = `
