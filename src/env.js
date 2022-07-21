@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { config } from "@onflow/config";
+import {config} from "@onflow/fcl"
 
 export const DEPLOYED_CONTRACTS = {
   emulator: {
@@ -57,70 +57,76 @@ export const DEPLOYED_CONTRACTS = {
 
     FUSD: "0x3c5959b568896393",
   },
-};
+}
 
 export const EXT_ENVIRONMENT = {
   emulator: {},
   testnet: {},
   mainnet: {},
-};
+}
 
-export const extendEnvironment = (branch) => {
-  for (const key of Object.keys(EXT_ENVIRONMENT)){
-    const value = branch[key];
-    const { name } = branch;
-    const branchValue = typeof branch[key] === "object" ? value : { [name]: value };
+export const extendEnvironment = branch => {
+  for (const key of Object.keys(EXT_ENVIRONMENT)) {
+    const value = branch[key]
+    const {name} = branch
+    const branchValue =
+      typeof branch[key] === "object" ? value : {[name]: value}
     EXT_ENVIRONMENT[key] = {
       ...EXT_ENVIRONMENT[key],
       ...branchValue,
-    };
+    }
   }
-};
+}
 
 export const ACCESS_NODES = {
-  mainnet: "https://access-mainnet-beta.onflow.org",
-  testnet: "https://access-testnet.onflow.org",
-  emulator: "http://localhost:8080",
-};
+  mainnet: "https://rest-mainnet.onflow.org",
+  testnet: "https://rest-testnet.onflow.org",
+  emulator: "http://localhost:8888",
+}
 
 export const getEnvironmentName = async () => {
-  return (await config().get("ix.env")) || "emulator";
-};
+  return (await config().get("flow.network")) || "emulator"
+}
 
 export const getEnvironment = async () => {
-  const env = await getEnvironmentName();
-  const core = DEPLOYED_CONTRACTS[env] || DEPLOYED_CONTRACTS.emulator;
-  const extended = EXT_ENVIRONMENT[env] || EXT_ENVIRONMENT.emulator;
+  const env = await getEnvironmentName()
+  const core = DEPLOYED_CONTRACTS[env] || DEPLOYED_CONTRACTS.emulator
+  const extended = EXT_ENVIRONMENT[env] || EXT_ENVIRONMENT.emulator
 
   return {
     ...core,
     ...extended,
-  };
-};
+  }
+}
 
-export const setEnvironment = async (networkName = "emulator", options = {}) => {
-  const network = networkName.toLowerCase();
+export const setEnvironment = async (
+  networkName = "emulator",
+  options = {}
+) => {
+  const network = networkName.toLowerCase()
 
   if (!DEPLOYED_CONTRACTS[network]) {
     throw new Error(
       `Provided value "${network}" is not supported. Try "emulator", "testnet" or "mainnet". Default: "emulator"`
-    );
+    )
   }
 
-  const { port, endpoint, limit, extend } = options;
+  const {port, endpoint, limit, extend} = options
   const portBased =
-    network === "emulator" && port ? `http://localhost:${port}` : ACCESS_NODES[network];
-  const accessNode = endpoint || portBased;
+    network === "emulator" && port
+      ? `http://localhost:${port}`
+      : ACCESS_NODES[network]
+  const accessNode = endpoint || portBased
 
-  await config().put("ix.env", network);
+  await config().put("flow.network", network)
 
   if (limit) {
-    await config().put("ix.executionLimit", limit);
+    await config().put("fcl.limit", limit)
   }
 
-  if (extend){
+  if (extend) {
     extendEnvironment(extend)
   }
 
-  await config().put("accessNode.api", accessNode);
-};
+  await config().put("accessNode.api", accessNode)
+}

@@ -355,7 +355,7 @@ import { query, config } from "@onflow/fcl";
 import { mapArgument } from "@onflow/flow-cadut";
 
 (async () => {
-  config().put("accessNode.api", "https://access-testnet.onflow.org");
+  config().put("accessNode.api", "https://rest-testnet.onflow.org");
 
   const cadence = `
     pub fun main(message: String): String{
@@ -401,7 +401,7 @@ import { query, config } from "@onflow/fcl";
 import { mapArgument } from "@onflow/flow-cadut";
 
 (async () => {
-  config().put("accessNode.api", "https://access-testnet.onflow.org");
+  config().put("accessNode.api", "https://rest-testnet.onflow.org");
 
   const cadence = `
     pub fun main(message: String, amount: Int): Int{
@@ -424,7 +424,7 @@ import { mapArgument } from "@onflow/flow-cadut";
 
 ### `mapValuesToCode(code, values)`
 
-This method will extract argument types from provided Cadence code and then coverts
+This method will extract argument types from provided Cadence code and then converts
 values to corresponding types, preparing them to be passed into `sdk.send`
 
 📣 Best usage of this method is with combination of `query`/`mutate` methods from Javascript SDK.
@@ -451,7 +451,7 @@ import { query, config } from "@onflow/fcl";
 import { mapValuesToCode } from "@onflow/flow-cadut";
 
 (async () => {
-  config().put("accessNode.api", "https://access-testnet.onflow.org");
+  config().put("accessNode.api", "https://rest-testnet.onflow.org");
 
   const cadence = `
     pub fun main(metadata: {String:String}, key: String):String {
@@ -817,7 +817,7 @@ import { processGitRepo } from "@onflow/flow-cadut";
 
 ### `setEnvironment(network, options)`
 
-Sets `ix.env` config value
+Sets `flow.network` config value
 
 #### Arguments
 
@@ -1010,7 +1010,7 @@ import { authenticate, currentUser, authz, config } from "@onflow/fcl";
 import { sendTransaction } from "@onflow/flow-cadut";
 
 config()
-  .put("accessNode.api", "https://access-testnet.onflow.org") // Configure FCL's Access Node
+  .put("accessNode.api", "https://rest-testnet.onflow.org") // Configure FCL's Access Node
   .put("challenge.handshake", "https://fcl-discovery.onflow.org/testnet/authn") // Configure FCL's Wallet Discovery mechanism
   .put("0xProfile", "0xba1132bc08f82fe2"); // Will let us use `0xProfile` in our Cadence
 

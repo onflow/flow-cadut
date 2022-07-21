@@ -40,36 +40,35 @@ export const fetchMotoGPScript = `
         return []
       }
     }
-  `;
+  `
 
 export const MotoGPEnvironment = {
   mainnet: {
-    "MotoGPCard":"0xa49cc0ee46c54bfb",
-    "MotoGPCardMetadata":"0xa49cc0ee46c54bfb",
+    MotoGPCard: "0xa49cc0ee46c54bfb",
+    MotoGPCardMetadata: "0xa49cc0ee46c54bfb",
   },
-};
+}
 
-
-export default (address) => {
+export default address => {
   // Register addresses for contracts
-  extendEnvironment(MotoGPEnvironment);
+  extendEnvironment(MotoGPEnvironment)
 
   return {
     name: "MotoGP",
     getData: async () => {
-      const code = fetchMotoGPScript;
-      const args = [address];
-      return query({ code, args, processed: false });
+      const code = fetchMotoGPScript
+      const args = [address]
+      return query({code, args, processed: false})
     },
-    mapData: (card) => {
-      const { cardID: id, imageUrl: image, data: metadata } = card;
+    mapData: card => {
+      const {cardID: id, imageUrl: image, data: metadata} = card
       const url = `https://motogp-ignition.com/nft/card/${id}?owner=${address}`
       return {
         id,
         image,
         url,
-        metadata
-      };
+        metadata,
+      }
     },
   }
 }

@@ -1,4 +1,4 @@
-import { query, extendEnvironment } from "../../../src";
+import {query, extendEnvironment} from "../../../src"
 
 export const fetchBallerzScript = `
   import Gaia from 0xGaia
@@ -17,20 +17,20 @@ export const fetchBallerzScript = `
     
     return items
   }
-`;
+`
 
 export const GaiaEnvironment = {
   name: "Gaia",
   mainnet: "0x8b148183c28ff88f",
   testnet: "",
-};
+}
 
-export default (address) => {
-  extendEnvironment(GaiaEnvironment);
+export default address => {
+  extendEnvironment(GaiaEnvironment)
 
-  const resolvedAddress = address;
-  const code = fetchBallerzScript;
-  const args = [resolvedAddress];
+  const resolvedAddress = address
+  const code = fetchBallerzScript
+  const args = [resolvedAddress]
   return {
     name: "Ballerz",
     getData: () => {
@@ -38,17 +38,17 @@ export default (address) => {
         code,
         args,
         processed: false,
-      });
+      })
     },
-    mapData: (baller) => {
-      const { id, img, ...metadata } = baller;
-      const ipfsUrl = img.slice(7).replace(/\//g, "%2F");
-      const image = `https://ongaia.com/_next/image?url=https%3A%2F%2Fimages.ongaia.com%2Fipfs%2F${ipfsUrl}&w=3840&q=75`;
+    mapData: baller => {
+      const {id, img, ...metadata} = baller
+      const ipfsUrl = img.slice(7).replace(/\//g, "%2F")
+      const image = `https://ongaia.com/_next/image?url=https%3A%2F%2Fimages.ongaia.com%2Fipfs%2F${ipfsUrl}&w=3840&q=75`
       return {
         id,
         metadata,
         image,
-      };
+      }
     },
-  };
-};
+  }
+}

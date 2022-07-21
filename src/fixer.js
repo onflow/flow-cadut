@@ -16,35 +16,35 @@
  * limitations under the License.
  */
 
-export const sansPrefix = (address) => {
-  if (address == null) return null;
-  return address.replace(/^0x/, "");
-};
+export const sansPrefix = address => {
+  if (address == null) return null
+  return address.replace(/^0x/, "")
+}
 
-export const withPrefix = (address) => {
-  if (address == null) return null;
-  return "0x" + sansPrefix(address);
-};
+export const withPrefix = address => {
+  if (address == null) return null
+  return "0x" + sansPrefix(address)
+}
 
-export const padAddress = (address) => {
-  return "0x" + sansPrefix(address).padStart(16, "0");
-};
+export const padAddress = address => {
+  return "0x" + sansPrefix(address).padStart(16, "0")
+}
 
-export const toFixedValue = (val) => parseFloat(val).toFixed(8);
+export const toFixedValue = val => parseFloat(val).toFixed(8)
 
-export const domains = ["public", "private", "storage"];
+export const domains = ["public", "private", "storage"]
 
-export const parsePath = (path) => {
+export const parsePath = path => {
   if (path.startsWith("/")) {
-    const parts = path.slice(1).split("/");
+    const parts = path.slice(1).split("/")
     if (parts.length !== 2) {
-      throw Error("Incorrect Path - identifier missing");
+      throw Error("Incorrect Path - identifier missing")
     }
-    if (!domains.includes(parts[0])){
+    if (!domains.includes(parts[0])) {
       throw Error("Incorrect Path - wrong domain")
     }
-    const [domain, identifier] = parts;
-    return { domain, identifier };
+    const [domain, identifier] = parts
+    return {domain, identifier}
   }
-  throw Error("Incorrect Path - shall start with `/`");
-};
+  throw Error("Incorrect Path - shall start with `/`")
+}

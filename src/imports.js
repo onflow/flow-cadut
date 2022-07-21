@@ -16,33 +16,33 @@
  * limitations under the License.
  */
 
-const getPairs = (line) => {
+const getPairs = line => {
   return line
     .split(/\s/)
-    .map((item) => item.replace(/\s/g, ""))
-    .filter((item) => item.length > 0 && item !== "import" && item !== "from");
-};
+    .map(item => item.replace(/\s/g, ""))
+    .filter(item => item.length > 0 && item !== "import" && item !== "from")
+}
 
 const collect = (acc, item) => {
-  const [contract, address] = item;
-  acc[contract] = address;
-  return acc;
-};
+  const [contract, address] = item
+  acc[contract] = address
+  return acc
+}
 
 /**
  * Returns address map for contracts defined in template code.
  * @param {string} code - Cadence code to parse.
  * @returns {*}
  */
-export const extractImports = (code) => {
+export const extractImports = code => {
   if (!code || code.length === 0) {
-    return {};
+    return {}
   }
   const split = code.split("\n")
-  const filtered = split.filter((line) => /^\s*import\s+\w*\s+from/.test(line))
+  const filtered = split.filter(line => /^\s*import\s+\w*\s+from/.test(line))
   const mapped = filtered.map(getPairs)
-  return mapped.reduce(collect, {});
-};
+  return mapped.reduce(collect, {})
+}
 
 /**
  * Returns list of missing imports.
@@ -50,17 +50,20 @@ export const extractImports = (code) => {
  * @param {Object.<string, string>} addressMap - contract name as a key and address where it's deployed as value
  */
 export const missingImports = (code, addressMap = {}) => {
-  const importsList = extractImports(code);
-  const missing = [];
+  const importsList = extractImports(code)
+  const missing = []
 
   for (const key in importsList) {
-    if (!addressMap[key] && Object.prototype.hasOwnProperty.call(importsList, key)) {
-      missing.push(key);
+    if (
+      !addressMap[key] &&
+      Object.prototype.hasOwnProperty.call(importsList, key)
+    ) {
+      missing.push(key)
     }
   }
 
-  return missing;
-};
+  return missing
+}
 
 /**
  * Reports missing imports.
@@ -68,10 +71,10 @@ export const missingImports = (code, addressMap = {}) => {
  * @param {string} prefix - error message prefix
  */
 export const report = (list = [], prefix = "") => {
-  const errorMessage = `Missing imports for contracts:`;
-  const message = prefix ? `${prefix} ${errorMessage}` : errorMessage;
-  console.error(message, list);
-};
+  const errorMessage = `Missing imports for contracts:`
+  const message = prefix ? `${prefix} ${errorMessage}` : errorMessage
+  console.error(message, list)
+}
 
 /**
  * Reports missing imports.
@@ -80,13 +83,13 @@ export const report = (list = [], prefix = "") => {
  * @param {string} [prefix] - prefix to add to error message
  */
 export const reportMissingImports = (code, addressMap, prefix = "") => {
-  const list = missingImports(code, addressMap);
+  const list = missingImports(code, addressMap)
   if (list.length > 0) {
-    report(list, prefix);
+    report(list, prefix)
   }
-};
+}
 
-const REGEXP_IMPORT = /(\s*import\s*)([\w\d]+)(\s+from\s*)([\w\d".\\/]+)/g;
+const REGEXP_IMPORT = /(\s*import\s*)([\w\d]+)(\s+from\s*)([\w\d".\\/]+)/g
 
 /**
  * Returns Cadence template code with replaced import addresses
@@ -98,11 +101,12 @@ const REGEXP_IMPORT = /(\s*import\s*)([\w\d]+)(\s+from\s*)([\w\d".\\/]+)/g;
  */
 export const replaceImportAddresses = (code, addressMap, byName = true) => {
   return code.replace(REGEXP_IMPORT, (match, imp, contract, _, address) => {
-    const key = byName ? contract : address;
-    const newAddress = addressMap instanceof Function ? addressMap(key) : addressMap[key];
+    const key = byName ? contract : address
+    const newAddress =
+      addressMap instanceof Function ? addressMap(key) : addressMap[key]
 
     // If the address is not inside addressMap we shall not alter import statement
-    const validAddress = newAddress || address;
-    return `${imp}${contract} from ${validAddress}`;
-  });
-};
+    const validAddress = newAddress || address
+    return `${imp}${contract} from ${validAddress}`
+  })
+}

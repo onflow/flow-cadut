@@ -1,12 +1,12 @@
-import { getGoatBaseScore } from "../utils";
+import {getGoatBaseScore} from "../utils"
 
 describe("test rarity score", () => {
-  it("shall properly calculate rare score",()=>{
-    const rarity ="rare"
+  it("shall properly calculate rare score", () => {
+    const rarity = "rare"
     const traitSlots = 7
     const correctScore = 55
-    const calculatedScore = getGoatBaseScore(rarity, traitSlots);
-    expect(calculatedScore).toBe(correctScore);
+    const calculatedScore = getGoatBaseScore(rarity, traitSlots)
+    expect(calculatedScore).toBe(correctScore)
   })
   it("shall properly calculate scores", () => {
     const cases = [
@@ -45,12 +45,12 @@ describe("test rarity score", () => {
         traitSlots: 9,
         correctScore: 90,
       },
-    ];
+    ]
 
     for (let i = 0; i < cases.length; i++) {
-      const { rarity, traitSlots, correctScore } = cases[i];
-      const calculatedScore = getGoatBaseScore(rarity, traitSlots);
-      expect(calculatedScore).toBe(correctScore);
+      const {rarity, traitSlots, correctScore} = cases[i]
+      const calculatedScore = getGoatBaseScore(rarity, traitSlots)
+      expect(calculatedScore).toBe(correctScore)
     }
-  });
-});
+  })
+})

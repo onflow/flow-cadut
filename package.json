@@ -65,8 +65,8 @@
     "build:plugin-find": "microbundle build --cwd plugins/FIND",
     "build:plugin-flowns": "microbundle build --cwd plugins/FLOWNS",
     "watch": "microbundle watch",
-    "lint": "eslint src",
-    "prettify": "prettier --write {src,tests}/**/*.js {src,tests}/*.js",
+    "lint": "eslint .",
+    "lintfix": "eslint --fix .",
     "test": "jest",
     "check-headers": "sh ./check-headers.sh",
     "precompile-handlebars": "node_modules/.bin/handlebars ./generator/src/templates -f ./generator/src/templates/index.js -e hbs -c handlebars",
@@ -80,14 +80,11 @@
     "flow-generate": "./bin/generate.js"
   },
   "dependencies": {
-    "@onflow/config": "0.0.2",
-    "@onflow/fcl": "^0.0.78",
-    "@onflow/types": "^0.0.6",
+    "@onflow/fcl": "^1.1.1-alpha.1",
     "elliptic": "^6.5.4",
     "esm": "^3.2.25",
     "handlebars": "^4.7.7",
     "handlebars-loader": "^1.7.1",
-    "prettier": "^2.3.0",
     "rimraf": "^3.0.2",
     "rlp": "^3.0.0",
     "sha3": "^2.1.4",
@@ -102,19 +99,26 @@
     "@changesets/cli": "^2.23.0",
     "babel-jest": "^26.6.3",
     "eslint": "^7.24.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jest": "^24.3.6",
+    "eslint-plugin-prettier": "^4.2.1",
     "jest": "^26.6.3",
     "jest-esm-transformer": "^1.0.0",
     "microbundle": "^0.13.0",
-    "npm-run-all": "^4.1.5"
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.7.1"
   },
   "eslintConfig": {
     "ignorePatterns": [
-      "**/templates/*.js"
+      "**/templates/*.js",
+      "**/generated/**/*",
+      "**/dist/**/*",
+      "**/*.hbs"
     ],
     "extends": [
       "eslint:recommended",
-      "plugin:jest/recommended"
+      "plugin:jest/recommended",
+      "plugin:prettier/recommended"
     ],
     "env": {
       "node": true,
@@ -140,13 +144,10 @@
     "verbose": true
   },
   "prettier": {
-    "printWidth": 100,
-    "endOfLine": "lf",
-    "semi": true,
-    "useTabs": false,
-    "singleQuote": false,
+    "semi": false,
     "trailingComma": "es5",
-    "tabWidth": 2
+    "bracketSpacing": false,
+    "arrowParens": "avoid"
   },
   "mangle": {
     "regex": "^_"
