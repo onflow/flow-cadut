@@ -19,10 +19,10 @@ The Flow Cadence Template Generator (`@onflow/flow-cadut-generator`) is responsi
 
 ### Installation
 
-In order to install the Flow Cadence Template Generator CLI, run the following command:
+In order to install the Flow Cadence Template Generator CLI, run the following command to add it to your project's `devDependencies`:
 
 ```bash
-npm install -g @onflow/flow-cadut-generator
+npm install -D @onflow/flow-cadut-generator
 ```
 
 Note that any generated code will require `@onflow/flow-cadut` as a dependency which can be installed by running the following command in your project root:

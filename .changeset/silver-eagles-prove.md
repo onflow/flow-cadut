@@ -17,3 +17,5 @@ In order to use the `flow-generate` command, you must install the generator pack
 ```bash
 npm install -D @onflow/flow-cadut-generator
 ```
+
+The generator command may now be used via `npx flow-generate` on the command line.  See complete installation instructions [here](/README.md#installation).
