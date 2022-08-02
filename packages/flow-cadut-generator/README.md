@@ -1,8 +1,6 @@
 # Flow Cadence Template Generator: Flow Cadut Generator
 
-Working with Cadence template files can be a bit frustrating.
-
-We aim to simplify this process by providing you an easy way to generate supporting JavaScript-wrapped template files, which are easy to use.
+Flow Cadut supports Cadence interaction by wrapping template files in Javascript.
 
 The Flow Cadence Template Generator (`@onflow/flow-cadut-generator`) is responsible for parsing Cadence (.cdc) template files and translating them to easy-to-use JavaScript (.js) files. The Cadence Template Generator, takes either path to a local folder or url to a Github repository and generates JavaScript files which wrap the Cadence code and facilitate sending the templated interactions to the Flow network.
 

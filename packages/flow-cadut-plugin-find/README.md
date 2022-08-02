@@ -2,6 +2,12 @@
 
 This package provides plugin for FIND address resolver.
 
+## Overview
+
+[Find](https://find.xyz/) allows you to lease a name on the blockchain which you can give to your friends instead of a hard to remember 18 digit hex string
+
+See [more here](https://find.xyz/).
+
 ## Installation
 
 The FIND plugin exists within the `@onflow/flow-cadut-plugin-find` package which is consumed by the `@onflow/flow-cadut` package.

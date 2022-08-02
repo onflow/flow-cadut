@@ -2,6 +2,14 @@
 
 This package provides plugin for FLOWNS address resolver.
 
+## Overview
+
+[Flowns](https://www.flowns.org/) is a new generation of decentralized domain name service built on Flow network. It is a resource-oriented domain name service based on Cadence smart contract language. The Resource model in Flow makes the Flowns service flexible and extensible, and based on the domain name NFT asset, we can generate more usage scenarios.
+
+Flowns is not only a domain service, but also a protocol for opening identities and assets in digital world.
+
+See [more here](https://www.flowns.org/).
+
 ## Installation
 
 The FLOWNS plugin exists within the `@onflow/flow-cadut-plugin-flowns` package which is consumed by the `@onflow/flow-cadut` package.
