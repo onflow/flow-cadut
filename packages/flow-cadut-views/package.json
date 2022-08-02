@@ -1,0 +1,26 @@
+{
+  "name": "@onflow/flow-cadut-views",
+  "amdName": "flowCadutViews",
+  "version": "0.0.1",
+  "author": "Dapper Labs",
+  "license": "Apache-2.0",
+  "main": "dist/views.js",
+  "module": "dist/views.module.js",
+  "source": "src/index.js",
+  "scripts": {
+    "build": "fcl-bundle",
+    "dev": "fcl-bundle --watch",
+    "test": "jest"
+  },
+  "mangle": {
+    "regex": "^_"
+  },
+  "devDependencies": {
+    "@onflow/fcl-bundle": "^1.0.1-alpha.0",
+    "jest": "^28.1.3"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.18.6",
+    "@onflow/flow-cadut": "^0.2.0-alpha.7"
+  }
+}
