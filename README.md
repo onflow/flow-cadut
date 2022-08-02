@@ -1,6 +1,5 @@
 # Flow Cadence Template Utilities
-Working with Cadence template files can be a bit frustrating.
-We aim to simplify this process by providing you an easy way to generate supporting JavaScript-wrapped template files, which are easy to use.
+Flow Cadut supports Cadence interaction by wrapping template files in Javascript.
 
 Flow Cadut (Flow Cadence Utilities) contains two core packages:
   1. Flow Cadence Utilities (`@onflow/flow-cadut`)
