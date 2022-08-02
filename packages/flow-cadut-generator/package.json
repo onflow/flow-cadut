@@ -12,11 +12,12 @@
       "esm": "dist/generator.module.js"
     },
     "src/generate.js": {
-      "cjs": "dist/generate.js"
+      "cjs": "dist/generate.js",
+      "banner": "#!/usr/bin/env node"
     }
   },
   "scripts": {
-    "build": "fcl-bundle && printf '%s\n%s\n' \"#!/usr/bin/env node\" \"$(cat dist/generate.js)\" > dist/generate.js",
+    "build": "fcl-bundle",
     "dev": "fcl-bundle --watch",
     "test": "jest"
   },
@@ -24,13 +25,13 @@
     "regex": "^_"
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "^1.0.1-alpha.0"
+    "@onflow/fcl-bundle": "^1.1.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6",
     "@onflow/flow-cadut": "^0.2.0-alpha.7"
   },
   "bin": {
-    "flow-generate": "./dist/cli.js"
+    "flow-generate": "./dist/generate.js"
   }
 }
