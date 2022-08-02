@@ -16,7 +16,7 @@
     "regex": "^_"
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "^1.0.1-alpha.0",
+    "@onflow/fcl-bundle": "^1.1.0",
     "jest": "^28.1.3"
   },
   "dependencies": {
