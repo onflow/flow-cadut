@@ -2,7 +2,7 @@
 
 ## 0.2.0-alpha.8
 
-### Minor Changes
+### Major Changes
 
 - [#102](https://github.com/onflow/flow-cadut/pull/102) [`477d3df`](https://github.com/onflow/flow-cadut/commit/477d3dfd6cad51de9a15a978e5adfcea9b128e80) Thanks [@jribbink](https://github.com/jribbink)! - **BREAKING** Bumped @onflow/fcl to 1.1.1-alpha.1
 
