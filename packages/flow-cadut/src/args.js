@@ -180,7 +180,7 @@ export const mapArgument = async (rawType, rawValue) => {
     }
 
     case isPath(type): {
-      return fcl.arg(parsePath(value), resolvedType)
+      return fcl.arg(parsePath(value, type), resolvedType)
     }
 
     case isArray(type): {

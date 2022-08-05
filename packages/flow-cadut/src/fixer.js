@@ -32,16 +32,33 @@ export const padAddress = address => {
 
 export const toFixedValue = val => parseFloat(val).toFixed(8)
 
+export const toRequiredType = type => /^(.*)\??$/.exec(type)[1]
+
 export const domains = ["public", "private", "storage"]
 
-export const parsePath = path => {
+export const domainMap = {
+  PublicPath: ["public"],
+  PrivatePath: ["private"],
+  StoragePath: ["storage"],
+  CapabilityPath: ["public", "private"],
+  Path: ["public", "private", "storage"],
+}
+
+export const parsePath = (path, type = null) => {
   if (path.startsWith("/")) {
     const parts = path.slice(1).split("/")
     if (parts.length !== 2) {
       throw Error("Incorrect Path - identifier missing")
     }
     if (!domains.includes(parts[0])) {
-      throw Error("Incorrect Path - wrong domain")
+      throw Error(`Incorrect Path - ${parts[0]} is not a valid domain`)
+    }
+    if (type) {
+      if (!domainMap[toRequiredType(type)].includes(parts[0])) {
+        throw new Error(
+          `Incorrect Path - argument type "${type}" is not compatible with path domain "${parts[0]}"`
+        )
+      }
     }
     const [domain, identifier] = parts
     return {domain, identifier}
