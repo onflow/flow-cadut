@@ -2,7 +2,7 @@
 "@onflow/flow-cadut": minor
 ---
 
-**BREAKING** @onflow/flow-cadut has been converted to a monorepo and partitioned into the following packages:
+**BREAKING** `@onflow/flow-cadut` has been converted to a monorepo and partitioned into the following packages:
 
  - `@onflow/flow-cadut`
  - `@onflow/flow-cadut-generator` (previously `@onflow/flow-cadut/generator`)

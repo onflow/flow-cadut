@@ -1,4 +1,4 @@
-# @onflow/flow-cadut-find
+# @onflow/flow-cadut-flowns
 
 ## 0.0.1
 
