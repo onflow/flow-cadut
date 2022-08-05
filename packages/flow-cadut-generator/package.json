@@ -1,7 +1,7 @@
 {
   "name": "@onflow/flow-cadut-generator",
   "amdName": "flowCadutGenerator",
-  "version": "0.1.0-alpha.0",
+  "version": "0.0.1",
   "author": "Dapper Labs",
   "license": "Apache-2.0",
   "main": "dist/generator.js",
