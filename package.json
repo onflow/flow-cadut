@@ -6,6 +6,7 @@
     "lint": "eslint .",
     "lintfix": "eslint --fix .",
     "prerelease": "npm run build && npm run test",
+    "regenerate-test": "npm run build && npm run --prefix packages/flow-cadut-generator precompile-handlebars && npm run --prefix packages/generator-test generate",
     "release": "changeset publish"
   },
   "workspaces": [
