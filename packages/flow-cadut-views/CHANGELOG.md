@@ -1,4 +1,4 @@
-# @onflow/flow-cadut-find
+# @onflow/flow-cadut-views
 
 ## 0.0.1
 

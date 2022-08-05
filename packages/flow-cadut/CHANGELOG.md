@@ -28,7 +28,7 @@
 
   You can learn more (including a guide on common transition paths) [here](https://github.com/onflow/flow-js-sdk/blob/master/packages/types/WARNINGS.md#0002-[U]Int*-and-Word*-as-Number).
 
-* [#104](https://github.com/onflow/flow-cadut/pull/104) [`c5d3a23`](https://github.com/onflow/flow-cadut/commit/c5d3a2370034ff6ee6b965d9b261d4547f9ad92f) Thanks [@jribbink](https://github.com/jribbink)! - **BREAKING** @onflow/flow-cadut has been converted to a monorepo and partitioned into the following packages:
+* [#104](https://github.com/onflow/flow-cadut/pull/104) [`c5d3a23`](https://github.com/onflow/flow-cadut/commit/c5d3a2370034ff6ee6b965d9b261d4547f9ad92f) Thanks [@jribbink](https://github.com/jribbink)! - **BREAKING** `@onflow/flow-cadut` has been converted to a monorepo and partitioned into the following packages:
 
   - `@onflow/flow-cadut`
   - `@onflow/flow-cadut-generator` (previously `@onflow/flow-cadut/generator`)
