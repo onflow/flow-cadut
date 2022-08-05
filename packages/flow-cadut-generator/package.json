@@ -1,7 +1,7 @@
 {
   "name": "@onflow/flow-cadut-generator",
   "amdName": "flowCadutGenerator",
-  "version": "0.0.1",
+  "version": "0.1.0-alpha.0",
   "author": "Dapper Labs",
   "license": "Apache-2.0",
   "main": "dist/generator.js",
@@ -19,6 +19,7 @@
   "scripts": {
     "build": "fcl-bundle",
     "dev": "fcl-bundle --watch",
+    "precompile-handlebars": "handlebars ./src/templates -f ./src/templates/index.js -e hbs -c handlebars",
     "test": "jest"
   },
   "mangle": {
@@ -29,7 +30,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6",
-    "@onflow/flow-cadut": "^0.2.0-alpha.7"
+    "@onflow/flow-cadut": "^0.2.0-alpha.8",
+    "handlebars": "^4.7.7",
+    "handlebars-loader": "^1.7.1"
   },
   "bin": {
     "flow-generate": "./dist/generate.js"

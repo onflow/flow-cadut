@@ -49,3 +49,7 @@
 ### Patch Changes
 
 - [#97](https://github.com/onflow/flow-cadut/pull/97) [`7a09ae7`](https://github.com/onflow/flow-cadut/commit/7a09ae7f63e33b7fc84d6abe6a86cfa30b13d37f) Thanks [@MaxStalker](https://github.com/MaxStalker)! - Fix contract parser to properly process contracts, which implements some interface
+
+* [#107](https://github.com/onflow/flow-cadut/pull/107) [`663f0fc`](https://github.com/onflow/flow-cadut/commit/663f0fc04194b5d40ed15523d9daa585256f00a2) Thanks [@jribbink](https://github.com/jribbink)! - Verify that provided domain is valid for provided argument type when mapping path arguments
+
+- [#113](https://github.com/onflow/flow-cadut/pull/113) [`8315ee1`](https://github.com/onflow/flow-cadut/commit/8315ee156520bde2b46a78cd77bd5488106665cd) Thanks [@jribbink](https://github.com/jribbink)! - Adds support for optional complex types

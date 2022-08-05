@@ -48,10 +48,27 @@ describe("fixer", () => {
     }).toThrow("Incorrect Path - identifier missing")
   })
 
-  it("shall throw error on incorrect path - wrong domain", () => {
-    const input = `/planet/Mars`
+  it("shall throw error on incorrect path - ${domain} is not a valid domain", () => {
+    const domain = "planet"
+    const identifier = "Mars"
+
+    const input = `/${domain}/${identifier}`
     expect(() => {
       parsePath(input)
-    }).toThrow("Incorrect Path - wrong domain")
+    }).toThrow(`Incorrect Path - ${domain} is not a valid domain`)
+  })
+
+  it('shall throw error on incorrect path - argument type "${type}" is not compatible with path domain "${domain}"', () => {
+    const domain = "public"
+    const identifier = "foo"
+
+    const path = `/${domain}/${identifier}`
+    const type = "StoragePath"
+
+    expect(() => {
+      parsePath(path, type)
+    }).toThrow(
+      `Incorrect Path - argument type "${type}" is not compatible with path domain "${domain}"`
+    )
   })
 })

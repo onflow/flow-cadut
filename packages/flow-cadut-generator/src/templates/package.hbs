@@ -10,6 +10,18 @@
   import { {{this}}Template, deploy{{this}} } from './{{this}}'
 {{/each}}
 
+export {
+    {{#each folders}}
+        {{ this }},
+    {{/each}}
+    {{#each files}}
+        {{ this }}Template, {{ this }},
+    {{/each}}
+    {{#each contracts}}
+      {{ this }}Template, deploy{{ this }},
+    {{/each}}
+}
+
 export default {
     {{#each folders}}
         {{ this }},
