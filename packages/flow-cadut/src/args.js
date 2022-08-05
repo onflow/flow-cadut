@@ -29,8 +29,10 @@ import {
   isArray,
   isDictionary,
   isComplexType,
-  wrongType,
+  isWrongType,
   isBasicNumType,
+  stripType,
+  isOptional,
 } from "./type-checker"
 
 import {removeSpaces} from "./strings"
@@ -99,15 +101,17 @@ export const reportMissing = (
 export const raw = type => type.slice(0, -1)
 
 export const resolveBasicType = type => {
-  if (wrongType(type)) return false
-
-  if (type.includes("?")) {
-    return t.Optional(t[raw(type)])
-  }
+  if (!t[type]) throwTypeError(`type ${type} is not supported`)
   return t[type]
 }
 
 export const resolveType = type => {
+  if (isWrongType(type)) throwTypeError("type is not a string")
+
+  if (isOptional(type)) {
+    return t.Optional(resolveType(stripType(type)))
+  }
+
   if (isComplexType(type)) {
     switch (true) {
       case isArray(type): {
