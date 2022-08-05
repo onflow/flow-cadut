@@ -29,7 +29,7 @@ import {
   isArray,
   isDictionary,
   isComplexType,
-  wrongType,
+  isWrongType,
   isBasicNumType,
   stripType,
   isOptional,
@@ -106,7 +106,7 @@ export const resolveBasicType = type => {
 }
 
 export const resolveType = type => {
-  if (wrongType(type)) throwTypeError("type is not a string")
+  if (isWrongType(type)) throwTypeError("type is not a string")
 
   if (isOptional(type)) {
     return t.Optional(resolveType(stripType(type)))

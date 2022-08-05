@@ -16,20 +16,20 @@
  * limitations under the License.
  */
 
-export const wrongType = type => !type || typeof type !== "string"
 export const stripType = type => type.replace(/\s/g, "").replace(/\?$/, "")
 
+export const isWrongType = type => !type || typeof type !== "string"
 export const isOptional = type => /\?$/.test(type)
 
 export const isBasicNumType = type => {
-  if (wrongType(type)) return false
+  if (isWrongType(type)) return false
   return (
     type.startsWith("Int") || type.startsWith("UInt") || type.startsWith("Word")
   )
 }
 
 export const isFixedNumType = type => {
-  if (wrongType(type)) return false
+  if (isWrongType(type)) return false
   return type.startsWith("Fix64") || type.startsWith("UFix64")
 }
 
@@ -49,7 +49,7 @@ export const isPath = type => {
 }
 
 export const isBasicType = type => {
-  if (wrongType(type)) return false
+  if (isWrongType(type)) return false
 
   let fixedType = type.endsWith("?") ? type.slice(0, -1) : type
   return (
@@ -61,14 +61,14 @@ export const isBasicType = type => {
 }
 
 export const isArray = type => {
-  if (wrongType(type)) return false
+  if (isWrongType(type)) return false
   const clearType = stripType(type)
 
   return clearType.startsWith("[") && clearType.endsWith("]")
 }
 
 export const isDictionary = type => {
-  if (wrongType(type)) return false
+  if (isWrongType(type)) return false
   const clearType = stripType(type)
 
   return clearType.startsWith("{") && clearType.endsWith("}")
