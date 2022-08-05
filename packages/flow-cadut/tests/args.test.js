@@ -429,6 +429,26 @@ describe("optionals", () => {
     expect(asArgument.value.value.toString()).toBe(input.toString())
   })
 
+  test("array", async () => {
+    const type = "[String]?"
+    const input = ["Foo", "Bar"]
+    const output = resolveType(type)
+    const asArgument = output.asArgument(input)
+
+    const expected = {
+      type: "Optional",
+      value: {
+        type: "Array",
+        value: [
+          {type: "String", value: "Foo"},
+          {type: "String", value: "Bar"},
+        ],
+      },
+    }
+
+    expect(asArgument).toEqual(expected)
+  })
+
   test("Dictionary - as argument", async () => {
     const type = "{String: String?}"
     const input = {
@@ -449,5 +469,24 @@ describe("optionals", () => {
 
     expect(output.value[2].key).toBe("middlename")
     expect(output.value[2].value).toBe(input.middlename)
+  })
+})
+
+describe("resolveType errors", () => {
+  test("type not supported", () => {
+    const type = "RocketShip"
+    expect(() => resolveType(type)).toThrow(
+      `Type Error: type ${type} is not supported`
+    )
+  })
+
+  test("non string type", () => {
+    const type = {foo: "bar"}
+    expect(() => resolveType(type)).toThrow("Type Error: type is not a string")
+  })
+
+  test("falsy type", () => {
+    const type = null
+    expect(() => resolveType(type)).toThrow("Type Error: type is not a string")
   })
 })

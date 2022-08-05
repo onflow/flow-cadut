@@ -16,7 +16,10 @@
  * limitations under the License.
  */
 
-export const wrongType = type => !type || typeof type != "string"
+export const wrongType = type => !type || typeof type !== "string"
+export const stripType = type => type.replace(/\s/g, "").replace(/\?$/, "")
+
+export const isOptional = type => /\?$/.test(type)
 
 export const isBasicNumType = type => {
   if (wrongType(type)) return false
@@ -34,17 +37,16 @@ export const isString = type => type === "String"
 export const isCharacter = type => type === "Character"
 export const isBoolean = type => type === "Bool"
 export const isAddress = type => type === "Address" || type === "Address?"
-export const isPath = type =>
-  type === "Path" ||
-  type === "Path?" ||
-  type === "PublicPath" ||
-  type === "PublicPath?" ||
-  type === "PrivatePath" ||
-  type === "PrivatePath?" ||
-  type === "StoragePath" ||
-  type === "StoragePath?" ||
-  type === "CapabilityPath" ||
-  type === "CapabilityPath?"
+export const isPath = type => {
+  const clearType = stripType(type)
+  return (
+    clearType === "Path" ||
+    clearType === "PublicPath" ||
+    clearType === "PrivatePath" ||
+    clearType === "StoragePath" ||
+    clearType === "CapabilityPath"
+  )
+}
 
 export const isBasicType = type => {
   if (wrongType(type)) return false
@@ -60,15 +62,15 @@ export const isBasicType = type => {
 
 export const isArray = type => {
   if (wrongType(type)) return false
+  const clearType = stripType(type)
 
-  const clearType = type.replace(/\s/g, "")
   return clearType.startsWith("[") && clearType.endsWith("]")
 }
 
 export const isDictionary = type => {
   if (wrongType(type)) return false
+  const clearType = stripType(type)
 
-  const clearType = type.replace(/\s/g, "")
   return clearType.startsWith("{") && clearType.endsWith("}")
 }
 
