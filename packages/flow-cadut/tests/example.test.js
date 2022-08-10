@@ -1,16 +1,21 @@
-// files
-import {sansExtension} from "../"
-
 // imports
 import {
   extractImports,
   missingImports,
   report,
   replaceImportAddresses,
-} from "@onflow/flow-cadut"
+} from "../src/imports"
 
 // arguments
-import {mapArgument, mapArguments, mapValuesToCode} from "@onflow/flow-cadut"
+import {
+  mapArgument,
+  mapArguments,
+  mapValuesToCode,
+  splitArgs,
+  argType,
+  getDictionaryTypes,
+  getArrayType,
+} from "../src/args"
 
 // parser
 import {
@@ -22,25 +27,12 @@ import {
   extractScriptArguments,
   extractTransactionArguments,
   extractContractName,
-  splitArgs,
-  argType,
-  getDictionaryTypes,
-  getArrayType,
-} from "@onflow/flow-cadut"
+} from "../src/parser"
 
 // Interactions
-import {setEnvironment, getEnvironment} from "@onflow/flow-cadut"
-
-// Templates
-import "../templates"
+import {setEnvironment, getEnvironment} from "../src/env"
 
 describe("documentation examples", function () {
-  // Files
-  it("should strip extension from filename", function () {
-    const fileName = sansExtension("log-message-and-return.cdc")
-    expect(fileName).toBe("log-message-and-return")
-  })
-
   // Imports
   it("should return import list", function () {
     const code = `
