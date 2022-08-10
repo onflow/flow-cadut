@@ -89,7 +89,10 @@ export const reportMissingImports = (code, addressMap, prefix = "") => {
   }
 }
 
-const REGEXP_IMPORT = /(\s*import\s*)([\w\d]+)(\s+from\s*)([\w\d".\\/]+)/g
+const REGEXP_IMPORT =
+  /(\s*import\s*)((([\w\d]+)(\s*,\s*))*([\w\d]+))(\s+from\s*)([\w\d".\\/]+)/g
+
+const REGEX_IMPORT_CONTRACT = /([\w\d]+)/g
 
 /**
  * Returns Cadence template code with replaced import addresses
@@ -100,13 +103,25 @@ const REGEXP_IMPORT = /(\s*import\s*)([\w\d]+)(\s+from\s*)([\w\d".\\/]+)/g
  * @returns {*}
  */
 export const replaceImportAddresses = (code, addressMap, byName = true) => {
-  return code.replace(REGEXP_IMPORT, (match, imp, contract, _, address) => {
-    const key = byName ? contract : address
-    const newAddress =
-      addressMap instanceof Function ? addressMap(key) : addressMap[key]
+  return code.replace(REGEXP_IMPORT, (...args) => {
+    const [, imp, contractsStr, , , , , , address] = args
+    const contracts = contractsStr.match(REGEX_IMPORT_CONTRACT)
+    const contractMap = contracts.reduce((map, contract) => {
+      const key = byName ? contract : address
+      const newAddress =
+        addressMap instanceof Function ? addressMap(key) : addressMap[key]
 
-    // If the address is not inside addressMap we shall not alter import statement
-    const validAddress = newAddress || address
-    return `${imp}${contract} from ${validAddress}`
+      // If the address is not inside addressMap we shall not alter import statement
+      const validAddress = newAddress || address
+      map[validAddress] = (map[validAddress] ?? []).concat(contract)
+      return map
+    }, {})
+
+    return Object.keys(contractMap)
+      .reduce((res, addr) => {
+        const contractsStr = contractMap[addr].join(", ")
+        return res.concat(`${imp}${contractsStr} from ${addr}`)
+      }, [])
+      .join("\n")
   })
 }

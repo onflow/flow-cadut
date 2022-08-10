@@ -88,6 +88,21 @@ describe("documentation examples", function () {
     )
   })
 
+  it("should replace import for multiple imports", function () {
+    const code = `
+      import Messages, GiraffeNFT from 0x01
+      pub fun main(){}
+    `
+    const addressMap = {
+      Messages: "0xf8d6e0586b0a20c7",
+      GiraffeNFT: "0xf8d6e0586b0a20c7",
+    }
+    const replaced = replaceImportAddresses(code, addressMap)
+    expect(
+      replaced.includes("import Messages, GiraffeNFT from 0xf8d6e0586b0a20c7")
+    ).toBe(true)
+  })
+
   // Arguments
   it("should convert value to sdk argument", async function () {
     const type = "String"
