@@ -83,7 +83,7 @@ export async function run(args) {
   if (isGitUrl(input)) {
     await processGitRepo(input, output, branch, {dependency})
   } else {
-    fs.rmdirSync(output, {recursive: true})
+    fs.rmSync(output, {recursive: true})
     await processFolder(input, output, {dependency})
   }
 }
