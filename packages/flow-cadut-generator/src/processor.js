@@ -53,7 +53,7 @@ const getFetchUrl = input => {
 const TEMP_REPO_FOLDER = path.resolve(process.cwd(), "./temp-generator-repo")
 const clean = () => {
   if (fs.existsSync(TEMP_REPO_FOLDER)) {
-    fs.rmdirSync(TEMP_REPO_FOLDER, {recursive: true})
+    fs.rmSync(TEMP_REPO_FOLDER, {recursive: true})
   }
 }
 

@@ -46,7 +46,7 @@ export const writeFile = (path, data) => {
  * @param {string} path - path to directory to delete
  */
 export const clearPath = path => {
-  fs.rmdirSync(path, {recursive: true})
+  fs.rmSync(path, {recursive: true})
 }
 
 export const getFilesList = async dir => {
