@@ -16,10 +16,13 @@
  * limitations under the License.
  */
 
+import inquirer from "inquirer"
 import fs from "fs"
+import {isGeneratedFolder} from "./file"
 
 import {processFolder, processGitRepo} from "./processor"
 import "./templates"
+import assert from "assert"
 
 // Initially we will support only GitHub repos
 // TODO: support other urls. List can be found here:
@@ -80,10 +83,30 @@ export async function run(args) {
   // console.log(argv)
   const {input, output, branch, dependency} = parseArgs(argv)
 
+  assert(
+    isGitUrl(input) || fs.existsSync(input),
+    `Specified cadence input folder "${input}" does not exist.  Please verify your CLI arguments & that the supplied path is valid.`
+  )
+
   if (isGitUrl(input)) {
     await processGitRepo(input, output, branch, {dependency})
   } else {
-    fs.rmSync(output, {recursive: true})
+    let safeToRemoveFolder = await isGeneratedFolder(output)
+    if (!safeToRemoveFolder) {
+      const {proceed} = await inquirer.prompt({
+        type: "confirm",
+        name: "proceed",
+        message: `The provided output folder "${output}" does not appear to be a flow-cadut generated folder.  Are you sure you want to overwrite the existing contents of this folder?`,
+        default: false,
+      })
+
+      if (!proceed) {
+        console.log("Aborting generation of JavaScript templates.")
+        return
+      }
+    }
+
+    fs.rmSync(output, {recursive: true, force: true})
     await processFolder(input, output, {dependency})
   }
 }

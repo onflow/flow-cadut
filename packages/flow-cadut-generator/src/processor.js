@@ -27,7 +27,15 @@ import {
   trimAndSplit,
   underscoreToCamelCase,
 } from "@onflow/flow-cadut"
-import {generateExports, getFilesList, readFile, writeFile} from "./file"
+import {
+  CONTRACT_PRAGMA,
+  generateExports,
+  getFilesList,
+  readFile,
+  SCRIPT_PRAGMA,
+  TRANSACTION_PRAGMA,
+  writeFile,
+} from "./file"
 import {
   getTemplateInfo,
   CONTRACT,
@@ -177,6 +185,7 @@ export const processFolder = async (input, output, options = {}) => {
     switch (templateInfo.type) {
       case SCRIPT:
         data = Handlebars.templates.script({
+          pragma: SCRIPT_PRAGMA,
           code,
           name,
           ixDependency,
@@ -187,6 +196,7 @@ export const processFolder = async (input, output, options = {}) => {
       case TRANSACTION: {
         const signers = extractSigners(code)
         data = Handlebars.templates.transaction({
+          pragma: TRANSACTION_PRAGMA,
           code,
           name,
           ixDependency,
@@ -199,6 +209,7 @@ export const processFolder = async (input, output, options = {}) => {
       case CONTRACT: {
         const contractName = templateInfo.contractName
         data = Handlebars.templates.contract({
+          pragma: CONTRACT_PRAGMA,
           code,
           name,
           ixDependency,
