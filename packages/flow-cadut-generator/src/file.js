@@ -17,6 +17,7 @@
  */
 
 import fs from "fs"
+import chokidar from "chokidar"
 import {resolve, dirname} from "path"
 import prettier from "prettier"
 import parserBabel from "prettier/parser-babel"
@@ -129,4 +130,22 @@ export const generateExports = async (dir, template) => {
   )
 
   return currentFolder
+}
+
+export const debouncedWatcher = (paths, action) => {
+  const watcher = chokidar.watch(paths)
+  let changes = false,
+    mutex = false
+  watcher.on("all", async () => {
+    changes = true
+    if (!mutex) {
+      mutex = true
+      await new Promise(resolve => setTimeout(() => resolve(), 100))
+      while (changes) {
+        changes = false
+        await action()
+      }
+      mutex = false
+    }
+  })
 }

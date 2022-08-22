@@ -31,6 +31,26 @@ Note that any generated code will require `@onflow/flow-cadut` as a dependency w
 npm install @onflow/flow-cadut
 ```
 
+### CLI options
+```
+flow-generate [input] [output]
+
+Generate corresponding JavaScript files from a cadence input folder
+
+Options:
+      --help        Show help                                          [boolean]
+      --version     Show version number                                [boolean]
+  -i, --input       Cadence input directory or Github repository URL
+                                                 [string] [default: "./cadence"]
+  -o, --output      Javascript output directory
+                                           [string] [default: "./src/generated"]
+  -b, --branch      Git branch to use if git repository used as input   [string]
+  -d, --dependency  Dependency to use in generated templates
+                                        [string] [default: "@onflow/flow-cadut"]
+  -w, --watch       Whether to run the generator as a standalone build or in
+                    watch mode                        [boolean] [default: false]
+```
+
 ### Local Folder
 ```
 # long flags
@@ -51,12 +71,12 @@ will default to `master/main` branch.
 npx flow-generate --input https://github.com/onflow/flow-core-contracts --branch feature/epochs --output ./src/generated
 
 # short flags
-npx flow-generate -i https://github.com/onflow/flow-core-contracts - b feature/epochs -o ./src/generated
+npx flow-generate -i https://github.com/onflow/flow-core-contracts -b feature/epochs -o ./src/generated
 
-# no flags
-npx flow-generate https://github.com/onflow/flow-core-contracts feature/epochs ./src/generated
+# positional arguments
+npx flow-generate https://github.com/onflow/flow-core-contracts ./src/generated -b feature/epochs
 
-# no flags, main branch
+# positional arguments, main branch
 npx flow-generate https://github.com/onflow/flow-core-contracts ./src/generated
 ```
 #### Process Single Folder (recursively)
@@ -69,5 +89,5 @@ In this specific case, generator would assume that you want to process `contract
 For a slightly more complex case - using Git Flow approach for example - please, specify branch name, so generator can 
 extract folder name properly.
 ```
-npx flow-generate https://github.com/onflow/flow-core-contracts/tree/feature/epochs/transactions/flowToken feature/epochs ./src/generated
+npx flow-generate https://github.com/onflow/flow-core-contracts/tree/feature/epochs/transactions/flowToken ./src/generated -b feature/epochs
 ```
