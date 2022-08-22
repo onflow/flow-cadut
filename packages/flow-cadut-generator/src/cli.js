@@ -20,6 +20,7 @@ import assert from "assert"
 import fs from "fs"
 
 import inquirer from "inquirer"
+import {exit} from "process"
 import yargs from "yargs"
 import {hideBin} from "yargs/helpers"
 
@@ -89,32 +90,15 @@ export async function run(args) {
     `Specified cadence input folder "${input}" does not exist.  Please verify your CLI arguments & that the supplied path is valid.`
   )
 
-  let safeToRemoveFolder = await isGeneratedFolder(output)
-  if (!safeToRemoveFolder) {
-    const {proceed} = await inquirer.prompt({
-      type: "confirm",
-      name: "proceed",
-      message: `The provided output folder "${output}" does not appear to be a flow-cadut generated folder.  Are you sure you want to overwrite the existing contents of this folder?`,
-      default: false,
-    })
-
-    if (!proceed) {
-      console.log("Aborting generation of JavaScript templates.")
-      return
-    }
-  }
-
-  fs.rmSync(output, {recursive: true, force: true})
-
   if (watch) {
     await debouncedWatcher(input, generate)
   } else {
     await generate()
   }
 
-  const generate = async () => {
+  async function generate() {
     console.log("Generating JavaScript files...")
-    fs.rmSync(output, {recursive: true})
+    await removeGeneratedFolder(output)
     if (isGitUrl(input)) {
       await processGitRepo(input, output, branch, {dependency})
     } else {
@@ -122,4 +106,23 @@ export async function run(args) {
     }
     console.log("Success!")
   }
+}
+
+const removeGeneratedFolder = async path => {
+  let safeToRemoveFolder = await isGeneratedFolder(path)
+  if (!safeToRemoveFolder) {
+    const {proceed} = await inquirer.prompt({
+      type: "confirm",
+      name: "proceed",
+      message: `The provided output folder "${path}" does not appear to be a flow-cadut generated folder.  Are you sure you want to overwrite the existing contents of this folder?`,
+      default: false,
+    })
+
+    if (!proceed) {
+      console.log("Aborting generation of JavaScript templates.")
+      exit(1)
+    }
+  }
+
+  fs.rmSync(path, {recursive: true, force: true})
 }

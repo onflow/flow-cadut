@@ -15,7 +15,6 @@ describe("CLI parser", () => {
       const args = paddedArgs(["-i", input, "-o", output])
 
       const parsed = parseArgs(args)
-      console.log(parsed)
       expect(parsed.input).toEqual(input)
       expect(parsed.output).toEqual(output)
     })
@@ -24,7 +23,6 @@ describe("CLI parser", () => {
       const args = paddedArgs(["--input", input, "--output", output])
 
       const parsed = parseArgs(args)
-      console.log(parsed)
       expect(parsed.input).toEqual(input)
       expect(parsed.output).toEqual(output)
     })
@@ -33,7 +31,6 @@ describe("CLI parser", () => {
       const args = paddedArgs([input, output])
 
       const parsed = parseArgs(args)
-      console.log(parsed)
       expect(parsed.input).toEqual(input)
       expect(parsed.output).toEqual(output)
     })
@@ -66,6 +63,9 @@ describe("run", () => {
   it("shall process folders correctly", async () => {
     const processFolderSpy = jest.spyOn(processor, "processFolder")
     processFolderSpy.mockImplementation(() => {})
+
+    const existsSyncSpy = jest.spyOn(fs, "existsSync")
+    existsSyncSpy.mockImplementation(path => path === input)
 
     const args = paddedArgs(["--input", input, "--output", output])
     await run(args)
