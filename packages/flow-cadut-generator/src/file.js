@@ -18,6 +18,7 @@
 
 import glob from "glob"
 import fs from "fs"
+import chokidar from "chokidar"
 import {resolve, dirname, join} from "path"
 import prettier from "prettier"
 import parserBabel from "prettier/parser-babel"
@@ -138,9 +139,8 @@ export const generateExports = async (dir, template) => {
 
 /**
  * Check if folder structure matches flow-cadut generated folder structure
- * @date 2022-08-16
- * @param {any} path
- * @returns {any}
+ * @param {string} path
+ * @returns {Promise<boolean>}
  */
 export const isGeneratedFolder = async path => {
   const format = {
@@ -171,4 +171,22 @@ export const isDirMatchingFormat = async (path, format = {}) => {
     missingFiles = missingFiles.filter(file => !matches.includes(file))
   })
   return missingFiles.length === 0
+}
+
+export const debouncedWatcher = (paths, action) => {
+  const watcher = chokidar.watch(paths)
+  let changes = false,
+    mutex = false
+  watcher.on("all", async () => {
+    changes = true
+    if (!mutex) {
+      mutex = true
+      await new Promise(resolve => setTimeout(() => resolve(), 100))
+      while (changes) {
+        changes = false
+        await action()
+      }
+      mutex = false
+    }
+  })
 }
