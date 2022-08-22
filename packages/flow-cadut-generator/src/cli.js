@@ -16,15 +16,17 @@
  * limitations under the License.
  */
 
+import assert from "assert"
+import fs from "fs"
+
+import inquirer from "inquirer"
+import {exit} from "process"
 import yargs from "yargs"
 import {hideBin} from "yargs/helpers"
 
-import fs from "fs"
-
+import {isGeneratedFolder, debouncedWatcher} from "./file"
 import {processFolder, processGitRepo} from "./processor"
 import "./templates"
-import {debouncedWatcher} from "./file"
-import assert from "assert"
 
 // Initially we will support only GitHub repos
 // TODO: support other urls. List can be found here:
@@ -83,9 +85,20 @@ export async function run(args) {
     "The branch argument can only be used if a git repository is used as an input"
   )
 
-  const generate = async () => {
+  assert(
+    isGitUrl(input) || fs.existsSync(input),
+    `Specified cadence input folder "${input}" does not exist.  Please verify your CLI arguments & that the supplied path is valid.`
+  )
+
+  if (watch) {
+    await debouncedWatcher(input, generate)
+  } else {
+    await generate()
+  }
+
+  async function generate() {
     console.log("Generating JavaScript files...")
-    fs.rmSync(output, {recursive: true})
+    await removeGeneratedFolder(output)
     if (isGitUrl(input)) {
       await processGitRepo(input, output, branch, {dependency})
     } else {
@@ -93,10 +106,23 @@ export async function run(args) {
     }
     console.log("Success!")
   }
+}
 
-  if (watch) {
-    await debouncedWatcher(input, generate)
-  } else {
-    await generate()
+const removeGeneratedFolder = async path => {
+  let safeToRemoveFolder = await isGeneratedFolder(path)
+  if (!safeToRemoveFolder) {
+    const {proceed} = await inquirer.prompt({
+      type: "confirm",
+      name: "proceed",
+      message: `The provided output folder "${path}" does not appear to be a flow-cadut generated folder.  Are you sure you want to overwrite the existing contents of this folder?`,
+      default: false,
+    })
+
+    if (!proceed) {
+      console.log("Aborting generation of JavaScript templates.")
+      exit(1)
+    }
   }
+
+  fs.rmSync(path, {recursive: true, force: true})
 }

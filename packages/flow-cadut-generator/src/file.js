@@ -16,12 +16,17 @@
  * limitations under the License.
  */
 
+import glob from "glob"
 import fs from "fs"
 import chokidar from "chokidar"
-import {resolve, dirname} from "path"
+import {resolve, dirname, join} from "path"
 import prettier from "prettier"
 import parserBabel from "prettier/parser-babel"
 import {underscoreToCamelCase} from "@onflow/flow-cadut"
+
+export const TRANSACTION_PRAGMA = "/** pragma type transaction **/"
+export const SCRIPT_PRAGMA = "/** pragma type script **/"
+export const CONTRACT_PRAGMA = "/** pragma type contract **/"
 
 /**
  * Syntax sugar for file reading
@@ -130,6 +135,42 @@ export const generateExports = async (dir, template) => {
   )
 
   return currentFolder
+}
+
+/**
+ * Check if folder structure matches flow-cadut generated folder structure
+ * @param {string} path
+ * @returns {Promise<boolean>}
+ */
+export const isGeneratedFolder = async path => {
+  const format = {
+    "transactions/**/*.js": code => code.trim().startsWith(TRANSACTION_PRAGMA),
+    "scripts/**/*.js": code => code.trim().startsWith(SCRIPT_PRAGMA),
+    "contracts/**/*.js": code => code.trim().startsWith(CONTRACT_PRAGMA),
+    "transactions/**/index.js": true,
+    "scripts/**/index.js": true,
+    "contracts/**/index.js": true,
+    "index.js": true,
+  }
+
+  return isDirMatchingFormat(path, format)
+}
+
+export const isDirMatchingFormat = async (path, format = {}) => {
+  let missingFiles = glob
+    .sync(join(path, "**/*"), path)
+    .filter(match => fs.lstatSync(match).isFile())
+  Object.keys(format).forEach(pattern => {
+    const matches = glob
+      .sync(join(path, pattern))
+      .filter(
+        match =>
+          format[pattern] === true ||
+          format[pattern](fs.readFileSync(match).toString())
+      )
+    missingFiles = missingFiles.filter(file => !matches.includes(file))
+  })
+  return missingFiles.length === 0
 }
 
 export const debouncedWatcher = (paths, action) => {
