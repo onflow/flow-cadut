@@ -16,12 +16,15 @@
   "mangle": {
     "regex": "^_"
   },
-  "dependencies": {
-    "@babel/runtime": "^7.18.6",
+  "peerDependencies": {
     "@onflow/flow-cadut": "^0.2.0-alpha.7"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.18.6"
   },
   "devDependencies": {
     "@onflow/fcl-bundle": "^1.1.0",
+    "@onflow/flow-cadut": "^0.2.0-alpha.7",
     "jest": "^28.1.3"
   }
 }
