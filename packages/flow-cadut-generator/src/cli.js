@@ -16,8 +16,15 @@
  * limitations under the License.
  */
 
+import assert from "assert"
 import fs from "fs"
 
+import inquirer from "inquirer"
+import {exit} from "process"
+import yargs from "yargs"
+import {hideBin} from "yargs/helpers"
+
+import {isGeneratedFolder, debouncedWatcher} from "./file"
 import {processFolder, processGitRepo} from "./processor"
 import "./templates"
 
@@ -26,64 +33,96 @@ import "./templates"
 // https://stackoverflow.com/questions/2514859/regular-expression-for-git-repository
 const isGitUrl = input => /https:\/\/github.com/.test(input)
 
-export const parseArgs = argv => {
-  let input, output
-  let branch = argv.branch
-  const dependency = argv.dependency
-
-  switch (argv._.length) {
-    // Case to pull from GitHub in "no flags" form
-    case 3: {
-      input = argv._[0]
-      branch = argv._[1]
-      output = argv._[2]
-      break
+export const parseArgs = args =>
+  yargs(hideBin(args)).command(
+    "$0 [input] [output]",
+    "Generate corresponding JavaScript files from a cadence input folder",
+    yargs => {
+      yargs.options({
+        i: {
+          alias: "input",
+          default: "./cadence",
+          description: "Cadence input directory or Github repository URL",
+          type: "string",
+        },
+        o: {
+          alias: "output",
+          default: "./src/generated",
+          description: "Javascript output directory",
+          type: "string",
+        },
+        b: {
+          alias: "branch",
+          description: "Git branch to use if git repository used as input",
+          type: "string",
+        },
+        d: {
+          alias: "dependency",
+          default: "@onflow/flow-cadut",
+          description: "Dependency to use in generated templates",
+          type: "string",
+        },
+        w: {
+          alias: "watch",
+          default: false,
+          description:
+            "Whether to run the generator as a standalone build or in watch mode",
+          type: "boolean",
+        },
+      })
     }
-
-    case 2: {
-      input = argv._[0]
-      output = argv._[1]
-      break
-    }
-    case 1: {
-      input = argv._[0]
-      output = argv.output
-      break
-    }
-    default: {
-      input = argv.input
-      output = argv.output
-    }
-  }
-
-  if (argv._.length === 2) {
-    input = argv._[0]
-    output = argv._[1]
-  }
-
-  return {input, output, branch, dependency}
-}
+  ).argv
 
 export async function run(args) {
-  const hideBin = args.slice(2)
+  const {input, output, branch, dependency, watch} = parseArgs(args)
 
-  const argv = require("yargs/yargs")(hideBin)
-    .alias("i", "input")
-    .alias("o", "output")
-    .alias("b", "branch")
-    .alias("d", "dependency")
-    .default({
-      i: "./cadence",
-      o: "./src/generated",
-      dependency: "@onflow/flow-cadut",
-    }).argv
-  // console.log(argv)
-  const {input, output, branch, dependency} = parseArgs(argv)
+  assert(
+    !watch || !isGitUrl(input),
+    "Watching a git repository is not supported"
+  )
+  assert(
+    !branch || isGitUrl(input),
+    "The branch argument can only be used if a git repository is used as an input"
+  )
 
-  if (isGitUrl(input)) {
-    await processGitRepo(input, output, branch, {dependency})
+  assert(
+    isGitUrl(input) || fs.existsSync(input),
+    `Specified cadence input folder "${input}" does not exist.  Please verify your CLI arguments & that the supplied path is valid.`
+  )
+
+  if (watch) {
+    await debouncedWatcher(input, generate)
   } else {
-    fs.rmdirSync(output, {recursive: true})
-    await processFolder(input, output, {dependency})
+    await generate()
   }
+
+  async function generate() {
+    console.log("Generating JavaScript files...")
+    await removeGeneratedFolder(output)
+    if (isGitUrl(input)) {
+      await processGitRepo(input, output, branch, {dependency})
+    } else {
+      await processFolder(input, output, {dependency})
+    }
+    console.log("Success!")
+  }
+}
+
+const removeGeneratedFolder = async path => {
+  let safeToRemoveFolder = await isGeneratedFolder(path)
+  if (!safeToRemoveFolder) {
+    const {proceed} = await inquirer.prompt({
+      type: "confirm",
+      name: "proceed",
+      message: `The provided output folder "${path}" does not appear to be a flow-cadut generated folder.  Are you sure you want to overwrite the existing contents of this folder?`,
+      default: false,
+    })
+
+    if (!proceed) {
+      console.log("Aborting generation of JavaScript templates.")
+      exit(1)
+    }
+  }
+
+  fs.rmSync(path, {recursive: true, force: true})
 }
