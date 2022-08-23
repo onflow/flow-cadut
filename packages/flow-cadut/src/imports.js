@@ -36,7 +36,7 @@
   /                               => end of regexp
 */
 export const REGEXP_IMPORT =
-  /import\s+(([\w\d]+\s*,\s*)*[\w\d]+)\s+from\s*([\w\d".\\/]+)/
+  /import\s+(([\w\d]+\s*,\s*)*[\w\d]+)\s+from\s*([\w\d".\\/]+)/g
 
 /*
   === REGEXP_IMPORT_CONTRACT ===
@@ -58,18 +58,15 @@ export const extractImports = code => {
     return {}
   }
 
-  return [...code.matchAll(new RegExp(REGEXP_IMPORT, "g"))].reduce(
-    (contracts, match) => {
-      const contractsStr = match[1],
-        address = match[3]
+  return [...code.matchAll(REGEXP_IMPORT)].reduce((contracts, match) => {
+    const contractsStr = match[1],
+      address = match[3]
 
-      contractsStr.match(REGEXP_IMPORT_CONTRACT).forEach(contract => {
-        contracts[contract] = address
-      })
-      return contracts
-    },
-    {}
-  )
+    contractsStr.match(REGEXP_IMPORT_CONTRACT).forEach(contract => {
+      contracts[contract] = address
+    })
+    return contracts
+  }, {})
 }
 
 /**
