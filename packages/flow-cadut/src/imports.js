@@ -16,9 +16,37 @@
  * limitations under the License.
  */
 
-const REGEXP_IMPORT =
-  /(import\s*)((([\w\d]+)(\s*,\s*))*([\w\d]+))(\s+from\s*)([\w\d".\\/]+)/g
-const REGEXP_IMPORT_CONTRACT = /([\w\d]+)/g
+/*
+  === REGEXP_IMPORT explanation ===
+  Matches import line in cadence code and is used for extracting address & list of contracts imported
+
+  /                               => start of regexp
+  import\s+                       => should have keyword import followed by one or more spaces
+
+  ((([\w\d]+)(\s*,\s*))*[\w\d]+)  => >>MATCH[1]<< matcher group for imported contracts (one or more comma separated words including digits)
+
+    ([\w\d]+\s*,\s*)*             => match comma-separated contracts
+      [\w\d]+                     => match individual contract name (one or more word or digit)
+      \s*,\s*                     => match trailing comma with any amount of space separation
+
+    [\w\d]+                       => match last contract name (mustn't have trailing comma, so separate from previous matcher)
+  
+  \s+from\s+                      => keyword from with one or more leading and following space characters
+  ([\w\d".\\/]+)                  => >>MATCH[3]<< one or more word, digit, "" or / character for address or file import notation
+  /                               => end of regexp
+*/
+export const REGEXP_IMPORT =
+  /import\s+(([\w\d]+\s*,\s*)*[\w\d]+)\s+from\s*([\w\d".\\/]+)/
+
+/*
+  === REGEXP_IMPORT_CONTRACT ===
+  Used to separate individual contract names from comma/space separarated list of contracts
+
+  /                               => start of regexp
+  ([\w\d]+)                       => >>MATCH[1]<< match individual contract name (one or more word or digit)
+  /g                              => end of regexp, g - global flag (find all)
+*/
+export const REGEXP_IMPORT_CONTRACT = /([\w\d]+)/g
 
 /**
  * Returns address map for contracts defined in template code.
@@ -30,15 +58,18 @@ export const extractImports = code => {
     return {}
   }
 
-  return [...code.matchAll(REGEXP_IMPORT)].reduce((contracts, match) => {
-    const contractsStr = match[2],
-      address = match[8]
+  return [...code.matchAll(new RegExp(REGEXP_IMPORT, "g"))].reduce(
+    (contracts, match) => {
+      const contractsStr = match[1],
+        address = match[3]
 
-    contractsStr.match(REGEXP_IMPORT_CONTRACT).forEach(contract => {
-      contracts[contract] = address
-    })
-    return contracts
-  }, {})
+      contractsStr.match(REGEXP_IMPORT_CONTRACT).forEach(contract => {
+        contracts[contract] = address
+      })
+      return contracts
+    },
+    {}
+  )
 }
 
 /**

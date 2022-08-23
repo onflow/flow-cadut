@@ -13,7 +13,7 @@
   "devDependencies": {
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.6",
-    "@onflow/flow-js-testing": "^0.3.0-alpha.11",
+    "@onflow/flow-js-testing": "0.3.0-alpha.14",
     "babel-jest": "^27.2.0",
     "elliptic": "^6.5.4",
     "jest": "^27.2.0",

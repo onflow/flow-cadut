@@ -82,13 +82,9 @@ describe("arguments - scripts", () => {
 describe("multiple interactions", () => {
   beforeAll(async () => {
     const basePath = path.resolve(__dirname, "../cadence")
-    // You can specify different port to parallelize execution of describe blocks
-    const port = 8080
-    // Setting logging flag to true will pipe emulator output to console
-    const logging = true
 
-    await init(basePath, {port, logging})
-    return emulator.start(port)
+    await init(basePath)
+    return emulator.start()
   })
 
   // Stop emulator, so it could be restarted

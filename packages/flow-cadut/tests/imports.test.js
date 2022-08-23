@@ -1,4 +1,78 @@
 import {extractImports, replaceImportAddresses} from "../src"
+import {REGEXP_IMPORT, REGEXP_IMPORT_CONTRACT} from "../src/imports"
+
+describe("imports RegExp tests", () => {
+  it("REGEXP_IMPORT - shall match import with one contract", () => {
+    const test = "import Foo from 0x01"
+    const match = test.match(REGEXP_IMPORT)
+    expect(match[1]).toBe("Foo")
+    expect(match[3]).toBe("0x01")
+  })
+
+  it("REGEXP_IMPORT - shall match import with integer in name", () => {
+    const test = "import F2oo from 0x01"
+    const match = test.match(REGEXP_IMPORT)
+    expect(match[1]).toBe("F2oo")
+    expect(match[3]).toBe("0x01")
+  })
+
+  it("REGEXP_IMPORT - shall match import with one filename", () => {
+    const test = 'import Foo from "Foo.cdc"'
+    const match = test.match(REGEXP_IMPORT)
+    expect(match[1]).toBe("Foo")
+    expect(match[3]).toBe('"Foo.cdc"')
+  })
+
+  it("REGEXP_IMPORT - shall match import with multiple contracts", () => {
+    const test = "import Foo, Bar from 0x01"
+    const match = test.match(REGEXP_IMPORT)
+    expect(match[1]).toBe("Foo, Bar")
+    expect(match[3]).toBe("0x01")
+  })
+
+  it("REGEXP_IMPORT - shall match import with multiple contracts with variable whitespace", () => {
+    const test = "import    Foo,  Bar    from  0x01"
+    const match = test.match(REGEXP_IMPORT)
+    expect(match[1]).toBe("Foo,  Bar")
+    expect(match[3]).toBe("0x01")
+  })
+
+  it("REGEXP_IMPORT - shall not match import with trailing∂ comma", () => {
+    const test = "import Foo, from 0x01"
+    const match = test.match(REGEXP_IMPORT)
+    expect(match).toBe(null)
+  })
+
+  it("REGEXP_IMPORT - shall not match without import tag", () => {
+    const test = "impgsaorst Foo from 0x01"
+    const match = test.match(REGEXP_IMPORT)
+    expect(match).toBe(null)
+  })
+
+  it("REGEXP_IMPORT - shall not match without import address", () => {
+    const test = "import Foo from"
+    const match = test.match(REGEXP_IMPORT)
+    expect(match).toBe(null)
+  })
+
+  it("REGEXP_IMPORT - shall not match without space preceeding imports", () => {
+    const test = "importFoo, Bar from 0x123"
+    const match = test.match(REGEXP_IMPORT)
+    expect(match).toBe(null)
+  })
+
+  it("REGEXP_IMPORT_CONTRACT - shall extract comma separated contract names", () => {
+    const test = "Foo, Bar"
+    const match = test.match(REGEXP_IMPORT_CONTRACT)
+    expect(match).toEqual(["Foo", "Bar"])
+  })
+
+  it("REGEXP_IMPORT_CONTRACT - shall extract contract names with integers", () => {
+    const test = "Fo2o, Ba5r"
+    const match = test.match(REGEXP_IMPORT_CONTRACT)
+    expect(match).toEqual(["Fo2o", "Ba5r"])
+  })
+})
 
 describe("imports tests", () => {
   it("extractImports - shall return a list of imports", () => {
@@ -76,7 +150,6 @@ describe("imports tests", () => {
       GiraffeNFT: "0xf8d6e0586b0a20c7",
     }
     const replaced = replaceImportAddresses(code, addressMap)
-    console.log(replaced)
     expect(
       replaced.includes("import Messages, GiraffeNFT from 0xf8d6e0586b0a20c7")
     ).toBe(true)
