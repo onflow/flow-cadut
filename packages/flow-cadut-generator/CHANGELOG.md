@@ -1,5 +1,16 @@
 # @onflow/flow-cadut-generator
 
+## 0.1.0-alpha.0
+
+### Minor Changes
+
+- [#122](https://github.com/onflow/flow-cadut/pull/122) [`bfb585d`](https://github.com/onflow/flow-cadut/commit/bfb585dfbf1656002c19650b85a1d698acc50d98) Thanks [@jribbink](https://github.com/jribbink)! - Allow flow-cadut-generator to run in watch mode using -w or --watch flag
+
+### Patch Changes
+
+- Updated dependencies [[`38a2961`](https://github.com/onflow/flow-cadut/commit/38a296178fd35045e46554bb22ae22f21d704724)]:
+  - @onflow/flow-cadut@0.2.0-alpha.9
+
 ## 0.0.1
 
 ### Major Changes
@@ -11,7 +22,7 @@
   - `@onflow/flow-cadut-plugin-find` (previously `@onflow/flow-cadut/plugins/find`)
   - `@onflow/flow-cadut-plugin-flowns` (previously `@onflow/flow-cadut/plugins/flowns`)
   - `@onflow/flow-cadut-views` (previously `@onflow/flow-cadut/views`)
-  
+
   For prior changelogs regarding this package, please [see the README](/packages/flow-cadut/CHANGELOG.md) of `@onflow/flow-cadut`.
 
 ### Minor Changes
