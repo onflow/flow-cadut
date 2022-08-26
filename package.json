@@ -23,12 +23,6 @@
     "prettier": "^2.7.1"
   },
   "eslintConfig": {
-    "ignorePatterns": [
-      "**/templates/*.js",
-      "**/generated/**/*",
-      "**/dist/**/*",
-      "**/*.hbs"
-    ],
     "extends": [
       "eslint:recommended",
       "plugin:jest/recommended",

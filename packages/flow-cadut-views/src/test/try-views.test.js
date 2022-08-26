@@ -28,6 +28,7 @@ describe("views", () => {
   it("fetch motogp", async () => {
     await setEnvironment("mainnet")
     const [cards, err] = await getView(MotoGP, "0x53f389d96fb4ce5e")
+    console.log(err)
     expect(cards).toBeTruthy()
     expect(err).toBeNull()
   })

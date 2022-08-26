@@ -1,0 +1,4 @@
+**/templates/*.js
+**/generated/**/*
+**/dist/**/*
+**/*.hbs

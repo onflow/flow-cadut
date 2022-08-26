@@ -16,18 +16,37 @@
  * limitations under the License.
  */
 
-const getPairs = line => {
-  return line
-    .split(/\s/)
-    .map(item => item.replace(/\s/g, ""))
-    .filter(item => item.length > 0 && item !== "import" && item !== "from")
-}
+/*
+  === REGEXP_IMPORT explanation ===
+  Matches import line in cadence code and is used for extracting address & list of contracts imported
 
-const collect = (acc, item) => {
-  const [contract, address] = item
-  acc[contract] = address
-  return acc
-}
+  /                               => start of regexp
+  import\s+                       => should have keyword import followed by one or more spaces
+
+  ((([\w\d]+)(\s*,\s*))*[\w\d]+)  => >>MATCH[1]<< matcher group for imported contracts (one or more comma separated words including digits)
+
+    ([\w\d]+\s*,\s*)*             => match comma-separated contracts
+      [\w\d]+                     => match individual contract name (one or more word or digit)
+      \s*,\s*                     => match trailing comma with any amount of space separation
+
+    [\w\d]+                       => match last contract name (mustn't have trailing comma, so separate from previous matcher)
+  
+  \s+from\s+                      => keyword from with one or more leading and following space characters
+  ([\w\d".\\/]+)                  => >>MATCH[3]<< one or more word, digit, "" or / character for address or file import notation
+  /                               => end of regexp
+*/
+export const REGEXP_IMPORT =
+  /import\s+(([\w\d]+\s*,\s*)*[\w\d]+)\s+from\s*([\w\d".\\/]+)/g
+
+/*
+  === REGEXP_IMPORT_CONTRACT ===
+  Used to separate individual contract names from comma/space separarated list of contracts
+
+  /                               => start of regexp
+  ([\w\d]+)                       => >>MATCH[1]<< match individual contract name (one or more word or digit)
+  /g                              => end of regexp, g - global flag (find all)
+*/
+export const REGEXP_IMPORT_CONTRACT = /([\w\d]+)/g
 
 /**
  * Returns address map for contracts defined in template code.
@@ -38,10 +57,16 @@ export const extractImports = code => {
   if (!code || code.length === 0) {
     return {}
   }
-  const split = code.split("\n")
-  const filtered = split.filter(line => /^\s*import\s+\w*\s+from/.test(line))
-  const mapped = filtered.map(getPairs)
-  return mapped.reduce(collect, {})
+
+  return [...code.matchAll(REGEXP_IMPORT)].reduce((contracts, match) => {
+    const contractsStr = match[1],
+      address = match[3]
+
+    contractsStr.match(REGEXP_IMPORT_CONTRACT).forEach(contract => {
+      contracts[contract] = address
+    })
+    return contracts
+  }, {})
 }
 
 /**
@@ -89,8 +114,6 @@ export const reportMissingImports = (code, addressMap, prefix = "") => {
   }
 }
 
-const REGEXP_IMPORT = /(\s*import\s*)([\w\d]+)(\s+from\s*)([\w\d".\\/]+)/g
-
 /**
  * Returns Cadence template code with replaced import addresses
  * @param {string} code - Cadence template code.
@@ -100,13 +123,25 @@ const REGEXP_IMPORT = /(\s*import\s*)([\w\d]+)(\s+from\s*)([\w\d".\\/]+)/g
  * @returns {*}
  */
 export const replaceImportAddresses = (code, addressMap, byName = true) => {
-  return code.replace(REGEXP_IMPORT, (match, imp, contract, _, address) => {
-    const key = byName ? contract : address
-    const newAddress =
-      addressMap instanceof Function ? addressMap(key) : addressMap[key]
+  return code.replace(REGEXP_IMPORT, importLine => {
+    const contracts = extractImports(importLine)
+    const contractMap = Object.keys(contracts).reduce((map, contract) => {
+      const address = contracts[contract]
+      const key = byName ? contract : address
+      const newAddress =
+        addressMap instanceof Function ? addressMap(key) : addressMap[key]
 
-    // If the address is not inside addressMap we shall not alter import statement
-    const validAddress = newAddress || address
-    return `${imp}${contract} from ${validAddress}`
+      // If the address is not inside addressMap we shall not alter import statement
+      const validAddress = newAddress || address
+      map[validAddress] = (map[validAddress] ?? []).concat(contract)
+      return map
+    }, {})
+
+    return Object.keys(contractMap)
+      .reduce((res, addr) => {
+        const contractsStr = contractMap[addr].join(", ")
+        return res.concat(`import ${contractsStr} from ${addr}`)
+      }, [])
+      .join("\n")
   })
 }
