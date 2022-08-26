@@ -1,5 +1,11 @@
 # @onflow/flow-cadut
 
+## 0.2.0-alpha.9
+
+### Patch Changes
+
+- [`38a2961`](https://github.com/onflow/flow-cadut/commit/38a296178fd35045e46554bb22ae22f21d704724) Thanks [@jribbink](https://github.com/jribbink)! - Fix multiple imports from a single address in one import line
+
 ## 0.2.0-alpha.8
 
 ### Major Changes
