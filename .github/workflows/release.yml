@@ -22,7 +22,7 @@ jobs:
 
       # install Flow CLI
       - name: Install Flow CLI
-        run: brew install flow-cli
+        run: git@github.com:onflow/flow-cadut.git
 
       - name: Install Dependencies
         run: npm i
