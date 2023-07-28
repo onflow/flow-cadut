@@ -22,7 +22,7 @@ jobs:
 
       # install Flow CLI
       - name: Install Flow CLI
-        run: brew install flow-cli
+        run: sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/master/install.sh)"
 
       - name: Install Dependencies
         run: npm i
