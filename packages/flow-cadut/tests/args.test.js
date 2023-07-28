@@ -8,6 +8,7 @@ import {
 } from "../src/args"
 import {toFixedValue, withPrefix} from "../src/fixer"
 import {getTemplateInfo} from "../src"
+import {isBasicNumType} from "../src/type-checker";
 
 describe("argument types", () => {
   test("Basic Type", async () => {
@@ -77,10 +78,19 @@ describe("type resolvers", () => {
     for (let i = 0; i < cases.length; i++) {
       const {type, argInput} = cases[i]
       const output = resolveType(type)
-      const asArgument = output.asArgument(argInput)
+
+      let value = argInput
+      if(isBasicNumType(type)){
+        value = value.toString()
+      }
+      const asArgument = output.asArgument(value)
 
       expect(asArgument.type).toBe(type)
-      expect(asArgument.value.toString()).toBe(argInput.toString())
+      if(isBasicNumType(asArgument.type)){
+        expect(asArgument.value).toBe(argInput.toString())
+      }else{
+        expect(asArgument.value).toBe(argInput)
+      }
     }
   })
   test("simple array = [String]", () => {
@@ -398,7 +408,7 @@ describe("mapValuesToCode", () => {
     expect(first.xform.label).toBe("Array")
     expect(first.value[0].length).toBe(values[0][0].length)
     for (let i = 0; i < values[0][0].length; i++) {
-      expect(first.value[0][i]).toBe(values[0][0][i])
+      expect(first.value[0][i]).toBe(values[0][0][i].toString())
     }
   })
 })

@@ -12,6 +12,7 @@ import {
   stripComments,
   stripStrings,
   extractImports,
+  generateSchema,
 } from "../src"
 
 import flovatarContract from "./stubs/flovatar"
@@ -218,7 +219,7 @@ describe("parser", () => {
       import Crypto
     `
     const result = extractImports(code)
-    expect(Object.keys(result).length).toBe(5)
+    expect(Object.keys(result).length).toBe(6)
   })
 })
 
@@ -326,6 +327,22 @@ describe("extract contract parameters", () => {
   test("with init method in code - multiple argument", () => {
     const contractName = "Hello"
     const args = "a: String, b: {String: String}"
+    const input = `
+    pub contract interface ${contractName}     {
+      // init method here
+      init(${args}){}
+    }
+  `
+    const output = extractContractParameters(input)
+    expect(output.contractName).toBe(contractName)
+    expect(output.args).toBe(args)
+  })
+
+  test("with init method in code - multi-line args", () => {
+    const contractName = "Hello"
+    const args = `a: String, 
+                  b: {String: String}
+                  `
     const input = `
     pub contract interface ${contractName}     {
       // init method here
@@ -568,5 +585,25 @@ describe("pragma extractor", () => {
     expect(result.name).toBe("Max")
     expect(result.title).toBe("Flow Cadut")
     expect(result.description).toBe("Simple Script to ping network")
+  })
+})
+
+describe("schema generator", () => {
+  test("single line arguments", () => {
+    const args = `a: Int, b: UInt8`
+    const schema = generateSchema(args)
+    expect(schema.length).toBe(2)
+    expect(schema[0]).toBe("a:Int")
+    expect(schema[1]).toBe("b:UInt8")
+  })
+
+  test("multi line arguments", () => {
+    const args = `
+        a: Int, 
+    b: UInt8`
+    const schema = generateSchema(args)
+    expect(schema.length).toBe(2)
+    expect(schema[0]).toBe("a:Int")
+    expect(schema[1]).toBe("b:UInt8")
   })
 })
