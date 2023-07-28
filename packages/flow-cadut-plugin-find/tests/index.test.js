@@ -18,7 +18,8 @@ describe("FIND plugin", () => {
       }
     `
     const args = ["find:shiny"]
-    return mapValuesToCode(code, args)
+    const mapped = mapValuesToCode(code, args)
+    expect(mapped).toBe(true)
   })
 
   it("shall resolve name.find properly", async () => {
@@ -28,6 +29,7 @@ describe("FIND plugin", () => {
       }
     `
     const args = ["shiny.find"]
-    return mapValuesToCode(code, args)
+    const mapped = mapValuesToCode(code, args)
+    expect(mapped).toBe(true)
   })
 })

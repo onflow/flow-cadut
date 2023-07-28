@@ -4,7 +4,7 @@ import {
   missingImports,
   report,
   replaceImportAddresses,
-} from "../src/imports"
+} from "../src"
 
 // arguments
 import {
@@ -15,7 +15,7 @@ import {
   argType,
   getDictionaryTypes,
   getArrayType,
-} from "../src/args"
+} from "../src"
 
 // parser
 import {
@@ -27,10 +27,10 @@ import {
   extractScriptArguments,
   extractTransactionArguments,
   extractContractName,
-} from "../src/parser"
+} from "../src"
 
 // Interactions
-import {setEnvironment, getEnvironment} from "../src/env"
+import {setEnvironment, getEnvironment} from "../src"
 
 describe("documentation examples", function () {
   // Imports
@@ -70,8 +70,13 @@ describe("documentation examples", function () {
   })
 
   it("should report to console", function () {
+    console.error = jest.fn()
     const list = ["Message", "Log"]
     report(list)
+    expect(console.error.mock.calls[0].length).toBe(2)
+    expect(console.error.mock.calls[0][0].includes("Missing imports")).toBe(
+      true
+    )
   })
 
   it("should replace import addresses", function () {
@@ -318,6 +323,7 @@ describe("documentation examples", function () {
     expect(complexType).toBe("{String:String}")
   })
 
+  /* eslint-disable */
   // Generator
   // This block is commented out for CI to work properly
   /*
@@ -333,6 +339,7 @@ describe("documentation examples", function () {
     await processGitRepo(url, output);
   });
    */
+  /* eslint-enable */
 
   // Interactions
   it("should throw error for unknown network", async function () {

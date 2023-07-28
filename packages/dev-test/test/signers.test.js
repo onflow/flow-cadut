@@ -23,7 +23,8 @@ describe("signers", () => {
         }
       `,
     })
-    console.log({result, err})
+    expect(result).toBe("42")
+    expect(err).toBe(null)
   })
 
   it("shall properly sign transaction", async () => {
@@ -45,8 +46,8 @@ describe("signers", () => {
       keyId,
     }
 
-    const [result, err] = await sendTransaction({code, payer})
-    console.log(result)
-    console.log(err)
+    const result = await sendTransaction({code, payer})
+    const err = result[0]
+    expect(err).toBe(null)
   })
 })

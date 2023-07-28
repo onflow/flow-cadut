@@ -50,8 +50,9 @@ describe("arguments - scripts", () => {
       }
     `
     const payer = authorization()
-    const [txId, err] = await mutate({cadence, payer, wait: null})
-    console.log({txId, err})
+    const result = await mutate({cadence, payer, wait: null})
+    const err = result[1]
+    expect(err).toBe(null)
   })
 
   it("shall properly process Address: [UInt64] array", async () => {
@@ -74,8 +75,8 @@ describe("arguments - scripts", () => {
       },
     ]
 
-    const [result, err] = await query({cadence, args})
-    console.log({result, err})
+    const [result] = await query({cadence, args})
+    expect(result).toBe("42")
   })
 })
 
