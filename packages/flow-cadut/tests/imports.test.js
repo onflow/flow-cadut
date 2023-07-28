@@ -186,7 +186,7 @@ describe("imports tests", () => {
   })
 })
 
-describe("Built-in contracts",()=>{
+describe("Built-in contracts", () => {
   it("replaceImportAddresses - should keep import unchanged for built-in contracts", function () {
     const code = `
       import Crypto
@@ -204,7 +204,7 @@ describe("Built-in contracts",()=>{
       import Crypto
       pub fun main(){}
     `
-    const replaced = replaceImportAddresses(code,{})
+    const replaced = replaceImportAddresses(code, {})
     expect(replaced.includes("Crypto\n")).toBe(true)
   })
 })
