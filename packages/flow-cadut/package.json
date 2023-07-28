@@ -27,7 +27,6 @@
     "build": "fcl-bundle",
     "watch": "fcl-bundle --watch",
     "test": "jest",
-    "format": "prettier --write \"**/*.{js,md}\"",
     "check-headers": "sh ./check-headers.sh"
   },
   "dependencies": {
@@ -47,7 +46,6 @@
     "@onflow/fcl-bundle": "^1.1.0",
     "babel-jest": "^26.6.3",
     "jest": "^26.6.3",
-    "jest-esm-transformer": "^1.0.0",
-    "prettier": "^3.0.0"
+    "jest-esm-transformer": "^1.0.0"
   }
 }
