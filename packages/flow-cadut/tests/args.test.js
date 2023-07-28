@@ -8,7 +8,7 @@ import {
 } from "../src/args"
 import {toFixedValue, withPrefix} from "../src/fixer"
 import {getTemplateInfo} from "../src"
-import {isBasicNumType} from "../src/type-checker";
+import {isBasicNumType} from "../src/type-checker"
 
 describe("argument types", () => {
   test("Basic Type", async () => {
@@ -80,17 +80,19 @@ describe("type resolvers", () => {
       const output = resolveType(type)
 
       let value = argInput
-      if(isBasicNumType(type)){
+      if (isBasicNumType(type)) {
         value = value.toString()
       }
       const asArgument = output.asArgument(value)
 
+      /*eslint-disable*/
       expect(asArgument.type).toBe(type)
-      if(isBasicNumType(asArgument.type)){
+      if (isBasicNumType(asArgument.type)) {
         expect(asArgument.value).toBe(argInput.toString())
-      }else{
+      } else {
         expect(asArgument.value).toBe(argInput)
       }
+      /*eslint-enable*/
     }
   })
   test("simple array = [String]", () => {

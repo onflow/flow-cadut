@@ -41,7 +41,7 @@
 
 */
 export const REGEXP_IMPORT =
-  /\s*import\s+("?([\w\d]+\s*,\s*)*(?!from\b)[\w\d]+"?)\s*(?:from)?\s*([\w\d".\/]+)?$/gm
+  /\s*import\s+("?([\w\d]+\s*,\s*)*(?!from\b)[\w\d]+"?)\s*(?:from)?\s*([\w\d"./]+)?$/gm
 
 /*
   === REGEXP_IMPORT_CONTRACT ===
