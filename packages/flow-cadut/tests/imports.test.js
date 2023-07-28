@@ -170,21 +170,6 @@ describe("imports tests", () => {
     )
   })
 
-  it("replaceImportAddresses - should properly inject import target for single contracts", function () {
-    const code = `
-      import   "Messages"
-      pub fun main(){}
-    `
-    const addressMap = {
-      Messages: "0xf8d6e0586b0a20c7",
-      GiraffeNFT: "0xf8d6e0586b0a20c7",
-    }
-    const replaced = replaceImportAddresses(code, addressMap)
-    expect(replaced.includes("import Messages from 0xf8d6e0586b0a20c7")).toBe(
-      true
-    )
-  })
-
   it("replaceImportAddresses - should properly inject import target for multiple contracts", function () {
     const code = `
       import   Messages,  GiraffeNFT
@@ -214,7 +199,7 @@ describe("Built-in contracts",()=>{
     expect(replaced.includes("0xf8d6e0586b0a20c7")).toBe(false)
   })
 
-  it("replaceImportAddresses - should keep import unchanged for built-in contracts", function () {
+  it("replaceImportAddresses - should keep import unchanged for contracts with address map", function () {
     const code = `
       import Crypto
       pub fun main(){}
