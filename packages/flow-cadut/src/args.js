@@ -163,6 +163,17 @@ export const mapArgument = async (rawType, rawValue) => {
       return fcl.arg(value, resolvedType)
     }
 
+    case isBasicNumType(type): {
+      // Try to parse value and throw if it fails
+      if (value === null) {
+        return fcl.arg(null, resolvedType)
+      }
+      if (isNaN(parseInt(value))) {
+        throwTypeError("Expected proper value for integer type")
+      }
+      return fcl.arg(value.toString(), resolvedType)
+    }
+
     case isFixedNumType(type): {
       // Try to parse value and throw if it fails
       if (value === null) {
@@ -196,8 +207,14 @@ export const mapArgument = async (rawType, rawValue) => {
         return fcl.arg(mappedValue, resolvedType)
       }
 
-      const result = fcl.arg(value, resolvedType)
-      return result
+      if (isBasicNumType(arrayType) || isFixedNumType(arrayType)) {
+        return fcl.arg(
+          value.map(item => (isNaN(item) ? item : item.toString())),
+          resolvedType
+        )
+      }
+
+      return fcl.arg(value, resolvedType)
     }
 
     case isDictionary(type): {
