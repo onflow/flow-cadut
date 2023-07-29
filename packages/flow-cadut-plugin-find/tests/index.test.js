@@ -18,7 +18,8 @@ describe("FIND plugin", () => {
       }
     `
     const args = ["find:bman"]
-    return mapValuesToCode(code, args)
+    const [result] = await mapValuesToCode(code, args)
+    expect(result.value).toBe("0x8bf9ecc3a2b8d7af")
   })
 
   it("shall resolve name.find properly", async () => {
@@ -28,6 +29,7 @@ describe("FIND plugin", () => {
       }
     `
     const args = ["bman.find"]
-    return mapValuesToCode(code, args)
+    const [result] = await mapValuesToCode(code, args)
+    expect(result.value).toBe("0x8bf9ecc3a2b8d7af")
   })
 })
