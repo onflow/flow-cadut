@@ -17,7 +17,7 @@ describe("FIND plugin", () => {
         return address
       }
     `
-    const args = ["find:shiny"]
+    const args = ["find:bman"]
     return mapValuesToCode(code, args)
   })
 
@@ -27,7 +27,7 @@ describe("FIND plugin", () => {
         return address
       }
     `
-    const args = ["shiny.find"]
+    const args = ["bman.find"]
     return mapValuesToCode(code, args)
   })
 })
