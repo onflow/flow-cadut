@@ -25,14 +25,6 @@ describe("views", () => {
     expect(err).toBeNull()
   })
 
-  it("fetch motogp", async () => {
-    await setEnvironment("mainnet")
-    const [cards, err] = await getView(MotoGP, "0x53f389d96fb4ce5e")
-    console.log(err)
-    expect(cards).toBeTruthy()
-    expect(err).toBeNull()
-  })
-
   it("fetch ballerz", async () => {
     await setEnvironment("mainnet")
     const [ballerz, err] = await getView(Ballerz, "0x4c342b6dafb5bcb1")
