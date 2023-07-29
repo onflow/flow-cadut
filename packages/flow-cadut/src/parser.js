@@ -89,7 +89,7 @@ export const extractContractName = code => {
 export const extractContractParameters = code => {
   const complexMatcher = /(resource|struct)\s+\w+\s*{[\s\S]+?}/g
   const contractNameMatcher =
-    /(?:access\(\w+\)|pub)\s+contract\s+(?:interface)*\s*(\w*)[:\s\w]*(\s*{[.\s\S]*init\s*\((.*?)\)[.\s\S]*})?/g
+    /(?:access\(\w+\)|pub)\s+contract\s+(?:interface)*\s*(\w*)[:\s\w]*(\s*{[.\s\S]*init\s*\(([.\s\S\r\n]*)\)[.\s\S]*})?/g
 
   const noComments = stripComments(code)
   const noComplex = noComments.replace(complexMatcher, "")

@@ -37,7 +37,7 @@ describe("imports RegExp tests", () => {
     expect(match[3]).toEqual("0x01")
   })
 
-  it("REGEXP_IMPORT - shall not match import with trailing comma", () => {
+  it("REGEXP_IMPORT - shall match import with trailing comma", () => {
     const test = "import Foo, from 0x01"
     const [match] = test.matchAll(REGEXP_IMPORT)
     expect(match).toEqual(undefined)
@@ -52,7 +52,7 @@ describe("imports RegExp tests", () => {
   it("REGEXP_IMPORT - shall not match without import address", () => {
     const test = "import Foo from"
     const [match] = test.matchAll(REGEXP_IMPORT)
-    expect(match).toEqual(undefined)
+    expect(match[1]).toEqual("Foo")
   })
 
   it("REGEXP_IMPORT - shall not match without space preceeding imports", () => {
@@ -153,5 +153,58 @@ describe("imports tests", () => {
     expect(
       replaced.includes("import Messages, GiraffeNFT from 0xf8d6e0586b0a20c7")
     ).toBe(true)
+  })
+
+  it("replaceImportAddresses - should properly inject import target for single contracts", function () {
+    const code = `
+      import   Messages
+      pub fun main(){}
+    `
+    const addressMap = {
+      Messages: "0xf8d6e0586b0a20c7",
+      GiraffeNFT: "0xf8d6e0586b0a20c7",
+    }
+    const replaced = replaceImportAddresses(code, addressMap)
+    expect(replaced.includes("import Messages from 0xf8d6e0586b0a20c7")).toBe(
+      true
+    )
+  })
+
+  it("replaceImportAddresses - should properly inject import target for multiple contracts", function () {
+    const code = `
+      import   Messages,  GiraffeNFT
+      pub fun main(){}
+    `
+    const addressMap = {
+      Messages: "0xf8d6e0586b0a20c7",
+      GiraffeNFT: "0xf8d6e0586b0a20c7",
+    }
+    const replaced = replaceImportAddresses(code, addressMap)
+    expect(
+      replaced.includes("import Messages, GiraffeNFT from 0xf8d6e0586b0a20c7")
+    ).toBe(true)
+  })
+})
+
+describe("Built-in contracts", () => {
+  it("replaceImportAddresses - should keep import unchanged for built-in contracts", function () {
+    const code = `
+      import Crypto
+      pub fun main(){}
+    `
+    const addressMap = {
+      Crypto: "0xf8d6e0586b0a20c7",
+    }
+    const replaced = replaceImportAddresses(code, addressMap)
+    expect(replaced.includes("0xf8d6e0586b0a20c7")).toBe(false)
+  })
+
+  it("replaceImportAddresses - should keep import unchanged for contracts with address map", function () {
+    const code = `
+      import Crypto
+      pub fun main(){}
+    `
+    const replaced = replaceImportAddresses(code, {})
+    expect(replaced.includes("Crypto\n")).toBe(true)
   })
 })

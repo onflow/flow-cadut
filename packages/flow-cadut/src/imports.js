@@ -20,27 +20,32 @@
   === REGEXP_IMPORT explanation ===
   Matches import line in cadence code and is used for extracting address & list of contracts imported
 
-  /                               => start of regexp
-  import\s+                       => should have keyword import followed by one or more spaces
+  /                                             => start of regexp
+      ^                                         => Matches the start of the string.
+      \s*                                       => Matches zero or more whitespace characters.
+      import\s+                                 => Matches the word "import" followed by one or more whitespace characters.
+      ("?([\w\d]+\s*,\s*)*(?!from\b)[\w\d]+"?)  => Matches a list of one or more variable names separated by commas,
+                                                   with each variable name optionally surrounded by quotes (?"), and optional
+                                                   whitespace characters in between ([\w\d]+\s*,\s*)*. The negative lookahead
+                                                   assertion (?!from\b) ensures that the word "from" is not part of a
+                                                   variable name. The entire list of variable names is optionally surrounded
+                                                   by quotes as well (?").
+      \s*                                       => Matches zero or more whitespace characters.
+      (?:from)?                                 => Matches the word "from" if it appears, but does not capture it.
+      \s*                                       => Matches zero or more whitespace characters.
+    ([\w\d".\/]+)?                              => Matches the target path, which is a sequence of one or more
+                                                   alphanumeric characters, quotes ("), periods (.), forward slashes (/),
+                                                   or double quotes (").
+      $                                         => Matches the end of the string.
+  /                                             => end of regexp
 
-  ((([\w\d]+)(\s*,\s*))*[\w\d]+)  => >>MATCH[1]<< matcher group for imported contracts (one or more comma separated words including digits)
-
-    ([\w\d]+\s*,\s*)*             => match comma-separated contracts
-      [\w\d]+                     => match individual contract name (one or more word or digit)
-      \s*,\s*                     => match trailing comma with any amount of space separation
-
-    [\w\d]+                       => match last contract name (mustn't have trailing comma, so separate from previous matcher)
-  
-  \s+from\s+                      => keyword from with one or more leading and following space characters
-  ([\w\d".\\/]+)                  => >>MATCH[3]<< one or more word, digit, "" or / character for address or file import notation
-  /                               => end of regexp
 */
 export const REGEXP_IMPORT =
-  /import\s+(([\w\d]+\s*,\s*)*[\w\d]+)\s+from\s*([\w\d".\\/]+)/g
+  /\s*import\s+("?([\w\d]+\s*,\s*)*(?!from\b)[\w\d]+"?)\s*(?:from)?\s*([\w\d"./]+)?$/gm
 
 /*
   === REGEXP_IMPORT_CONTRACT ===
-  Used to separate individual contract names from comma/space separarated list of contracts
+  Used to separate individual contract names from comma/space separated list of contracts
 
   /                               => start of regexp
   ([\w\d]+)                       => >>MATCH[1]<< match individual contract name (one or more word or digit)
@@ -58,7 +63,8 @@ export const extractImports = code => {
     return {}
   }
 
-  return [...code.matchAll(REGEXP_IMPORT)].reduce((contracts, match) => {
+  const lines = [...code.matchAll(REGEXP_IMPORT)]
+  return lines.reduce((contracts, match) => {
     const contractsStr = match[1],
       address = match[3]
 
@@ -117,30 +123,45 @@ export const reportMissingImports = (code, addressMap, prefix = "") => {
 /**
  * Returns Cadence template code with replaced import addresses
  * @param {string} code - Cadence template code.
- * @param {{string:string}} [addressMap={}] - name/address map or function to use as lookup table
+ * @param {{[key:string]:string}} [addressMap={}] - name/address map or function to use as lookup table
  * for addresses in import statements.
  * @param byName - lag to indicate whether we shall use names of the contracts.
  * @returns {*}
  */
 export const replaceImportAddresses = (code, addressMap, byName = true) => {
+  const EMPTY = "empty"
   return code.replace(REGEXP_IMPORT, importLine => {
     const contracts = extractImports(importLine)
+
     const contractMap = Object.keys(contracts).reduce((map, contract) => {
       const address = contracts[contract]
+
       const key = byName ? contract : address
       const newAddress =
         addressMap instanceof Function ? addressMap(key) : addressMap[key]
 
       // If the address is not inside addressMap we shall not alter import statement
-      const validAddress = newAddress || address
-      map[validAddress] = (map[validAddress] ?? []).concat(contract)
+      let validAddress = newAddress || address
+
+      if (!newAddress || contract === "Crypto") {
+        validAddress = EMPTY
+      }
+
+      if (!map[validAddress]) {
+        map[validAddress] = []
+      }
+
+      map[validAddress] = map[validAddress].concat(contract)
       return map
     }, {})
 
     return Object.keys(contractMap)
       .reduce((res, addr) => {
         const contractsStr = contractMap[addr].join(", ")
-        return res.concat(`import ${contractsStr} from ${addr}`)
+        if (addr === EMPTY) {
+          return res.concat(`import ${contractsStr}`)
+        }
+        return res.concat(`import ${contractsStr} from ${addr} `)
       }, [])
       .join("\n")
   })
