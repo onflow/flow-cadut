@@ -2,7 +2,6 @@ import {setEnvironment} from "@onflow/flow-cadut"
 import {
   Flovatars,
   VersusArt,
-  MotoGP,
   Ballerz,
   GoatedGoats,
   GoatedTraits,
