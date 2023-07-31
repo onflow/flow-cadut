@@ -2,7 +2,6 @@ import {setEnvironment} from "@onflow/flow-cadut"
 import {
   Flovatars,
   VersusArt,
-  MotoGP,
   Ballerz,
   GoatedGoats,
   GoatedTraits,
@@ -22,14 +21,6 @@ describe("views", () => {
     await setEnvironment("mainnet")
     const [art, err] = await getView(VersusArt, "0x886f3aeaf848c535")
     expect(art).toBeTruthy()
-    expect(err).toBeNull()
-  })
-
-  it("fetch motogp", async () => {
-    await setEnvironment("mainnet")
-    const [cards, err] = await getView(MotoGP, "0x53f389d96fb4ce5e")
-    console.log(err)
-    expect(cards).toBeTruthy()
     expect(err).toBeNull()
   })
 

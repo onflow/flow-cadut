@@ -2,7 +2,7 @@
   "name": "flow-cadut",
   "scripts": {
     "build": "lerna run build",
-    "test": "jest",
+    "test": "lerna run test",
     "lint": "eslint .",
     "lintfix": "eslint --fix .",
     "prerelease": "npm run build && npm run test",

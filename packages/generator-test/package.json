@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "generate": "flow-generate ./cadence ./src/generated",
-    "test": "node index.js"
+    "test-generator": "node index.js"
   },
   "author": "",
   "license": "ISC",

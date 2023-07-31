@@ -17,8 +17,9 @@ describe("FIND plugin", () => {
         return address
       }
     `
-    const args = ["find:shiny"]
-    return mapValuesToCode(code, args)
+    const args = ["find:bman"]
+    const [result] = await mapValuesToCode(code, args)
+    expect(result.value).toBe("0x8bf9ecc3a2b8d7af")
   })
 
   it("shall resolve name.find properly", async () => {
@@ -27,7 +28,8 @@ describe("FIND plugin", () => {
         return address
       }
     `
-    const args = ["shiny.find"]
-    return mapValuesToCode(code, args)
+    const args = ["bman.find"]
+    const [result] = await mapValuesToCode(code, args)
+    expect(result.value).toBe("0x8bf9ecc3a2b8d7af")
   })
 })
