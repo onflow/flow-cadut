@@ -108,7 +108,7 @@ export const extractContractParameters = code => {
 export const getTemplateInfo = template => {
   const contractMatcher = /\w+\s+contract\s+(\w*\s*)\w*/g
   const transactionMatcher = /transaction\s*(\(\s*\))*\s*/g
-  const scriptMatcher = /pub\s+fun\s+main\s*/g
+  const scriptMatcher = /(pub|access\s*\(\s*all\s*\))\s+fun\s+main\s*/g
 
   const code = stripStrings(stripComments(template))
 

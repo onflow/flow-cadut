@@ -107,6 +107,16 @@ describe("parser", () => {
     expect(output.length).toBe(0)
   })
 
+  test("extract script arguments - no arguments - cadence 1.0", () => {
+    const input = `
+      access(all) fun main(){
+        log(a)
+      }
+    `
+    const output = extractScriptArguments(input)
+    expect(output.length).toBe(0)
+  })
+
   test("extract script arguments", () => {
     const input = `
       pub fun main(a: Int){
