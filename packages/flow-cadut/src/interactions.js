@@ -132,7 +132,7 @@ export const sendTransaction = async props => {
 // TODO: add arguments for "init" method into template
 export const addContractTemplate = `
     transaction(name: String, code: String) {
-      prepare(acct: AuthAccount){
+      prepare(acct: auth(AddContract) &Account) {
         let decoded = code.decodeHex()
         
         acct.contracts.add(
@@ -144,13 +144,13 @@ export const addContractTemplate = `
   `
 export const updateContractTemplate = `
   transaction(name: String, code: String){
-    prepare(acct: AuthAccount){
+    prepare(acct: auth(AddContract, UpdateContract) &Account) {
       let decoded = code.decodeHex()
       
       if acct.contracts.get(name: name) == nil {
         acct.contracts.add(name: name, code: decoded)
       } else {
-        acct.contracts.update__experimental(name: name, code: decoded)
+        acct.contracts.update(name: name, code: decoded)
       }
     }
   }
