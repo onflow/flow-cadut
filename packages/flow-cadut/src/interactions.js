@@ -132,7 +132,7 @@ export const sendTransaction = async props => {
 // TODO: add arguments for "init" method into template
 export const addContractTemplate = `
     transaction(name: String, code: String) {
-      prepare(acct: AuthAccount){
+      prepare(acct: auth(AddContract) &Account) {
         let decoded = code.decodeHex()
         
         acct.contracts.add(
@@ -144,13 +144,38 @@ export const addContractTemplate = `
   `
 export const updateContractTemplate = `
   transaction(name: String, code: String){
-    prepare(acct: AuthAccount){
+    prepare(acct: auth(AddContract, UpdateContract) &Account) {
       let decoded = code.decodeHex()
       
       if acct.contracts.get(name: name) == nil {
         acct.contracts.add(name: name, code: decoded)
       } else {
-        acct.contracts.update__experimental(name: name, code: decoded)
+        acct.contracts.update(name: name, code: decoded)
+      }
+    }
+  }
+`
+export const addContractTemplateLegacy = `
+    transaction(name: String, code: String) {
+      prepare(acct: AuthAccount) {
+        let decoded = code.decodeHex()
+        
+        acct.contracts.add(
+          name: name,
+          code: decoded,
+        )
+      }
+    }
+  `
+export const updateContractTemplateLegacy = `
+  transaction(name: String, code: String){
+    prepare(acct: AuthAccount) {
+      let decoded = code.decodeHex()
+      
+      if acct.contracts.get(name: name) == nil {
+        acct.contracts.add(name: name, code: decoded)
+      } else {
+        acct.contracts.update(name: name, code: decoded)
       }
     }
   }
@@ -169,16 +194,19 @@ export const deployContract = async props => {
     code: contractCode,
     update = false,
     processed = false,
+    legacy = false,
     addressMap = {},
   } = props
 
-  // Update imprort statement with addresses from addressMap
+  // Update import statement with addresses from addressMap
   const ixContractCode = processed
     ? contractCode
     : replaceImportAddresses(contractCode, addressMap)
 
   // TODO: Implement arguments for "init" method
-  const template = update ? addContractTemplate : updateContractTemplate
+  let template = update ? addContractTemplate : updateContractTemplate
+  if (legacy)
+    template = update ? addContractTemplateLegacy : updateContractTemplateLegacy
 
   const hexedCode = hexContract(ixContractCode)
   const args = [name, hexedCode]

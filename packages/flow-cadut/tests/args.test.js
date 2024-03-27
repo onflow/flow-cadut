@@ -343,6 +343,28 @@ describe("complex example", () => {
     expect(output[3].xform.label).toBe("UFix64")
   })
 
+  test("multiple values from code - cadence 1.0", async () => {
+    const code = `access(all) fun main(a: Int, b: Address, c: [String], d: UFix64) { }`
+    const argValues = [42, "0x01", ["Hello, World"], 1.337]
+
+    const schema = getTemplateInfo(code).args.map(argType)
+    const output = await mapArguments(schema, argValues)
+
+    expect(output.length).toBe(argValues.length)
+
+    expect(output[0].value).toBe(42)
+    expect(output[0].xform.label).toBe("Int")
+
+    expect(output[1].value).toBe("0x01")
+    expect(output[1].xform.label).toBe("Address")
+
+    expect(output[2].value).toEqual(["Hello, World"])
+    expect(output[2].xform.label).toBe("Array")
+
+    expect(output[3].value).toBe(toFixedValue("1.337"))
+    expect(output[3].xform.label).toBe("UFix64")
+  })
+
   test("multiple values from code - shall fail conversion", async () => {
     const code = `pub fun main(a: Int, b: Address, c: [String], d: UFix64) { }`
 
