@@ -155,6 +155,31 @@ export const updateContractTemplate = `
     }
   }
 `
+export const addContractTemplateLegacy = `
+    transaction(name: String, code: String) {
+      prepare(acct: AuthAccount) {
+        let decoded = code.decodeHex()
+        
+        acct.contracts.add(
+          name: name,
+          code: decoded,
+        )
+      }
+    }
+  `
+export const updateContractTemplateLegacy = `
+  transaction(name: String, code: String){
+    prepare(acct: AuthAccount) {
+      let decoded = code.decodeHex()
+      
+      if acct.contracts.get(name: name) == nil {
+        acct.contracts.add(name: name, code: decoded)
+      } else {
+        acct.contracts.update(name: name, code: decoded)
+      }
+    }
+  }
+`
 
 // TODO: add jsdoc
 export const hexContract = contract =>
@@ -169,16 +194,19 @@ export const deployContract = async props => {
     code: contractCode,
     update = false,
     processed = false,
+    legacy = false,
     addressMap = {},
   } = props
 
-  // Update imprort statement with addresses from addressMap
+  // Update import statement with addresses from addressMap
   const ixContractCode = processed
     ? contractCode
     : replaceImportAddresses(contractCode, addressMap)
 
   // TODO: Implement arguments for "init" method
-  const template = update ? addContractTemplate : updateContractTemplate
+  let template = update ? addContractTemplate : updateContractTemplate
+  if (legacy)
+    template = update ? addContractTemplateLegacy : updateContractTemplateLegacy
 
   const hexedCode = hexContract(ixContractCode)
   const args = [name, hexedCode]

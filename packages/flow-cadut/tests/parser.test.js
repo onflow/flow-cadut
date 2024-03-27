@@ -466,6 +466,21 @@ describe("template type checker", () => {
     const {type} = getTemplateInfo(input)
     expect(type).toBe(TRANSACTION)
   })
+
+  test("is transaction - Cadence 1.0", () => {
+    const input = `
+      import FlowManager from 0x01
+
+      transaction(name:String, code: String, manager: Address ##ARGS-WITH-TYPES##) {
+        prepare(acct: auth(BorrowValue ) & Account, other: auth (Entitlement, OtherEntitle) &Account){
+          let decoded = code.decodeHex()
+        }
+      }
+    `
+    const {type, signers} = getTemplateInfo(input)
+    expect(type).toBe(TRANSACTION)
+    expect(signers).toBe(2)
+  })
 })
 
 describe("spaces in definitions", () => {

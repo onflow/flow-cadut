@@ -23,11 +23,17 @@ export const TRANSACTION = "transaction"
 export const SCRIPT = "script"
 export const UNKNOWN = "unknown"
 
-export const generateSchema = argsDefinition =>
-  argsDefinition
-    .split(",")
-    .map(item => item.replace(/\s*/g, ""))
-    .filter(item => item !== "")
+export const generateSchema = argsDefinition => {
+  const matchedArgs = [
+    ...argsDefinition.matchAll(
+      /([^:]*:(\s*(auth)?\s*\([^)]*?\))?\s*[^,)]*),?/g
+    ),
+  ]
+  const splittedArgs = matchedArgs.map(
+    item => item[1]?.replace(/\s*/g, "") ?? ""
+  )
+  return splittedArgs.filter(item => item !== "")
+}
 
 export const stripComments = code => {
   const commentsRegExp = /(\/\*[\s\S]*?\*\/)|(\/\/.*)/g
@@ -71,7 +77,10 @@ export const extract = (code, keyWord) => {
 }
 
 export const extractSigners = code => {
-  return extract(code, `(?:prepare\\s*\\(\\s*)([^\\)]*)(?:\\))`)
+  return extract(
+    code,
+    `(?:prepare\\s*\\(\\s*)((?:[^:]*:(\\s*(auth)?\\s*\\([^)]*\\))?\\s*[^,)]*,?)*)(?:\\))`
+  )
 }
 
 export const extractScriptArguments = code => {
