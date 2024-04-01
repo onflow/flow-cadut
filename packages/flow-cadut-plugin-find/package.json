@@ -1,7 +1,7 @@
 {
   "name": "@onflow/flow-cadut-plugin-find",
   "amdName": "flowCadutPluginFIND",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "FIND address resolver",
   "author": "Dapper Labs",
   "license": "Apache-2.0",
@@ -17,14 +17,14 @@
     "regex": "^_"
   },
   "peerDependencies": {
-    "@onflow/flow-cadut": "^0.2.0-alpha.7"
+    "@onflow/flow-cadut": "^0.2.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6"
   },
   "devDependencies": {
     "@onflow/fcl-bundle": "^1.1.0",
-    "@onflow/flow-cadut": "^0.2.0-alpha.7",
+    "@onflow/flow-cadut": "^0.2.0",
     "jest": "^28.1.3"
   }
 }

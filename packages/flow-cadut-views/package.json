@@ -1,7 +1,7 @@
 {
   "name": "@onflow/flow-cadut-views",
   "amdName": "flowCadutViews",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Dapper Labs",
   "license": "Apache-2.0",
   "main": "dist/views.js",
@@ -16,11 +16,11 @@
     "regex": "^_"
   },
   "peerDependencies": {
-    "@onflow/flow-cadut": "^0.2.0-alpha.7"
+    "@onflow/flow-cadut": "^0.2.0"
   },
   "devDependencies": {
     "@onflow/fcl-bundle": "^1.1.0",
-    "@onflow/flow-cadut": "^0.2.0-alpha.7",
+    "@onflow/flow-cadut": "^0.2.0",
     "jest": "^28.1.3"
   },
   "dependencies": {
