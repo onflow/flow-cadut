@@ -1,0 +1,16 @@
+{
+  "mode": "pre",
+  "tag": "stable-cadence",
+  "initialVersions": {
+    "dev-test": "1.0.0",
+    "@onflow/flow-cadut": "0.2.0",
+    "@onflow/flow-cadut-generator": "0.1.0",
+    "@onflow/flow-cadut-plugin-find": "0.1.0",
+    "@onflow/flow-cadut-plugin-flowns": "0.1.0",
+    "@onflow/flow-cadut-views": "0.1.0",
+    "generator-test": "1.0.0"
+  },
+  "changesets": [
+    "chilly-adults-guess"
+  ]
+}

@@ -1,5 +1,12 @@
 # @onflow/flow-cadut-generator
 
+## 0.1.1-stable-cadence.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/flow-cadut@0.3.0-stable-cadence.0
+
 ## 0.1.0
 
 ### Minor Changes

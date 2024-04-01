@@ -9,6 +9,9 @@
   "updateInternalDependencies": "patch",
   "ignore": [
     "dev-test",
-    "generator-test"
+    "generator-test",
+    "@onflow/flow-cadut-views",
+    "@onflow/flow-cadut-plugin-flowns",
+    "@onflow/flow-cadut-plugin-find"
   ]
 }

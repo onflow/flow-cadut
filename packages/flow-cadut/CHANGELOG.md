@@ -1,5 +1,11 @@
 # @onflow/flow-cadut
 
+## 0.3.0-stable-cadence.0
+
+### Minor Changes
+
+- Add Cadence 1.0 parsing support (access modifiers + &Account signer types)
+
 ## 0.2.0
 
 ### Minor Changes

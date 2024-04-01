@@ -12,7 +12,7 @@
   "license": "ISC",
   "devDependencies": {
     "@onflow/fcl": "^0.0.73",
-    "@onflow/flow-cadut-generator": "^0.1.0",
+    "@onflow/flow-cadut-generator": "^0.1.1-stable-cadence.0",
     "elliptic": "^6.5.4",
     "esm": "^3.2.25",
     "rlp": "^2.2.6",
