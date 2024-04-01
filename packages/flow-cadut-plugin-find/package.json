@@ -1,7 +1,7 @@
 {
   "name": "@onflow/flow-cadut-plugin-find",
   "amdName": "flowCadutPluginFIND",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "FIND address resolver",
   "author": "Dapper Labs",
   "license": "Apache-2.0",

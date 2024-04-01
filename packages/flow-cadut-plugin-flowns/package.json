@@ -1,7 +1,7 @@
 {
   "name": "@onflow/flow-cadut-plugin-flowns",
   "amdName": "flowCadutPluginFLOWNS",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "FLOWNS address resolver",
   "author": "Dapper Labs",
   "license": "Apache-2.0",
