@@ -7,7 +7,7 @@ import {FIND} from "../src/index"
 
 describe("FIND plugin", () => {
   beforeEach(async () => {
-    await setEnvironment("testnet")
+    await setEnvironment("mainnet")
     await registerPlugin(FIND)
   })
 
@@ -17,9 +17,12 @@ describe("FIND plugin", () => {
         return address
       }
     `
-    const args = ["find:bman"]
+
+    // test relies on this address to be registered
+    // if it breaks, swap it with another address
+    const args = ["find:roham"]
     const [result] = await mapValuesToCode(code, args)
-    expect(result.value).toBe("0x8bf9ecc3a2b8d7af")
+    expect(result.value).toBe("0x65f12353ccc255ee")
   })
 
   it("shall resolve name.find properly", async () => {
@@ -28,8 +31,11 @@ describe("FIND plugin", () => {
         return address
       }
     `
-    const args = ["bman.find"]
+
+    // test relies on this address to be registered
+    // if it breaks, swap it with another address
+    const args = ["roham.find"]
     const [result] = await mapValuesToCode(code, args)
-    expect(result.value).toBe("0x8bf9ecc3a2b8d7af")
+    expect(result.value).toBe("0x65f12353ccc255ee")
   })
 })

@@ -1,7 +1,7 @@
 {
   "name": "@onflow/flow-cadut-views",
   "amdName": "flowCadutViews",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "author": "Dapper Labs",
   "license": "Apache-2.0",
   "main": "dist/views.js",
