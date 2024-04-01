@@ -1,5 +1,5 @@
 {
-  "mode": "pre",
+  "mode": "exit",
   "tag": "alpha",
   "initialVersions": {
     "@onflow/flow-cadut": "0.1.16-alpha.3",
