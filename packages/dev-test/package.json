@@ -20,7 +20,7 @@
     "jest-environment-node": "^27.2.0"
   },
   "dependencies": {
-    "@onflow/fcl": "^1.1.1-alpha.1",
+    "@onflow/fcl": "^1.10.1",
     "sha3": "^2.1.4"
   }
 }
