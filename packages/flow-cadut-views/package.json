@@ -16,11 +16,11 @@
     "regex": "^_"
   },
   "peerDependencies": {
-    "@onflow/flow-cadut": "^0.3.0-stable-cadence.0"
+    "@onflow/flow-cadut": "^0.3.0-stable-cadence.1"
   },
   "devDependencies": {
     "@onflow/fcl-bundle": "^1.1.0",
-    "@onflow/flow-cadut": "^0.3.0-stable-cadence.0",
+    "@onflow/flow-cadut": "^0.3.0-stable-cadence.1",
     "jest": "^28.1.3"
   },
   "dependencies": {

@@ -14,14 +14,14 @@
     "test": "jest"
   },
   "peerDependencies": {
-    "@onflow/flow-cadut": "^0.3.0-stable-cadence.0"
+    "@onflow/flow-cadut": "^0.3.0-stable-cadence.1"
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6"
   },
   "devDependencies": {
     "@onflow/fcl-bundle": "^1.1.0",
-    "@onflow/flow-cadut": "^0.3.0-stable-cadence.0",
+    "@onflow/flow-cadut": "^0.3.0-stable-cadence.1",
     "jest": "^28.1.3"
   }
 }

@@ -1,5 +1,13 @@
 # @onflow/flow-cadut
 
+## 0.3.0-stable-cadence.1
+
+### Patch Changes
+
+- [#144](https://github.com/onflow/flow-cadut/pull/144) [`15d6dc3`](https://github.com/onflow/flow-cadut/commit/15d6dc3e2bac705b3b26e9dc1278b3a9a74670ce) Thanks [@jribbink](https://github.com/jribbink)! - Update @onflow/fcl
+
+* [#141](https://github.com/onflow/flow-cadut/pull/141) [`e31c3fd`](https://github.com/onflow/flow-cadut/commit/e31c3fd27e4988349399a8d902aec091a684290a) Thanks [@jribbink](https://github.com/jribbink)! - Update @onflow/fcl to v1.10.1
+
 ## 0.3.0-stable-cadence.0
 
 ### Minor Changes
