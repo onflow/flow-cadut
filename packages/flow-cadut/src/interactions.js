@@ -113,19 +113,17 @@ export const waitForStatus = statusValue => {
 export const sendTransaction = async props => {
   const {wait = "seal"} = props
   try {
-    const txId = await fcl.decode(
-      await prepareInteraction(props, "transaction")
-    )
+    const response = await prepareInteraction(props, "transaction")
     if (wait) {
       const waitMethod = waitForStatus(wait)
-      const rawResult = await fcl.tx(txId)[waitMethod]()
+      const rawResult = await fcl.tx(response)[waitMethod]()
       const txResult = {
-        txId,
+        txId: response,
         ...rawResult,
       }
       return [txResult, null]
     }
-    return [txId, null]
+    return [response.transactionId, null]
   } catch (e) {
     return [null, e]
   }
