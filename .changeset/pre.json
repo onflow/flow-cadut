@@ -11,6 +11,8 @@
     "generator-test": "1.0.0"
   },
   "changesets": [
-    "chilly-adults-guess"
+    "chilly-adults-guess",
+    "forty-lobsters-smell",
+    "little-bobcats-design"
   ]
 }
