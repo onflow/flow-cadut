@@ -118,7 +118,7 @@ export const sendTransaction = async props => {
     )
     if (wait) {
       const waitMethod = waitForStatus(wait)
-      const rawResult = await fcl.tx(response)[waitMethod]()
+      const rawResult = await fcl.tx(txId)[waitMethod]()
       const txResult = {
         txId,
         ...rawResult,

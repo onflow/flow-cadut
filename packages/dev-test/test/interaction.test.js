@@ -32,7 +32,8 @@ describe("arguments - scripts", () => {
       }
     `
 
-    const [result] = await query({cadence, raw: true})
+    const [result, err] = await query({cadence, raw: true})
+    expect(err).toBe(null)
 
     expect(result.type).toBe("Struct")
     expect(result.value.id.includes("Info")).toBe(true)
